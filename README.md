@@ -1,2 +1,2 @@
 # bayit-abroad
-Bayit Abroad Webpage
+Welcome to the Bayit Abroad webpage

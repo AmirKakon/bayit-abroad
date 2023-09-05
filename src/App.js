@@ -1,5 +1,4 @@
 import React from 'react';
-import { app, analytics } from './firebase';  // import the initialized firebase app and services
 import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
 import Header from "./components/Header";
 import {HomePage, AboutPage} from './pages';

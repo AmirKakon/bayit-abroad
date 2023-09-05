@@ -17,7 +17,8 @@ const CircleSvg = (props) => (
       ry="40.983844"
       transform="matrix(1.2449 0 0 1.207793 50 50)"
       fill="#e6deca"
-      stroke-width="0"
+      stroke="#2c3c30"
+      stroke-width="1"
     />
   </svg>
 );

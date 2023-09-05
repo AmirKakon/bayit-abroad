@@ -1,19 +1,34 @@
 import React from "react";
 import CircleIcon from "../../media/CircleIcon.js";
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 
 const HomePage = () => {
   return (
-    <Box sx={{ bgcolor: "#f0f0f0", color: "black", height: "100%", px: "15%" }}>
-      <Grid container spacing={2} justifyContent="space-between" sx={{ margin: "auto" }}>
+    <Box sx={{ 
+      // background: "#e3e3e3", //"linear-gradient(180deg, #2C3C30 40%, #B8B6A4 100%)", 
+      color: "white", 
+      minHeight: "500",
+      px: 10,
+      paddingTop:10
+  }}>
+      <Grid container direction="column" spacing={2} alignItems="center">
         <Grid item>
-          <CircleIcon size="150" />
+          <Typography variant="h4" align="center" color="black">
+            Welcome to Bayit Abroad
+          </Typography>
+          <br />
+          <br />
         </Grid>
-        <Grid item>
-          <CircleIcon size="150" />
-        </Grid>
-        <Grid item>
-          <CircleIcon size="150" />
+        <Grid container item spacing={2} justifyContent="space-between">
+          <Grid item>
+            <CircleIcon size="150" />
+          </Grid>
+          <Grid item>
+            <CircleIcon size="150" />
+          </Grid>
+          <Grid item>
+            <CircleIcon size="150" />
+          </Grid>
         </Grid>
       </Grid>
     </Box>

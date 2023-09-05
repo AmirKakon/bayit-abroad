@@ -5,6 +5,7 @@ import {HomePage, AboutPage} from './pages';
 
 const App = () => {
   return (
+    <div style={{ backgroundColor: "#e3e3e3", minHeight: '100vh'}}>
     <Router>
       <Header />
       <Routes>
@@ -13,6 +14,7 @@ const App = () => {
           <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
     </Router>
+    </div>
   );
 };
 

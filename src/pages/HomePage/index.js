@@ -9,25 +9,24 @@ const HomePage = () => {
       color: "white", 
       minHeight: "500",
       px: 10,
-      paddingTop:10
+      paddingTop:10,
   }}>
       <Grid container direction="column" spacing={2} alignItems="center">
         <Grid item>
-          <Typography variant="h4" align="center" color="black">
+          <Typography variant="h4" fontFamily="serif" align="center" color="black">
             Welcome to Bayit Abroad
           </Typography>
           <br />
-          <br />
         </Grid>
-        <Grid container item spacing={2} justifyContent="space-between">
+        <Grid container item spacing={3} justifyContent="center">
           <Grid item>
-            <CircleIcon size="150" />
+            <CircleIcon size="200" text={["Feel more at","home, abroad"]}/>
           </Grid>
           <Grid item>
-            <CircleIcon size="150" />
+            <CircleIcon size="200" text={["Enjoy traveling all","days of the year"]}/>
           </Grid>
           <Grid item>
-            <CircleIcon size="150" />
+            <CircleIcon size="200" text={["Save money and","travel flexibly"]}/>
           </Grid>
         </Grid>
       </Grid>

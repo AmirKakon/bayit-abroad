@@ -8,7 +8,7 @@ const App = () => {
   return (
     <Router>
       <Header />
-      <Link to="/about" style={{ textDecoration: 'none', color: 'black' }}>Welcome to Bayit Abroad</Link>
+      <Link to="/about" style={{ textDecoration: 'none', color: 'black' }}>Welcome to Test Abroad</Link>
 
 
       <Routes>

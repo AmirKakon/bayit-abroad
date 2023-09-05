@@ -7,9 +7,6 @@ const App = () => {
   return (
     <Router>
       <Header />
-      <Link to="/about" style={{ textDecoration: 'none', color: 'black' }}>Welcome to Test Abroad</Link>
-
-
       <Routes>
           <Route path="/home" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />

@@ -1,17 +1,11 @@
-import logo from './media/bayit-abroad-logo.png';
-import './App.css';
+import HomePage from "./layout/HomePage";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <h3>
-          Welcome to Bayit Abroad
-        </h3>
-      </header>
+    <div>
+      <HomePage />
     </div>
   );
-}
+};
 
 export default App;

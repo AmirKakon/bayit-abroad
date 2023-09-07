@@ -3,10 +3,14 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import Header from "./layout/Header";
 import {HomePage, AboutPage} from './pages';
 import Footer from './layout/Footer';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { lightThemeOptions } from './theme';
+
+const theme = createTheme(lightThemeOptions);
 
 const App = () => {
   return (
-    <div style={{ backgroundColor: "#e3e3e3", minHeight: '100vh'}}>
+    <ThemeProvider theme={theme}>
     <Router>
       <Header />
       <Routes>
@@ -16,7 +20,7 @@ const App = () => {
         </Routes>
         <Footer />
     </Router>
-    </div>
+    </ThemeProvider>
   );
 };
 

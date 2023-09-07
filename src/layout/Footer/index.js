@@ -11,7 +11,7 @@ const Footer = () => {
         {/* Left side: Copyright */}
         <Grid item>
           <Typography color="textSecondary" fontFamily="serif">
-            &copy; 2023 All Rights Reserved, Bayit Abroad
+            &copy; 2023 All Rights Reserved, Bayit Abroad - A Family Company
           </Typography>
         </Grid>
 

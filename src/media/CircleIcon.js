@@ -13,10 +13,11 @@ const CircleSvg = (props) => {
       id="circle"
       xmlns="http://www.w3.org/2000/svg"
       viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
-      shape-rendering="geometricPrecision"
-      text-rendering="geometricPrecision"
-      width={props.size} // Display size remains the same as passed through props
-      height={props.size} // Display size remains the same as passed through props
+      shapeRendering="geometricPrecision"
+      textRendering="geometricPrecision"
+      width={props.size}
+      height={props.size}
+      style={{ pointerEvents: 'none' }}
     >
       <ellipse
         id="circle-s-ellipse1"
@@ -28,7 +29,14 @@ const CircleSvg = (props) => {
         stroke="#2c3c30"
         strokeWidth={1 * scale}
       />
-      <text x={viewBoxSize / 2} y={viewBoxSize / 2 - 5} fontSize="16" fontFamily="serif" textAnchor="middle" fill="#2c3c30">
+      <text 
+        x={viewBoxSize / 2} 
+        y={viewBoxSize / 2 - 5} 
+        fontSize="16" 
+        fontFamily="serif" 
+        textAnchor="middle" 
+        fill="#2c3c30"
+      >
         <tspan x={viewBoxSize / 2} dy="0">{props.text[0]}</tspan>
         <tspan x={viewBoxSize / 2} dy="15">{props.text[1]}</tspan>
       </text>

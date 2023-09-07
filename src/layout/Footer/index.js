@@ -1,46 +1,76 @@
-import React from 'react';
-import { Box, Typography, Grid, Link } from '@mui/material';
+import React, { useState, useEffect } from "react";
+import { Box, Typography, Grid, Link } from "@mui/material";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import EmailIcon from '@mui/icons-material/Email';
+import EmailIcon from "@mui/icons-material/Email";
 
 const Footer = () => {
-  return (
-    <Box sx={{ bgcolor: '#f8f8f8', padding: '20px 0', marginTop: '40px' }}>
-      <Grid container justifyContent="space-between" alignItems="center" spacing={2} px={5}>
-        
-        {/* Left side: Copyright */}
-        <Grid item>
-          <Typography color="textSecondary" fontFamily="serif">
-            &copy; 2023 All Rights Reserved, Bayit Abroad
-          </Typography>
-          <Typography color="textSecondary" fontFamily="serif">
-            version 1.0.0
-          </Typography>
-        </Grid>
+  const [version, setVersion] = useState("Loading...");
 
-        {/* Right side: Contact Information */}
-        <Grid item>
-          <Box display="flex" alignItems="center" spacing={2}>
-            <Box display="flex" alignItems="center" marginRight={2}>
-              <WhatsAppIcon color="action" style={{ marginRight: '5px' }} />
-              <Typography fontFamily="serif">
-                <Link href="https://wa.me/972547321928" color="textSecondary" style={{ textDecoration: 'none' }} target="_blank">
-                  +972-54-7321-928
-                </Link>
-              </Typography>
+  useEffect(() => {
+    // Fetch the content of version.txt
+    fetch("/version.txt")
+      .then((response) => response.text())
+      .then((text) => {
+        setVersion(text.trim()); // Update state with fetched version
+      })
+      .catch(() => {
+        setVersion("Error loading version"); // Handle any error during fetching
+      });
+  }, []);
+
+  return (
+    <footer>
+      <Box sx={{ bgcolor: "#f8f8f8", padding: "20px 0", marginTop: "40px" }}>
+        <Grid
+          container
+          justifyContent="space-between"
+          alignItems="center"
+          spacing={2}
+          px={5}
+        >
+          {/* Left side: Copyright */}
+          <Grid item>
+            <Typography color="textSecondary" fontFamily="serif">
+              &copy; 2023 All Rights Reserved, Bayit Abroad
+            </Typography>
+            <Typography color="textSecondary" fontFamily="serif">
+              Version {version}
+            </Typography>
+          </Grid>
+
+          {/* Right side: Contact Information */}
+          <Grid item>
+            <Box display="flex" alignItems="center" spacing={2}>
+              <Box display="flex" alignItems="center" marginRight={2}>
+                <WhatsAppIcon color="action" style={{ marginRight: "5px" }} />
+                <Typography fontFamily="serif">
+                  <Link
+                    href="https://wa.me/972547321928"
+                    color="textSecondary"
+                    style={{ textDecoration: "none" }}
+                    target="_blank"
+                  >
+                    +972-54-7321-928
+                  </Link>
+                </Typography>
+              </Box>
+              <Box display="flex" alignItems="center">
+                <EmailIcon color="action" style={{ marginRight: "5px" }} />
+                <Typography fontFamily="serif">
+                  <Link
+                    href="mailto:bayitabroad@gmail.com"
+                    color="textSecondary"
+                    style={{ textDecoration: "none" }}
+                  >
+                    bayitabroad@gmail.com
+                  </Link>
+                </Typography>
+              </Box>
             </Box>
-            <Box display="flex" alignItems="center">
-              <EmailIcon color="action" style={{ marginRight: '5px' }} />
-              <Typography fontFamily="serif">
-                <Link href="mailto:bayitabroad@gmail.com" color="textSecondary" style={{ textDecoration: 'none' }}>
-                  bayitabroad@gmail.com
-                </Link>
-              </Typography>
-            </Box>
-          </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </footer>
   );
 };
 

@@ -31,8 +31,8 @@ const CircleSvg = (props) => {
       />
       <text 
         x={viewBoxSize / 2} 
-        y={viewBoxSize / 2 - 5} 
-        fontSize="16" 
+        y={viewBoxSize / 2 - 3} 
+        fontSize="18" 
         fontFamily="serif" 
         textAnchor="middle" 
         fill="#2c3c30"

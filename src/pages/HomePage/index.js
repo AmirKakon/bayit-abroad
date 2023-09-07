@@ -2,7 +2,8 @@ import React from "react";
 import CircleIcon from "../../media/CircleIcon.js";
 import { Box, Grid, Link, Typography } from "@mui/material";
 import Divider from "@mui/material/Divider";
-import { width } from "@mui/system";
+
+const circleSize = "200";
 
 const registrationLink = (
   <Link
@@ -10,63 +11,82 @@ const registrationLink = (
     target="_blank"
     rel="noopener noreferrer"
     style={{
-      display: 'inline-block', 
-      backgroundColor: '#2c3c30', 
-      color: 'white', 
-      padding: '10px 20px', 
-      borderRadius: '25px', 
-      textDecoration: 'none',
-      textAlign: 'center',
-      cursor: 'pointer',
-      width: "100%"
+      display: "inline-block",
+      backgroundColor: "#98aaa8",
+      padding: "10px 30px",
+      borderRadius: "25px",
+      textDecoration: "none",
+      cursor: "pointer",
     }}
   >
-    Click to register!
+    <Typography
+      variant="subtitle1"
+      fontFamily="serif"
+      align="center"
+      color="black"
+    >
+      Click To Reserve Your Order Now!
+    </Typography>
   </Link>
 );
 
 const header = (
   <Grid container direction="column" spacing={2} alignItems="center">
     <Grid item>
-      <Typography variant="h3" fontFamily="serif" align="center" color="black">
+      <Typography variant="h2" fontFamily="serif" align="center" color="black">
         Welcome to Bayit Abroad
       </Typography>
       <br />
-      {registrationLink}
     </Grid>
+    <Grid item>{registrationLink} </Grid>
+
     <Grid container item justifyContent="center">
       <Grid item sx={{ padding: "20px" }}>
         <CircleIcon
-          size="180"
+          size={circleSize}
           text={["Enjoy traveling all", "days of the year"]}
         />
       </Grid>
       <Grid item sx={{ padding: "20px" }}>
-        <CircleIcon size="180" text={["Feel more at", "home, abroad"]} />
+        <CircleIcon size={circleSize} text={["Feel more at", "home, abroad"]} />
       </Grid>
       <Grid item sx={{ padding: "20px" }}>
-        <CircleIcon size="180" text={["Save money and", "travel flexibly"]} />
+        <CircleIcon
+          size={circleSize}
+          text={["Save money and", "travel flexibly"]}
+        />
       </Grid>
     </Grid>
   </Grid>
 );
 
-const getToKnowUs = (
+const whyChooseUs = (
   <Grid container direction="column" spacing={2} alignItems="center">
     <Grid item>
       <Typography variant="h4" fontFamily="serif" align="center" color="black">
-        Get To Know Us
+        WHY CHOOSE US
       </Typography>
       <br />
     </Grid>
-    <Grid item>
-      <Typography
-        variant="body 1"
-        fontFamily="serif"
-        align="center"
-        color="black"
-      >
-        Welcome to Bayit Abroad
+    <Grid item sx={{ textAlign: "center" }}>
+      <Typography variant="h6" fontFamily="serif" align="center" color="black">
+        <b>Planning a family trip to Jerusalem?</b>
+        <br />
+        Say goodbye to the frustrations of Shabbat and focus on creating
+        beautiful memories in the holiest city!
+        <br />
+        <br />
+        <b>Stay in Comfort:</b> No longer worry about the challenges of Shabbat
+        away from home- no matter where you’re staying we deliver the products
+        to you!
+        <br />
+        <br />
+        <b>Enhance Your Shabbat:</b> Prepare warm meals, have hot water (and
+        coffee!), and maintain the sanctity of Shabbat effortlessly.
+        <br />
+        <br />
+        <b>Pack Light:</b> Traveling with children can be demanding, and we
+        understand that. Leave behind the burden of carrying heavy appliances.
       </Typography>
       <br />
     </Grid>
@@ -86,7 +106,7 @@ const HomePage = () => {
     >
       {header}
       <Divider variant="middle" sx={{ marginTop: 3, marginBottom: 3 }} />
-      {getToKnowUs}
+      {whyChooseUs}
     </Box>
   );
 };

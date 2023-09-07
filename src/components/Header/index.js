@@ -10,7 +10,7 @@ const Header = () => {
                     <Link to="/home" sx={{ textDecoration: 'none', display: 'flex', alignItems: 'center' }}>
                         <img src={logo} alt="Bayit Abroad Logo" height={70} style={{ display: 'block'}} />
                     </Link>
-                    <Typography variant="h5" color="#e6deca" sx={{ marginLeft: 2 }}>Bayit Abroad</Typography>
+                    <Typography variant="h5" color="#e6deca" sx={{ marginLeft: 1 }}>Bayit Abroad</Typography>
                 </Grid>
             </Box>
         </header>

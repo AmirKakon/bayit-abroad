@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Header from "./components/Header";
 import {HomePage, AboutPage} from './pages';
+import Footer from './layout/Footer';
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
           <Route path="/about" element={<AboutPage />} />
           <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
+        <Footer />
     </Router>
     </div>
   );

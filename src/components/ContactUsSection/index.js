@@ -50,7 +50,7 @@ const ContactUsSection = () => {
           alignItems="center"
           marginBottom={2}
         >
-          <WhatsAppIcon color="primary" style={{ marginRight: "10px" }} />
+          <WhatsAppIcon color="secondary" style={{ marginRight: "10px" }} />
           <Link
             href="https://wa.me/972547321928"
             style={{ textDecoration: "none" }}
@@ -60,7 +60,7 @@ const ContactUsSection = () => {
           </Link>
         </Box>
         <Box display="flex" justifyContent="center" alignItems="center">
-          <EmailIcon color="primary" style={{ marginRight: "10px" }} />
+          <EmailIcon color="secondary" style={{ marginRight: "10px" }} />
           <Link
             href="mailto:bayitabroad@gmail.com?subject=Inquiry%20from%20Website"
             style={{ textDecoration: "none" }}

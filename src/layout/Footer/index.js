@@ -13,7 +13,6 @@ const Footer = () => {
           <Typography color="textSecondary" fontFamily="serif">
             &copy; 2023 All Rights Reserved, Bayit Abroad
           </Typography>
-          <br/>
           <Typography color="textSecondary" fontFamily="serif">
             version 1.0.0
           </Typography>

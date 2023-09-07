@@ -28,17 +28,7 @@ const Footer = () => {
           spacing={2}
           px={5}
         >
-          {/* Left side: Copyright */}
-          <Grid item>
-            <Typography color="textSecondary" fontFamily="serif">
-              &copy; 2023 All Rights Reserved, Bayit Abroad
-            </Typography>
-            <Typography color="textSecondary" fontFamily="serif">
-              Version {version}
-            </Typography>
-          </Grid>
-
-          {/* Right side: Contact Information */}
+          {/* Left side: Contact Information */}
           <Grid item>
             <Box display="flex" alignItems="center" spacing={2}>
               <Box display="flex" alignItems="center" marginRight={2}>
@@ -46,7 +36,7 @@ const Footer = () => {
                 <Typography fontFamily="serif">
                   <Link
                     href="https://wa.me/972547321928"
-                    color="textSecondary"
+                    color="textPrimary"
                     style={{ textDecoration: "none" }}
                     target="_blank"
                   >
@@ -59,7 +49,7 @@ const Footer = () => {
                 <Typography fontFamily="serif">
                   <Link
                     href="mailto:bayitabroad@gmail.com"
-                    color="textSecondary"
+                    color="textPrimary"
                     style={{ textDecoration: "none" }}
                   >
                     bayitabroad@gmail.com
@@ -67,6 +57,16 @@ const Footer = () => {
                 </Typography>
               </Box>
             </Box>
+          </Grid>
+
+          {/* Right side: Copyright */}
+          <Grid item>
+            <Typography color="textPrimary" fontFamily="serif">
+              &copy; 2023 All Rights Reserved, Bayit Abroad
+            </Typography>
+            <Typography color="textPrimary" fontFamily="serif">
+              Version {version}
+            </Typography>
           </Grid>
         </Grid>
       </Box>

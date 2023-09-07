@@ -1,8 +1,46 @@
+import React from "react";
+import WelcomeSection from "../../components/WelcomeSection";
+import WhyChooseUsSection from "../../components/WhyChooseUsSection";
+import HowItWorksSection from "../../components/HowItWorksSection";
+import ContactUsSection from "../../components/ContactUsSection";
+import { Box, Grid } from "@mui/material";
+import Divider from "@mui/material/Divider";
+
 const HomePage = () => {
   return (
-    <div>
-      <h5> Welcome to home page </h5>
-    </div>
+    <Box
+      sx={{
+        color: "white",
+        minHeight: "500",
+        padding: 10, // Consistent padding
+      }}
+    >
+      <Grid
+        container
+        direction="column"
+        spacing={2}
+        alignItems="center"
+        justifyContent="center"
+        style={{ width: "100%" }}
+      >
+        <WelcomeSection />
+        <Divider
+          variant="middle"
+          sx={{ marginTop: 3, marginBottom: 3, width: "100%" }}
+        />
+        <WhyChooseUsSection />
+        <Divider
+          variant="middle"
+          sx={{ marginTop: 3, marginBottom: 3, width: "100%" }}
+        />
+        <HowItWorksSection />
+        <Divider
+          variant="middle"
+          sx={{ marginTop: 3, marginBottom: 3, width: "100%" }}
+        />
+        <ContactUsSection />
+      </Grid>
+    </Box>
   );
 };
 

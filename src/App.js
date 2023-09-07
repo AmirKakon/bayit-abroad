@@ -1,21 +1,22 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
-import Header from "./components/Header";
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import Header from "./layout/Header";
 import {HomePage, AboutPage} from './pages';
+import Footer from './layout/Footer';
 
 const App = () => {
   return (
+    <div style={{ backgroundColor: "#e3e3e3", minHeight: '100vh'}}>
     <Router>
       <Header />
-      <Link to="/about" style={{ textDecoration: 'none', color: 'black' }}>Welcome to Test Abroad</Link>
-
-
       <Routes>
           <Route path="/home" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
+        <Footer />
     </Router>
+    </div>
   );
 };
 

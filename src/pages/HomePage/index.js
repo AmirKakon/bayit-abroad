@@ -11,9 +11,10 @@ const HomePage = () => {
     <Box
       sx={{
         color: "white",
-        minHeight: "500",
-        padding: 10, // Consistent padding
+        minHeight: "200",
+        padding: 5, // Consistent padding
       }}
+      flex={1}
     >
       <Grid
         container

@@ -16,6 +16,7 @@ import dayjs from "dayjs";
 
 const FormPage = () => {
   const [selectedItems, setSelectedItems] = useState([]);
+  const [totalPrice, setTotalPrice] = useState({usd: 0, nis: 0});
   const [deliveryDate, setDeliveryDate] = useState(null);
   const [pickupDate, setPickupDate] = useState(null);
   const [formData, setFormData] = useState({
@@ -56,18 +57,43 @@ const FormPage = () => {
     }));
   };
 
+//   const calculateTotal = (selectedItems) => {
+//     let totalUSD = 0;
+//     let totalNIS = 0;
+
+//     if (selectedItems.includes(items[0].name)) {
+//       totalUSD = items[0].price.usd;
+//       totalNIS = items[0].price.nis;
+//     } else {
+//       selectedItems.forEach((itemName) => {
+//         const item = items.find(it => it.name === itemName);
+//         if (item) {
+//           totalUSD += item.price.usd;
+//           totalNIS += item.price.nis;
+//         }
+//       });
+//     }
+
+//     return { usd: totalUSD, nis: totalNIS };
+//   };
+
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
 
-    if (name === "Entire package..." && checked) {
-      setSelectedItems(items); // Select all items if "Entire package..." is checked
-    } else if (name === "Entire package..." && !checked) {
-      setSelectedItems([]); // Deselect all items if "Entire package..." is unchecked
+    let newSelectedItems;
+    if (name === items[0].name && checked) {
+      newSelectedItems = [items[0]];
+    } else if (name === items[0].name && !checked) {
+      newSelectedItems = [];
     } else {
-      setSelectedItems((prev) =>
-        checked ? [...prev, name] : prev.filter((item) => item !== name)
-      );
+      newSelectedItems = checked 
+        ? [...selectedItems, name] 
+        : selectedItems.filter((item) => item.name !== name);
     }
+
+    setSelectedItems(newSelectedItems);
+    // const total = calculateTotal(newSelectedItems);
+    // setTotalPrice(total);
   };
 
   const handleSubmit = (event) => {
@@ -117,10 +143,10 @@ const FormPage = () => {
               </Typography>
               {items.map((item) => (
                 <FormControlLabel
-                  key={item}
+                  key={item.name}
                   control={
                     <Checkbox
-                      name={item}
+                      name={item.name}
                       checked={
                         selectedItems.includes(item) || isEntirePackageSelected
                       }
@@ -129,10 +155,13 @@ const FormPage = () => {
                       disabled={isEntirePackageSelected && item !== items[0]}
                     />
                   }
-                  label={item}
+                  label={`${item.name} : $${item.price.usd} / ₪${item.price.nis}`}
                 />
               ))}
             </FormControl>
+            <Typography variant="body1" align="left" paragraph padding={1}>
+                Total: ${totalPrice.usd} / ₪{totalPrice.nis}
+            </Typography>
             <Typography variant="body1" align="left" paragraph padding={1}>
               Looking for an item that isn't listed? Add more items in the
               "Additional Notes" section at the bottom of the form and our team

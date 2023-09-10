@@ -36,6 +36,8 @@ const ContactInformation = ({ formData, setFormData }) => {
       ...prevData,
       dateRange: range,
     }));
+
+    console.log(formData)
   };
 
   const validatePhoneNumber = (number) => {

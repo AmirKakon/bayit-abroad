@@ -10,8 +10,6 @@ import { items } from "../../dummyData/items";
 
 const FormPage = () => {
   const [selectedItems, setSelectedItems] = useState([]);
-  const [deliveryDate, setDeliveryDate] = useState(null);
-  const [pickupDate, setPickupDate] = useState(null);
   const [totalPrice, setTotalPrice] = useState({ usd: 0, nis: 0 });
   const [formData, setFormData] = useState({
     fullName: "",
@@ -35,8 +33,7 @@ const FormPage = () => {
       formData.email &&
       validatePhoneNumber(formData.phoneNumber) &&
       formData.deliveryAddress &&
-      deliveryDate &&
-      pickupDate
+      formData.range && formData.range.delivery && formData.range.pickup
     );
   };
 
@@ -82,11 +79,9 @@ const FormPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const orderItems = isEntirePackageSelected ? items : selectedItems;
-    const dateRange = { delivery: deliveryDate.$d, pickup: pickupDate.$d };
     const submissionData = {
       ...formData,
       orderItems,
-      dateRange,
     };
     console.log("Form Data:", submissionData);
   };

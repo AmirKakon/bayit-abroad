@@ -13,11 +13,10 @@ import {
   Paper,
 } from "@mui/material";
 import { Box } from "@mui/system";
+import { items } from "../../dummyData/items";
 
 const FormPage = () => {
   const [selectedItems, setSelectedItems] = useState([]);
-
-  const items = ["Item 1", "Item 2", "Item 3"]; // Example items
 
   const handleCheckboxChange = (event) => {
     if (event.target.checked) {
@@ -39,6 +38,7 @@ const FormPage = () => {
     <Box
       flex={1}
       sx={{
+        backgroundColor: "#e2e2e2",
         minHeight: "200",
         padding: 2, // Consistent padding
       }}
@@ -71,7 +71,7 @@ const FormPage = () => {
         <form onSubmit={handleSubmit}>
           <Paper elevation={2} sx={{ padding: 1 }}>
             <FormControl component="fieldset">
-              <Typography component="legend">Select Items:</Typography>
+              <Typography component="legend">Select the Items to Order:</Typography>
               {items.map((item) => (
                 <FormControlLabel
                   key={item}

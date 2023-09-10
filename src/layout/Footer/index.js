@@ -20,7 +20,7 @@ const Footer = () => {
 
   return (
     <footer>
-      <Box sx={{ bgcolor: "#f8f8f8", padding: "20px 0", marginTop: "40px" }}>
+      <Box sx={{ bgcolor: "#f8f8f8", padding: "20px 0" }}>
         <Grid
           container
           justifyContent="space-between"

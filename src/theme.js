@@ -8,8 +8,8 @@ export const lightThemeOptions = {
       main: "#e6deca",
     },
     background: {
-      default: "#e6e6e6",
-      paper: "#e1e1e1",
+      default: "#e2e2e2",
+      paper: "#ffffff",
     },
     text: {
       disabled: "#9e9e9e",

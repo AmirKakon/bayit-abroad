@@ -1,11 +1,65 @@
 export const items = [
-    "Entire package- all of the products (180 ₪ / $50)",
-"Hot plate + Shabbat timer (35 ₪ / $10)",
-"Hot plate cover (10 ₪ / $3)",
-"Hot water urn (35 NIS / $10)",
-"Challah Board + Knife + Cover (85 ₪ / $25)",
-"2x Shabbat Timers (10 ₪ / $3)",
-"Kiddush cup (25 ₪ / $7)",
-"Tin Foil Trays (20 ₪ / $6)",
-"Board Game (40 ₪/ $11)",
+  {
+    name: "Entire package - all of the products",
+    price: {
+      usd: 50,
+      nis: 180,
+    },
+  },
+  {
+    name: "Hot Plate & Shabbat Timer",
+    price: {
+      usd: 10,
+      nis: 35,
+    },
+  },
+  {
+    name: "Hot Plate Cover",
+    price: {
+      usd: 3,
+      nis: 10,
+    },
+  },
+  {
+    name: "Hot Water Urn",
+    price: {
+      usd: 10,
+      nis: 35,
+    },
+  },
+  {
+    name: "Challah Board, Knife & Cover",
+    price: {
+      usd: 25,
+      nis: 85,
+    },
+  },
+  {
+    name: "2 Shabbat Timers",
+    price: {
+      usd: 3,
+      nis: 10,
+    },
+  },
+  {
+    name: "Kiddush Cup",
+    price: {
+      usd: 7,
+      nis: 25,
+    },
+  },
+  {
+    name: "Tin Foil Trays",
+    price: {
+      usd: 6,
+      nis: 20,
+    },
+  },
+  {
+    name: "Board Game",
+    price: {
+      usd: 11,
+      nis: 40,
+    },
+  },
 ];

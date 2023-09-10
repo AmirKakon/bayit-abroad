@@ -23,7 +23,6 @@ const FormPage = () => {
     email: "",
     phoneNumber: "",
     deliveryAddress: "",
-    dateRange: [null, null],
     additionalNotes: "",
   });
 
@@ -34,6 +33,15 @@ const FormPage = () => {
     const pattern = /^[0-9]{10}$/;
     return true;//pattern.test(number);
   };
+
+  const isFormComplete = () => {
+    return formData.fullName &&
+      formData.email &&
+      validatePhoneNumber(formData.phoneNumber) &&
+      formData.deliveryAddress &&
+      deliveryDate &&
+      pickupDate;
+  }
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -65,9 +73,11 @@ const FormPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const orderItems = isEntirePackageSelected ? items : selectedItems;
+    const dateRange = {delivery: deliveryDate.$d, pickup: pickupDate.$d}
     const submissionData = {
       ...formData,
       orderItems,
+      dateRange
     };
     console.log("Form Data:", submissionData);
   };
@@ -195,11 +205,7 @@ const FormPage = () => {
 
             <DatePicker
               label="Pickup Date"
-            //   value={pickupDate}
-            //   onChange={(newDate) => setPickupDate(newDate)}
-            //   renderInput={(params) => (
-            //     <TextField {...params} helperText={null} />
-            //   )}
+              onChange={(newDate) => setPickupDate(newDate)}
               minDate={deliveryDate || dayjs()}
               sx={{marginTop: 2}}
             />
@@ -222,6 +228,7 @@ const FormPage = () => {
             fullWidth
             variant="contained"
             color="primary"
+            disabled={!isFormComplete()}
             style={{ marginTop: "16px" }}
           >
             Submit

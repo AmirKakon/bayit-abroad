@@ -12,7 +12,7 @@ const HomePage = () => {
       sx={{
         color: "white",
         minHeight: "200",
-        padding: 5, // Consistent padding
+        padding: 2, // Consistent padding
       }}
       flex={1}
     >

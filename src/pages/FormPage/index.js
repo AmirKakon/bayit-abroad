@@ -10,11 +10,14 @@ import {
   Paper,
 } from "@mui/material";
 import { Box } from "@mui/system";
-import { DateRangePicker } from "@mui/x-date-pickers-pro/DateRangePicker";
+import { DatePicker } from "@mui/x-date-pickers";
 import { items } from "../../dummyData/items";
+import dayjs from "dayjs";
 
 const FormPage = () => {
   const [selectedItems, setSelectedItems] = useState([]);
+  const [deliveryDate, setDeliveryDate] = useState(null);
+  const [pickupDate, setPickupDate] = useState(null);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -29,7 +32,7 @@ const FormPage = () => {
   const validatePhoneNumber = (number) => {
     // This is a basic regex for validating phone numbers, consider using a library like libphonenumber-js for a comprehensive solution
     const pattern = /^[0-9]{10}$/;
-    return pattern.test(number);
+    return true;//pattern.test(number);
   };
 
   const handleInputChange = (event) => {
@@ -108,12 +111,12 @@ const FormPage = () => {
                   control={
                     <Checkbox
                       name={item}
-                      checked={selectedItems.includes(item) || isEntirePackageSelected}
+                      checked={
+                        selectedItems.includes(item) || isEntirePackageSelected
+                      }
                       onChange={handleCheckboxChange}
                       color="primary"
-                      disabled={
-                        isEntirePackageSelected && item !== items[0]
-                      }
+                      disabled={isEntirePackageSelected && item !== items[0]}
                     />
                   }
                   label={item}
@@ -183,18 +186,22 @@ const FormPage = () => {
               required
             />
 
-            <DateRangePicker
-              sx={{ marginTop: 2 }}
-              localeText={{ start: "From", end: "To" }}
-              name="dateRange"
-              value={formData.dateRange}
-              minDate={new Date()}
-              onChange={(newValue) =>
-                setFormData((prevData) => ({
-                  ...prevData,
-                  dateRange: newValue,
-                }))
-              }
+            <DatePicker
+              label="Delivery Date"
+              onChange={(newDate) => setDeliveryDate(newDate)}
+              disablePast
+              required
+            />
+
+            <DatePicker
+              label="Pickup Date"
+            //   value={pickupDate}
+            //   onChange={(newDate) => setPickupDate(newDate)}
+            //   renderInput={(params) => (
+            //     <TextField {...params} helperText={null} />
+            //   )}
+              minDate={deliveryDate || dayjs()}
+              required
             />
 
             <TextField

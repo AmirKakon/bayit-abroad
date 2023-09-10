@@ -1,5 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import Header from "./layout/Header";
 import {HomePage, FormPage, AboutPage} from './pages';
 import Footer from './layout/Footer';
@@ -11,6 +13,7 @@ const theme = createTheme(lightThemeOptions);
 
 const App = () => {
   return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
     <ThemeProvider theme={theme}>
       <Router>
         <Header />
@@ -25,6 +28,7 @@ const App = () => {
         </Box>
       </Router>
     </ThemeProvider>
+    </LocalizationProvider>
   );
 };
 

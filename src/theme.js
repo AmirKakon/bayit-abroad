@@ -12,7 +12,7 @@ export const lightThemeOptions = {
       },
       text: {
         disabled: '#9e9e9e',
-        secondary: '#ffffff',
+        secondary: '#2c3c30',
         primary: '#000000',
       },
     },

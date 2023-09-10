@@ -1,34 +1,48 @@
-import React, {useState} from "react";
-import {
-  TextField,
-  Typography,
-  Paper,
-} from "@mui/material";
+import React, { useState } from "react";
+import { TextField, Typography, Paper } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 
-const ContactInformation = ({formData, setFormData}) => {
-    const [deliveryDate, setDeliveryDate] = useState(null);
-    const [pickupDate, setPickupDate] = useState(null);
+const ContactInformation = ({ formData, setFormData }) => {
+  const [deliveryDate, setDeliveryDate] = useState(null);
+  const [pickupDate, setPickupDate] = useState(null);
 
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-    
-        if (name === "phoneNumber" && !validatePhoneNumber(value)) {
-          return; // Do not update state if the phone number is invalid
-        }
-    
-        setFormData((prevData) => ({
-          ...prevData,
-          [name]: value,
-        }));
-      };
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
 
-      const validatePhoneNumber = (number) => {
-        // This is a basic regex for validating phone numbers, consider using a library like libphonenumber-js for a comprehensive solution
-        const pattern = /^[0-9]{10}$/;
-        return true; //pattern.test(number);
-      };
+    if (name === "phoneNumber" && !validatePhoneNumber(value)) {
+      return; // Do not update state if the phone number is invalid
+    }
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleDateChange = (newDate, type) => {
+    if (type === 0) {
+      setDeliveryDate(newDate);
+    } else {
+      setPickupDate(newDate);
+    }
+
+    let range = {
+      delivery: deliveryDate ? deliveryDate.$d : null,
+      pickup: pickupDate ? pickupDate.$d : null,
+    };
+
+    setFormData((prevData) => ({
+      ...prevData,
+      dateRange: range,
+    }));
+  };
+
+  const validatePhoneNumber = (number) => {
+    // This is a basic regex for validating phone numbers, consider using a library like libphonenumber-js for a comprehensive solution
+    const pattern = /^[0-9]{10}$/;
+    return true; //pattern.test(number);
+  };
 
   return (
     <Paper elevation={2} sx={{ padding: 2 }}>
@@ -86,15 +100,20 @@ const ContactInformation = ({formData, setFormData}) => {
       />
 
       <DatePicker
+        name="deliveryDate"
         label="Delivery Date"
-        onChange={(newDate) => setDeliveryDate(newDate)}
+        onChange={(newDate) => {
+          handleDateChange(newDate, 0);
+        }}
         disablePast
         sx={{ marginRight: 2, marginTop: 2 }}
       />
 
       <DatePicker
         label="Pickup Date"
-        onChange={(newDate) => setPickupDate(newDate)}
+        onChange={(newDate) => {
+          handleDateChange(newDate, 1);
+        }}
         minDate={deliveryDate || dayjs()}
         sx={{ marginTop: 2 }}
       />

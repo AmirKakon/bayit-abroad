@@ -86,7 +86,7 @@ const FormPage = () => {
           Bayit Abroad Order Form
         </Typography>
         <Paper elevation={2} sx={{ padding: 2, marginBottom: 2 }}>
-          <Typography variant="body1" align="center" paragraph>
+          <Typography variant="subtitle1" align="center" paragraph>
             Thanks for choosing to order from us!
           </Typography>
           <Typography variant="body1" align="left" paragraph>
@@ -190,7 +190,7 @@ const FormPage = () => {
               label="Delivery Date"
               onChange={(newDate) => setDeliveryDate(newDate)}
               disablePast
-              required
+              sx={{marginRight: 2, marginTop: 2}}
             />
 
             <DatePicker
@@ -201,7 +201,7 @@ const FormPage = () => {
             //     <TextField {...params} helperText={null} />
             //   )}
               minDate={deliveryDate || dayjs()}
-              required
+              sx={{marginTop: 2}}
             />
 
             <TextField

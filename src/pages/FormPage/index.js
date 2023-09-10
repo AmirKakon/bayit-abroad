@@ -1,24 +1,18 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Container,
-  TextField,
-  Typography,
-  FormControl,
-  FormControlLabel,
-  Checkbox,
-  Paper,
-} from "@mui/material";
+import { Button, Container } from "@mui/material";
 import { Box } from "@mui/system";
-import { DatePicker } from "@mui/x-date-pickers";
+import {
+  Header,
+  ItemSelection,
+  ContactInformation,
+} from "../../components/Form";
 import { items } from "../../dummyData/items";
-import dayjs from "dayjs";
 
 const FormPage = () => {
   const [selectedItems, setSelectedItems] = useState([]);
-  const [totalPrice, setTotalPrice] = useState({usd: 0, nis: 0});
   const [deliveryDate, setDeliveryDate] = useState(null);
   const [pickupDate, setPickupDate] = useState(null);
+  const [totalPrice, setTotalPrice] = useState({ usd: 0, nis: 0 });
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -32,50 +26,39 @@ const FormPage = () => {
   const validatePhoneNumber = (number) => {
     // This is a basic regex for validating phone numbers, consider using a library like libphonenumber-js for a comprehensive solution
     const pattern = /^[0-9]{10}$/;
-    return true;//pattern.test(number);
+    return true; //pattern.test(number);
   };
 
   const isFormComplete = () => {
-    return formData.fullName &&
+    return (
+      formData.fullName &&
       formData.email &&
       validatePhoneNumber(formData.phoneNumber) &&
       formData.deliveryAddress &&
       deliveryDate &&
-      pickupDate;
-  }
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-
-    if (name === "phoneNumber" && !validatePhoneNumber(value)) {
-      return; // Do not update state if the phone number is invalid
-    }
-
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+      pickupDate
+    );
   };
 
-//   const calculateTotal = (selectedItems) => {
-//     let totalUSD = 0;
-//     let totalNIS = 0;
+  //   const calculateTotal = (selectedItems) => {
+  //     let totalUSD = 0;
+  //     let totalNIS = 0;
 
-//     if (selectedItems.includes(items[0].name)) {
-//       totalUSD = items[0].price.usd;
-//       totalNIS = items[0].price.nis;
-//     } else {
-//       selectedItems.forEach((itemName) => {
-//         const item = items.find(it => it.name === itemName);
-//         if (item) {
-//           totalUSD += item.price.usd;
-//           totalNIS += item.price.nis;
-//         }
-//       });
-//     }
+  //     if (selectedItems.includes(items[0].name)) {
+  //       totalUSD = items[0].price.usd;
+  //       totalNIS = items[0].price.nis;
+  //     } else {
+  //       selectedItems.forEach((itemName) => {
+  //         const item = items.find(it => it.name === itemName);
+  //         if (item) {
+  //           totalUSD += item.price.usd;
+  //           totalNIS += item.price.nis;
+  //         }
+  //       });
+  //     }
 
-//     return { usd: totalUSD, nis: totalNIS };
-//   };
+  //     return { usd: totalUSD, nis: totalNIS };
+  //   };
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
@@ -86,8 +69,8 @@ const FormPage = () => {
     } else if (name === items[0].name && !checked) {
       newSelectedItems = [];
     } else {
-      newSelectedItems = checked 
-        ? [...selectedItems, name] 
+      newSelectedItems = checked
+        ? [...selectedItems, name]
         : selectedItems.filter((item) => item.name !== name);
     }
 
@@ -99,11 +82,11 @@ const FormPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const orderItems = isEntirePackageSelected ? items : selectedItems;
-    const dateRange = {delivery: deliveryDate.$d, pickup: pickupDate.$d}
+    const dateRange = { delivery: deliveryDate.$d, pickup: pickupDate.$d };
     const submissionData = {
       ...formData,
       orderItems,
-      dateRange
+      dateRange,
     };
     console.log("Form Data:", submissionData);
   };
@@ -118,139 +101,16 @@ const FormPage = () => {
       }}
     >
       <Container component="main" maxWidth="md">
-        <Typography variant="h4" align="center" gutterBottom>
-          Bayit Abroad Order Form
-        </Typography>
-        <Paper elevation={2} sx={{ padding: 2, marginBottom: 2 }}>
-          <Typography variant="subtitle1" align="center" paragraph>
-            Thanks for choosing to order from us!
-          </Typography>
-          <Typography variant="body1" align="left" paragraph>
-            Please fill out which equipment you'd like to rent, the weekend of
-            the rental and the location.
-            <br />
-            <br />* Please note that delivery is only in Jerusalem. Drop off is
-            on Thursday night / Friday morning and pick it up is on Saturday
-            night / Sunday morning, depending on our availability and your
-            preference.
-          </Typography>
-        </Paper>
+        <Header />
         <form onSubmit={handleSubmit}>
-          <Paper elevation={2} sx={{ padding: 2, marginBottom: 2 }}>
-            <FormControl component="fieldset">
-              <Typography variant="h6" component="legend">
-                Select the Items to Order:
-              </Typography>
-              {items.map((item) => (
-                <FormControlLabel
-                  key={item.name}
-                  control={
-                    <Checkbox
-                      name={item.name}
-                      checked={
-                        selectedItems.includes(item) || isEntirePackageSelected
-                      }
-                      onChange={handleCheckboxChange}
-                      color="primary"
-                      disabled={isEntirePackageSelected && item !== items[0]}
-                    />
-                  }
-                  label={`${item.name} : $${item.price.usd} / ₪${item.price.nis}`}
-                />
-              ))}
-            </FormControl>
-            <Typography variant="body1" align="left" paragraph padding={1}>
-                Total: ${totalPrice.usd} / ₪{totalPrice.nis}
-            </Typography>
-            <Typography variant="body1" align="left" paragraph padding={1}>
-              Looking for an item that isn't listed? Add more items in the
-              "Additional Notes" section at the bottom of the form and our team
-              will review the request and let you know if we can supply it for
-              you.
-            </Typography>
-          </Paper>
+          <ItemSelection
+            selectedItems={selectedItems}
+            setSelectedItems={setSelectedItems}
+            totalPrice={totalPrice}
+            setTotalPrice={setTotalPrice}
+          />
 
-          <Paper elevation={2} sx={{ padding: 2 }}>
-            <Typography variant="h6" component="legend">
-              Contact Information:
-            </Typography>
-
-            <TextField
-              fullWidth
-              variant="outlined"
-              margin="normal"
-              label="Full Name"
-              required
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleInputChange}
-            />
-
-            <TextField
-              fullWidth
-              variant="outlined"
-              margin="normal"
-              label="Email Address"
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              required
-            />
-
-            <TextField
-              fullWidth
-              variant="outlined"
-              margin="normal"
-              label="Phone Number"
-              name="phoneNumber"
-              error={!validatePhoneNumber(formData.phoneNumber)}
-              helperText={
-                !validatePhoneNumber(formData.phoneNumber) &&
-                "Invalid phone number"
-              }
-              value={formData.phoneNumber}
-              onChange={handleInputChange}
-              required
-            />
-
-            <TextField
-              fullWidth
-              variant="outlined"
-              margin="normal"
-              label="Delivery Address"
-              name="deliveryAddress"
-              value={formData.deliveryAddress}
-              onChange={handleInputChange}
-              required
-            />
-
-            <DatePicker
-              label="Delivery Date"
-              onChange={(newDate) => setDeliveryDate(newDate)}
-              disablePast
-              sx={{marginRight: 2, marginTop: 2}}
-            />
-
-            <DatePicker
-              label="Pickup Date"
-              onChange={(newDate) => setPickupDate(newDate)}
-              minDate={deliveryDate || dayjs()}
-              sx={{marginTop: 2}}
-            />
-
-            <TextField
-              fullWidth
-              margin="normal"
-              id="outlined-multiline-flexible"
-              label="Additional Notes"
-              name="additionalNotes"
-              value={formData.additionalNotes}
-              onChange={handleInputChange}
-              multiline
-              maxRows={4}
-            />
-          </Paper>
+          <ContactInformation formData={formData} setFormData={setFormData} />
 
           <Button
             type="submit"

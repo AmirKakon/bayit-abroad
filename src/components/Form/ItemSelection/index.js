@@ -42,7 +42,7 @@ const ItemSelection = ({
     // Calculate total whenever selectedItems changes
     const newTotal = calculateTotal(selectedItems);
     setTotalPrice(newTotal);
-  }, [selectedItems, setTotalPrice]);
+  }, [isEntirePackageSelected, selectedItems, setTotalPrice]);
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;

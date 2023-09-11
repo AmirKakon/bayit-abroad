@@ -38,45 +38,6 @@ const FormPage = () => {
     );
   };
 
-  //   const calculateTotal = (selectedItems) => {
-  //     let totalUSD = 0;
-  //     let totalNIS = 0;
-
-  //     if (selectedItems.includes(items[0].name)) {
-  //       totalUSD = items[0].price.usd;
-  //       totalNIS = items[0].price.nis;
-  //     } else {
-  //       selectedItems.forEach((itemName) => {
-  //         const item = items.find(it => it.name === itemName);
-  //         if (item) {
-  //           totalUSD += item.price.usd;
-  //           totalNIS += item.price.nis;
-  //         }
-  //       });
-  //     }
-
-  //     return { usd: totalUSD, nis: totalNIS };
-  //   };
-
-  const handleCheckboxChange = (event) => {
-    const { name, checked } = event.target;
-
-    let newSelectedItems;
-    if (name === items[0].name && checked) {
-      newSelectedItems = [items[0]];
-    } else if (name === items[0].name && !checked) {
-      newSelectedItems = [];
-    } else {
-      newSelectedItems = checked
-        ? [...selectedItems, name]
-        : selectedItems.filter((item) => item.name !== name);
-    }
-
-    setSelectedItems(newSelectedItems);
-    // const total = calculateTotal(newSelectedItems);
-    // setTotalPrice(total);
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
     const orderItems = isEntirePackageSelected ? items : selectedItems;

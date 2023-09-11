@@ -33,7 +33,8 @@ const FormPage = () => {
       formData.email &&
       validatePhoneNumber(formData.phoneNumber) &&
       formData.deliveryAddress &&
-      formData.range && formData.range.delivery && formData.range.pickup
+      formData.dateRange && formData.dateRange.delivery && formData.dateRange.pickup
+      && formData.dateRange.delivery < formData.dateRange.pickup
     );
   };
 

@@ -1,11 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { TextField, Typography, Paper } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+
+dayjs.extend(isSameOrBefore);
 
 const ContactInformation = ({ formData, setFormData }) => {
+  const [dateError, setDateError] = useState(null);
   const [deliveryDate, setDeliveryDate] = useState(null);
   const [pickupDate, setPickupDate] = useState(null);
+
+  const validatePhoneNumber = (number) => {
+    // This is a basic regex for validating phone numbers, consider using a library like libphonenumber-js for a comprehensive solution
+    const pattern = /^[0-9]{10}$/;
+    return true; //pattern.test(number);
+  };
+
+  const errorMessage = useMemo(() => {
+    switch (dateError) {
+      case "maxDate":
+      case "minDate": {
+        return "Pickup date must be after Delivery date.";
+      }
+
+      case "invalidDate": {
+        return "The dates selected are invalid";
+      }
+
+      default: {
+        return "";
+      }
+    }
+  }, [dateError]);
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -21,29 +48,38 @@ const ContactInformation = ({ formData, setFormData }) => {
   };
 
   const handleDateChange = (newDate, type) => {
+    let updatedDeliveryDate = deliveryDate;
+    let updatedPickupDate = pickupDate;
+
     if (type === 0) {
-      setDeliveryDate(newDate);
+      updatedDeliveryDate = newDate;
     } else {
-      setPickupDate(newDate);
+      updatedPickupDate = newDate;
+      if (
+        updatedDeliveryDate &&
+        dayjs(updatedPickupDate).isSameOrBefore(dayjs(updatedDeliveryDate))
+      ) {
+        setDateError("minDate"); // Set the error type
+      } else {
+        setDateError(null); // Reset error for valid dates
+      }
+    }
+
+    if (type === 0) {
+      setDeliveryDate(updatedDeliveryDate);
+    } else {
+      setPickupDate(updatedPickupDate);
     }
 
     let range = {
-      delivery: deliveryDate ? deliveryDate.$d : null,
-      pickup: pickupDate ? pickupDate.$d : null,
+      delivery: updatedDeliveryDate ? updatedDeliveryDate.$d : null,
+      pickup: updatedPickupDate ? updatedPickupDate.$d : null,
     };
 
     setFormData((prevData) => ({
       ...prevData,
       dateRange: range,
     }));
-
-    console.log(formData)
-  };
-
-  const validatePhoneNumber = (number) => {
-    // This is a basic regex for validating phone numbers, consider using a library like libphonenumber-js for a comprehensive solution
-    const pattern = /^[0-9]{10}$/;
-    return true; //pattern.test(number);
   };
 
   return (
@@ -102,7 +138,6 @@ const ContactInformation = ({ formData, setFormData }) => {
       />
 
       <DatePicker
-        name="deliveryDate"
         label="Delivery Date"
         onChange={(newDate) => {
           handleDateChange(newDate, 0);
@@ -113,10 +148,20 @@ const ContactInformation = ({ formData, setFormData }) => {
 
       <DatePicker
         label="Pickup Date"
+        onError={(error) => setDateError(error)}
+        slotProps={{
+          textField: {
+            helperText: errorMessage,
+          },
+        }}
         onChange={(newDate) => {
           handleDateChange(newDate, 1);
         }}
-        minDate={deliveryDate || dayjs()}
+        minDate={
+          deliveryDate
+            ? dayjs(deliveryDate).add(1, "day")
+            : dayjs().add(1, "day")
+        }
         sx={{ marginTop: 2 }}
       />
 

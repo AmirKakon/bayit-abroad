@@ -13,7 +13,7 @@ const ContactInformation = ({ formData, setFormData }) => {
 
   const validatePhoneNumber = (number) => {
     // This is a basic regex for validating phone numbers, consider using a library like libphonenumber-js for a comprehensive solution
-    const pattern = /^[0-9]{10}$/;
+    //const pattern = /^[0-9]{10}$/;
     return true; //pattern.test(number);
   };
 

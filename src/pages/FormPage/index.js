@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Button, Container } from "@mui/material";
-import { Box } from "@mui/system";
+import { Button, Container, Box } from "@mui/material";
 import {
   Header,
   ItemSelection,
@@ -17,30 +16,30 @@ const FormPage = () => {
     phoneNumber: "",
     deliveryAddress: "",
     additionalNotes: "",
+    dateRange: { delivery: null, pickup: null },
   });
 
-  const isEntirePackageSelected = selectedItems.includes(items[0]);
-
-  const validatePhoneNumber = (number) => {
-    // This is a basic regex for validating phone numbers, consider using a library like libphonenumber-js for a comprehensive solution
-    const pattern = /^[0-9]{10}$/;
-    return true; //pattern.test(number);
-  };
+  const isEntirePackageSelected = selectedItems.includes(items[0].name);
 
   const isFormComplete = () => {
     return (
       formData.fullName &&
       formData.email &&
-      validatePhoneNumber(formData.phoneNumber) &&
+      formData.phoneNumber &&
       formData.deliveryAddress &&
-      formData.dateRange && formData.dateRange.delivery && formData.dateRange.pickup
-      && formData.dateRange.delivery < formData.dateRange.pickup
+      formData.dateRange.delivery &&
+      formData.dateRange.pickup &&
+      formData.dateRange.delivery < formData.dateRange.pickup
     );
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const orderItems = isEntirePackageSelected ? items : selectedItems;
+    const orderItems = isEntirePackageSelected
+      ? items
+      : selectedItems.map((itemName) =>
+          items.find((item) => item.name === itemName)
+        );
     const submissionData = {
       ...formData,
       orderItems,
@@ -54,7 +53,7 @@ const FormPage = () => {
       sx={{
         backgroundColor: "#e2e2e2",
         minHeight: "200",
-        padding: 2, // Consistent padding
+        padding: 2,
       }}
     >
       <Container component="main" maxWidth="md">
@@ -75,7 +74,7 @@ const FormPage = () => {
             variant="contained"
             color="primary"
             disabled={!isFormComplete()}
-            style={{ marginTop: "16px" }}
+            sx={{ marginTop: 2 }}
           >
             Submit
           </Button>

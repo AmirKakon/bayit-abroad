@@ -19,30 +19,30 @@ const ItemSelection = ({
   const isEntirePackageSelected = selectedItems.includes(items[0].name);
 
   useEffect(() => {
+    const calculateTotal = (selectedItems) => {
+      if (isEntirePackageSelected) {
+        return items[0].price;
+      }
+
+      const total = selectedItems.reduce(
+        (acc, currentItemName) => {
+          const item = items.find((i) => i.name === currentItemName);
+          if (item) {
+            acc.usd += item.price.usd;
+            acc.nis += item.price.nis;
+          }
+          return acc;
+        },
+        { usd: 0, nis: 0 }
+      );
+
+      return total;
+    };
+
     // Calculate total whenever selectedItems changes
     const newTotal = calculateTotal(selectedItems);
     setTotalPrice(newTotal);
   }, [selectedItems, setTotalPrice]);
-
-  const calculateTotal = (selectedItems) => {
-    if (isEntirePackageSelected) {
-      return items[0].price; // Assuming items[0].price is an object like {usd: 100, nis: 400}
-    }
-
-    const total = selectedItems.reduce(
-      (acc, currentItemName) => {
-        const item = items.find((i) => i.name === currentItemName);
-        if (item) {
-          acc.usd += item.price.usd;
-          acc.nis += item.price.nis;
-        }
-        return acc;
-      },
-      { usd: 0, nis: 0 }
-    );
-
-    return total;
-  };
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;

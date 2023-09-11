@@ -89,8 +89,8 @@ const ItemSelection = ({
           />
         ))}
       </FormControl>
-      <Typography variant="body1" align="left" paragraph padding={1}>
-        Total: ${totalPrice.usd} / ₪{totalPrice.nis}
+      <Typography variant="subtitle1" align="left" paragraph padding={1}>
+        <b>Total:</b> ${totalPrice.usd} / ₪{totalPrice.nis}
       </Typography>
       <Typography variant="body1" align="left" paragraph padding={1}>
         Looking for an item that isn't listed? Add more items in the "Additional

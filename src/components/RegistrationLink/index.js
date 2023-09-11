@@ -1,12 +1,11 @@
 import React from "react";
-import { Typography, Link } from "@mui/material";
+import { Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const RegistrationLink = () => {
   return (
     <Link
-      href="https://forms.gle/Y3F9yxM9gL2iV6de6"
-      target="_blank"
-      rel="noopener noreferrer"
+      to="/form" // Update this to your form route
       style={{
         display: "inline-block",
         backgroundColor: "#98aaa8",

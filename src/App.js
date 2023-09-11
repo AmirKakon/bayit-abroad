@@ -1,27 +1,36 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import Header from "./layout/Header";
-import {HomePage, AboutPage} from './pages';
+import {HomePage, FormPage, AboutPage} from './pages';
 import Footer from './layout/Footer';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { lightThemeOptions } from './theme';
+import { Box } from '@mui/system';
 
 const theme = createTheme(lightThemeOptions);
 
 const App = () => {
   return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
     <ThemeProvider theme={theme}>
-    <Router>
-      <Header />
-      <Routes>
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="*" element={<Navigate to="/home" replace />} />
-        </Routes>
-        <Footer />
-    </Router>
+      <Router>
+        <Header />
+        <Box display="flex" flexDirection="column" minHeight="100vh">
+          <Routes>
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/form" element={<FormPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="*" element={<Navigate to="/home" replace />} />
+          </Routes>
+          <Footer />
+        </Box>
+      </Router>
     </ThemeProvider>
+    </LocalizationProvider>
   );
 };
+
 
 export default App;

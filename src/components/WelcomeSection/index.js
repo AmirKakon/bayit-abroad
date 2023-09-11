@@ -7,7 +7,7 @@ const circleSize = "200";
 
 const WelcomeSection = () => {
   return (
-    <Grid container direction="column" spacing={2} alignItems="center">
+    <Grid container direction="column" spacing={2} alignItems="center" marginTop={2}>
       <Grid item>
         <Typography
           variant="h2"

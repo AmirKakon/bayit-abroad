@@ -6,7 +6,6 @@ import {
   Checkbox,
   Paper,
 } from "@mui/material";
-import { items } from "../../../dummyData/items";
 
 const ItemSelection = ({
   selectedItems,
@@ -14,9 +13,23 @@ const ItemSelection = ({
   totalPrice,
   setTotalPrice,
 }) => {
+  const [items, setItems] = useState([]);
   const [previousSelectedItems, setPreviousSelectedItems] = useState([]);
 
-  const isEntirePackageSelected = selectedItems.includes(items[0].name);
+  const isEntirePackageSelected = selectedItems.includes(items[0]?.name);
+
+  useEffect(() => {
+    const apiBasrUrl = process.env.REACT_APP_API_BASE_URL;
+
+    fetch(`${apiBasrUrl}/getAllItems`)
+      .then((response) => response.json())
+      .then((data) => {
+        setItems(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
 
   useEffect(() => {
     const calculateTotal = (selectedItems) => {

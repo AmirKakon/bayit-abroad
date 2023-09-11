@@ -32,6 +32,8 @@ exports.getItem = onRequest(async (req, res) => {
   });
 });
 
+const preferredId = "myszTIFQHloPy7Xksgw2"; // 'entire package' id
+
 exports.getAllItems = onRequest(async (req, res) => {
   cors(req, res, async () => {
     try {
@@ -44,10 +46,16 @@ exports.getAllItems = onRequest(async (req, res) => {
         return;
       }
 
-      const items = snapshot.docs.map((doc) => ({
+      let items = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
+
+      const preferredItem = items.find((item) => item.id === preferredId);
+      if (preferredItem) {
+        items = items.filter((item) => item.id !== preferredId);
+        items.unshift(preferredItem);
+      }
 
       logger.log("Item List", items);
       res.status(200).json(items);

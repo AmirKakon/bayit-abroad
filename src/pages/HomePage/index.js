@@ -3,24 +3,10 @@ import WelcomeSection from "../../components/WelcomeSection";
 import WhyChooseUsSection from "../../components/WhyChooseUsSection";
 import HowItWorksSection from "../../components/HowItWorksSection";
 import ContactUsSection from "../../components/ContactUsSection";
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import Divider from "@mui/material/Divider";
 
 const HomePage = () => {
-
-  const apiBasrUrl = process.env.REACT_APP_API_BASE_URL;
-
-const testRequest = () => {
-  fetch(`${apiBasrUrl}/getAllItems`)
-  .then(response => response.json())
-  .then(data => {
-    console.log(data);
-  })
-  .catch(error => {
-    console.error("Error fetching data:", error);
-  });
-
-};
 
   return (
     <Box
@@ -56,9 +42,6 @@ const testRequest = () => {
         />
         <ContactUsSection />
       </Grid>
-      <Button onClick={testRequest}>
-        test
-      </Button>
     </Box>
   );
 };

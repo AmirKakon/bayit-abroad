@@ -14,9 +14,6 @@ jobs:
       - name: Set up environment variable from secret
         run: echo "REACT_APP_API_BASE_URL=${{ secrets.API_BASE_URL }}" >> $GITHUB_ENV
 
-      - name: Print API Base URL
-        run: echo "API Base URL set: ${REACT_APP_API_BASE_URL}"
-
       - run: npm ci && npm run build
 
       - uses: FirebaseExtended/action-hosting-deploy@v0

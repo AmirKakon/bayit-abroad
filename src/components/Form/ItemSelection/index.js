@@ -20,7 +20,8 @@ const ItemSelection = ({
 
   useEffect(() => {
     const apiBasrUrl = process.env.REACT_APP_API_BASE_URL;
-
+    console.log('API Base URL:', apiBasrUrl);
+    
     fetch(`${apiBasrUrl}/getAllItems`)
       .then((response) => response.json())
       .then((data) => {

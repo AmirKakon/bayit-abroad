@@ -11,7 +11,7 @@ import {
   Button,
 } from "@mui/material";
 import Loading from "../../Loading";
-import {games} from "../../../media/dummyData";
+import { games } from "../../../media/dummyData";
 
 const ItemSelection = ({
   selectedItems,
@@ -30,26 +30,45 @@ const ItemSelection = ({
 
   const calculateTotal = useCallback(
     (selectedItems) => {
+      let total = { usd: 0, nis: 0 };
+  
       if (isEntirePackageSelected) {
         return items[0].price;
       }
-
-      const total = selectedItems.reduce(
-        (acc, currentItemName) => {
-          const item = items.find((i) => i.id === currentItemName);
-          if (item) {
-            acc.usd += item.price.usd;
-            acc.nis += item.price.nis;
+  
+      // Create a map of games for faster lookup by id
+      const gamesMap = {};
+      games.forEach(game => {
+        gamesMap[game.id] = game;
+      });
+  
+      // Create a map of items for faster lookup by id
+      const itemsMap = {};
+      items.forEach(item => {
+        itemsMap[item.id] = item;
+      });
+  
+      // Calculate the total for the main items and selected games
+      for (const itemId of selectedItems) {
+        if (itemsMap[itemId]) {
+          total.usd += itemsMap[itemId].price.usd;
+          total.nis += itemsMap[itemId].price.nis;
+        }
+  
+        if (itemId === "BhT9GsyGCCs7OsmklyJz") {
+          for (const gameId of selectedGames) {
+            if (gamesMap[gameId]) {
+              total.usd += gamesMap[gameId].price.usd;
+              total.nis += gamesMap[gameId].price.nis;
+            }
           }
-          return acc;
-        },
-        { usd: 0, nis: 0 }
-      );
-
+        }
+      }
+  
       return total;
     },
-    [isEntirePackageSelected, items]
-  );
+    [isEntirePackageSelected, items, selectedGames, games]
+  );  
 
   useEffect(() => {
     const apiBasrUrl = process.env.REACT_APP_API_BASE_URL;
@@ -96,7 +115,6 @@ const ItemSelection = ({
     <Loading />
   ) : (
     <Paper elevation={2} sx={{ padding: 2, marginBottom: 2 }}>
-      
       <FormControl component="fieldset">
         <Typography variant="h6" component="legend">
           Select the Items to Order:
@@ -115,8 +133,12 @@ const ItemSelection = ({
                   disabled={isEntirePackageSelected && item !== items[0]}
                 />
               }
-              label={item.id === gamesId ?  `${item.name} : per game` : `${item.name} : $${item.price.usd} / ₪${item.price.nis}`}
-              sx={{width: "100%"}}
+              label={
+                item.id === gamesId
+                  ? `${item.name} : per game`
+                  : `${item.name} : $${item.price.usd} / ₪${item.price.nis}`
+              }
+              sx={{ width: "100%" }}
             />
             {item.id === gamesId && selectedItems.includes(item.id) && (
               <Select
@@ -125,18 +147,20 @@ const ItemSelection = ({
                 renderValue={(selected) => {
                   // Transforming the selected game IDs into game names
                   const selectedGameNames = selected.map(
-                    (gameId) => games.find(game => game.id === gameId)?.name
+                    (gameId) => games.find((game) => game.id === gameId)?.name
                   );
-              
-                  return selectedGameNames.join(', ');
+
+                  return selectedGameNames.join(", ");
                 }}
-                sx={{minWidth: 300}}
+                sx={{ minWidth: 300 }}
                 multiple
               >
                 {games.map((game) => (
                   <MenuItem key={game.id} value={game.id}>
                     <Checkbox checked={selectedGames.indexOf(game.id) > -1} />
-                    <ListItemText primary={`${game.name} : $${game.price.usd} / ₪${game.price.nis}`} />
+                    <ListItemText
+                      primary={`${game.name} : $${game.price.usd} / ₪${game.price.nis}`}
+                    />
                   </MenuItem>
                 ))}
               </Select>
@@ -153,7 +177,13 @@ const ItemSelection = ({
         Notes" section at the bottom of the form and our team will review the
         request and let you know if we can supply it for you.
       </Typography>
-      <Button onClick={() => {setSelectedGames([])}}>Click</Button>
+      <Button
+        onClick={() => {
+          setSelectedGames([]);
+        }}
+      >
+        Click
+      </Button>
     </Paper>
   );
 };

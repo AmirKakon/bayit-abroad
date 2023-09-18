@@ -115,7 +115,7 @@ const ItemSelection = ({
                   disabled={isEntirePackageSelected && item !== items[0]}
                 />
               }
-              label={`${item.name} : $${item.price.usd} / ₪${item.price.nis}`}
+              label={item.id === gamesId ?  `${item.name} : per game` : `${item.name} : $${item.price.usd} / ₪${item.price.nis}`}
               sx={{width: "100%"}}
             />
             {item.id === gamesId && selectedItems.includes(item.id) && (

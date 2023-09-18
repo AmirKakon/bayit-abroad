@@ -102,6 +102,11 @@ const ItemSelection = ({
         setCheckedItems((prev) => prev.filter((itemId) => itemId !== name));
       }
     }
+
+    if(isSelectedGameId && !checked)
+    {
+      setSelectedGames([]);
+    }
   };
 
   useEffect(() => {

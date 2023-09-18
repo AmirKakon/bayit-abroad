@@ -20,6 +20,26 @@ const ItemSelection = ({
 
   const isEntirePackageSelected = selectedItems.includes(items[0]?.name);
 
+  const calculateTotal = (selectedItems) => {
+    if (isEntirePackageSelected) {
+      return items[0].price;
+    }
+
+    const total = selectedItems.reduce(
+      (acc, currentItemName) => {
+        const item = items.find((i) => i.name === currentItemName);
+        if (item) {
+          acc.usd += item.price.usd;
+          acc.nis += item.price.nis;
+        }
+        return acc;
+      },
+      { usd: 0, nis: 0 }
+    );
+
+    return total;
+  };
+
   useEffect(() => {
     const apiBasrUrl = process.env.REACT_APP_API_BASE_URL;
     
@@ -35,26 +55,6 @@ const ItemSelection = ({
   }, []);
 
   useEffect(() => {
-    const calculateTotal = (selectedItems) => {
-      if (isEntirePackageSelected) {
-        return items[0].price;
-      }
-
-      const total = selectedItems.reduce(
-        (acc, currentItemName) => {
-          const item = items.find((i) => i.name === currentItemName);
-          if (item) {
-            acc.usd += item.price.usd;
-            acc.nis += item.price.nis;
-          }
-          return acc;
-        },
-        { usd: 0, nis: 0 }
-      );
-
-      return total;
-    };
-
     // Calculate total whenever selectedItems changes
     const newTotal = calculateTotal(selectedItems);
     setTotalPrice(newTotal);

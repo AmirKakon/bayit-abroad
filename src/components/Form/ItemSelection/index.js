@@ -11,11 +11,7 @@ import Loading from "../../Loading";
 import { gamesId } from "../../../config";
 import { games } from "../../../media/dummyData";
 
-const ItemSelection = ({
-  setSelectedItems,
-  totalPrice,
-  setTotalPrice,
-}) => {
+const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
@@ -103,8 +99,7 @@ const ItemSelection = ({
       }
     }
 
-    if(isSelectedGameId && !checked)
-    {
+    if (isSelectedGameId && !checked) {
       setSelectedGames([]);
     }
   };
@@ -169,10 +164,9 @@ const ItemSelection = ({
         <b>Total:</b> ${totalPrice.usd} / ₪{totalPrice.nis}
       </Typography>
       <Typography variant="body1" align="left" paragraph padding={1}>
-        Looking for an item that isn't listed? Add more itconst isSelectedGameId
-        = selectedItems.includes(gamesId);ems in the "Additional Notes" section
-        at the bottom of the form and our team will review the request and let
-        you know if we can supply it for you.
+        Looking for an item that isn't listed? Add more items in the "Additional
+        Notes" section at the bottom of the form and our team will review the
+        request and get back to you if we can supply it for you.
       </Typography>
     </Paper>
   );

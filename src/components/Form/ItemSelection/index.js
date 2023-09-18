@@ -9,12 +9,12 @@ import {
 import GameDropdown from "../GameDropDown";
 import Loading from "../../Loading";
 import { gamesId } from "../../../config";
-import { games } from "../../../media/dummyData";
 
 const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState([]);
   const [checkedItems, setCheckedItems] = useState([]);
+  const [games, setGames] = useState([]);
   const [selectedGames, setSelectedGames] = useState([]);
   const [previousCheckedItems, setPreviousCheckedItems] = useState([]);
 
@@ -71,6 +71,15 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
       .then((data) => {
         setItems(data);
         setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+
+    fetch(`${apiBasrUrl}/getAllGames`)
+      .then((response) => response.json())
+      .then((data) => {
+        setGames(data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -153,6 +162,7 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
             />
             {item.id === gamesId && isSelectedGameId && (
               <GameDropdown
+                games={games}
                 selectedGames={selectedGames}
                 setSelectedGames={setSelectedGames}
               />

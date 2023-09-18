@@ -6,9 +6,8 @@ import {
   MenuItem,
   ListItemText,
 } from "@mui/material";
-import { games } from "../../../media/dummyData";
 
-const GameDropdown = ({ selectedGames, setSelectedGames }) => {
+const GameDropdown = ({ games, selectedGames, setSelectedGames }) => {
   const [noGameSelectedMessage, setNoGameSelectedMessage] = useState("No games have been selected");
 
   const handleGameChange = (event) => {

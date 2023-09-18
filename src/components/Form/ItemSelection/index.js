@@ -30,7 +30,7 @@ const ItemSelection = ({
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
-  }, [items]);
+  }, []);
 
   useEffect(() => {
     const calculateTotal = (selectedItems) => {
@@ -56,7 +56,7 @@ const ItemSelection = ({
     // Calculate total whenever selectedItems changes
     const newTotal = calculateTotal(selectedItems);
     setTotalPrice(newTotal);
-  }, [isEntirePackageSelected, selectedItems, setTotalPrice, items]);
+  }, [isEntirePackageSelected, selectedItems, setTotalPrice]);
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;

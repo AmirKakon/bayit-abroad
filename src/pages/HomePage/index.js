@@ -30,12 +30,12 @@ const HomePage = () => {
           variant="middle"
           sx={{ marginTop: 3, marginBottom: 3, width: "100%" }}
         />
-        <WhyChooseUsSection />
+        <HowItWorksSection />
         <Divider
           variant="middle"
           sx={{ marginTop: 3, marginBottom: 3, width: "100%" }}
         />
-        <HowItWorksSection />
+        <WhyChooseUsSection />
         <Divider
           variant="middle"
           sx={{ marginTop: 3, marginBottom: 3, width: "100%" }}

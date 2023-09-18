@@ -138,7 +138,7 @@ const ContactInformation = ({ formData, setFormData }) => {
       />
 
       <DatePicker
-        label="Delivery Date"
+        label="Delivery Date *"
         onChange={(newDate) => {
           handleDateChange(newDate, 0);
         }}
@@ -147,7 +147,7 @@ const ContactInformation = ({ formData, setFormData }) => {
       />
 
       <DatePicker
-        label="Pickup Date"
+        label="Pickup Date *"
         onError={(error) => setDateError(error)}
         slotProps={{
           textField: {

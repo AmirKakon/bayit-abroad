@@ -18,7 +18,7 @@ const ItemSelection = ({
   const [items, setItems] = useState([]);
   const [previousSelectedItems, setPreviousSelectedItems] = useState([]);
 
-  const isEntirePackageSelected = selectedItems.includes(items[0]?.name);
+  const isEntirePackageSelected = selectedItems.includes(items[0]?.id);
 
   const calculateTotal = useCallback(
     (selectedItems) => {
@@ -64,26 +64,22 @@ const ItemSelection = ({
   }, [isEntirePackageSelected, selectedItems, setTotalPrice, calculateTotal]);
 
   const handleCheckboxChange = (event) => {
-    const { name, checked } = event.target;
-
-    if (name === items[0].name && checked) {
-      // Save current state to memory (previousSelectedItems) and select the entire package
+    const { name, checked } = event.target;  // Here, 'name' will now contain the id
+  
+    if (name === items[0].id && checked) {
       setPreviousSelectedItems([...selectedItems]);
-      setSelectedItems([items[0].name]);
-    } else if (name === items[0].name && !checked) {
-      // Revert to the previous selection state
+      setSelectedItems([items[0].id]);
+    } else if (name === items[0].id && !checked) {
       setSelectedItems(previousSelectedItems);
     } else {
-      // Handle the case for all other items
       if (checked) {
         setSelectedItems((prev) => [...prev, name]);
       } else {
-        setSelectedItems((prev) =>
-          prev.filter((itemName) => itemName !== name)
-        );
+        setSelectedItems((prev) => prev.filter((itemId) => itemId !== name));
       }
     }
   };
+  
   return loading ? (
     <Loading />
   ) : (
@@ -97,10 +93,10 @@ const ItemSelection = ({
             key={item.name}
             control={
               <Checkbox
-                name={item.name}
+                name={item.id} // Change this from item.name to item.id
                 checked={
-                  selectedItems.includes(item.name) || isEntirePackageSelected
-                }
+                  selectedItems.includes(item.id) || isEntirePackageSelected
+                } // Update the condition as well
                 onChange={handleCheckboxChange}
                 color="primary"
                 disabled={isEntirePackageSelected && item !== items[0]}

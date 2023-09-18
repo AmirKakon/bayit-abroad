@@ -121,7 +121,7 @@ const ItemSelection = ({
             {item.id === gamesId && selectedItems.includes(item.id) && (
               <Select
                 value={selectedGames}
-                onChange={(event) => setSelectedGames(event.target.value)}
+                onChange={handleGameChange}
                 renderValue={(selected) => {
                   // Transforming the selected game IDs into game names
                   const selectedGameNames = selected.map(
@@ -136,7 +136,7 @@ const ItemSelection = ({
                 {games.map((game) => (
                   <MenuItem key={game.id} value={game.id}>
                     <Checkbox checked={selectedGames.indexOf(game.id) > -1} />
-                    <ListItemText primary={game.name} />
+                    <ListItemText primary={`${game.name} : $${game.price.usd} / ₪${game.price.nis}`} />
                   </MenuItem>
                 ))}
               </Select>

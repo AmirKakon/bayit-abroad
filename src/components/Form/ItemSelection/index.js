@@ -5,11 +5,8 @@ import {
   FormControlLabel,
   Checkbox,
   Paper,
-  Select,
-  MenuItem,
-  ListItemText,
-  Button,
 } from "@mui/material";
+import GameDropdown from "../GameDropDown";
 import Loading from "../../Loading";
 import { games } from "../../../media/dummyData";
 
@@ -27,34 +24,35 @@ const ItemSelection = ({
   const gamesId = "BhT9GsyGCCs7OsmklyJz";
 
   const isEntirePackageSelected = selectedItems.includes(items[0]?.id);
+  const isSelectedGameId = selectedItems.includes(gamesId);
 
   const calculateTotal = useCallback(
     (selectedItems) => {
       let total = { usd: 0, nis: 0 };
-  
+
       if (isEntirePackageSelected) {
         return items[0].price;
       }
-  
+
       // Create a map of games for faster lookup by id
       const gamesMap = {};
-      games.forEach(game => {
+      games.forEach((game) => {
         gamesMap[game.id] = game;
       });
-  
+
       // Create a map of items for faster lookup by id
       const itemsMap = {};
-      items.forEach(item => {
+      items.forEach((item) => {
         itemsMap[item.id] = item;
       });
-  
+
       // Calculate the total for the main items and selected games
       for (const itemId of selectedItems) {
         if (itemsMap[itemId]) {
           total.usd += itemsMap[itemId].price.usd;
           total.nis += itemsMap[itemId].price.nis;
         }
-  
+
         if (itemId === "BhT9GsyGCCs7OsmklyJz") {
           for (const gameId of selectedGames) {
             if (gamesMap[gameId]) {
@@ -64,11 +62,11 @@ const ItemSelection = ({
           }
         }
       }
-  
+
       return total;
     },
     [isEntirePackageSelected, items, selectedGames, games]
-  );  
+  );
 
   useEffect(() => {
     const apiBasrUrl = process.env.REACT_APP_API_BASE_URL;
@@ -107,10 +105,6 @@ const ItemSelection = ({
     }
   };
 
-  const handleGameChange = (event) => {
-    setSelectedGames(event.target.value);
-  };
-
   return loading ? (
     <Loading />
   ) : (
@@ -130,7 +124,7 @@ const ItemSelection = ({
                   }
                   onChange={handleCheckboxChange}
                   color="primary"
-                  disabled={isEntirePackageSelected && item !== items[0]}
+                  disabled={isEntirePackageSelected && item.id !== items[0].id}
                 />
               }
               label={
@@ -138,52 +132,24 @@ const ItemSelection = ({
                   ? `${item.name} : per game`
                   : `${item.name} : $${item.price.usd} / ₪${item.price.nis}`
               }
-              sx={{ width: "100%" }}
             />
-            {item.id === gamesId && selectedItems.includes(item.id) && (
-              <Select
-                value={selectedGames}
-                onChange={handleGameChange}
-                renderValue={(selected) => {
-                  // Transforming the selected game IDs into game names
-                  const selectedGameNames = selected.map(
-                    (gameId) => games.find((game) => game.id === gameId)?.name
-                  );
-
-                  return selectedGameNames.join(", ");
-                }}
-                sx={{ minWidth: 300 }}
-                multiple
-              >
-                {games.map((game) => (
-                  <MenuItem key={game.id} value={game.id}>
-                    <Checkbox checked={selectedGames.indexOf(game.id) > -1} />
-                    <ListItemText
-                      primary={`${game.name} : $${game.price.usd} / ₪${game.price.nis}`}
-                    />
-                  </MenuItem>
-                ))}
-              </Select>
+            {item.id === gamesId && isSelectedGameId && (
+              <GameDropdown
+                selectedGames={selectedGames}
+                setSelectedGames={setSelectedGames}
+              />
             )}
           </div>
         ))}
       </FormControl>
-
       <Typography variant="h6" align="left" paragraph padding={1}>
         <b>Total:</b> ${totalPrice.usd} / ₪{totalPrice.nis}
       </Typography>
       <Typography variant="body1" align="left" paragraph padding={1}>
-        Looking for an item that isn't listed? Add more items in the "Additional
+        Looking for an item that isn't listed? Add more itconst isSelectedGameId = selectedItems.includes(gamesId);ems in the "Additional
         Notes" section at the bottom of the form and our team will review the
         request and let you know if we can supply it for you.
       </Typography>
-      <Button
-        onClick={() => {
-          setSelectedGames([]);
-        }}
-      >
-        Click
-      </Button>
     </Paper>
   );
 };

@@ -8,23 +8,22 @@ import {
 } from "@mui/material";
 import GameDropdown from "../GameDropDown";
 import Loading from "../../Loading";
+import { gamesId } from "../../../config";
 import { games } from "../../../media/dummyData";
 
 const ItemSelection = ({
-  selectedItems,
   setSelectedItems,
   totalPrice,
   setTotalPrice,
 }) => {
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState([]);
+  const [checkedItems, setCheckedItems] = useState([]);
   const [selectedGames, setSelectedGames] = useState([]);
-  const [previousSelectedItems, setPreviousSelectedItems] = useState([]);
+  const [previousCheckedItems, setPreviousCheckedItems] = useState([]);
 
-  const gamesId = "BhT9GsyGCCs7OsmklyJz";
-
-  const isEntirePackageSelected = selectedItems.includes(items[0]?.id);
-  const isSelectedGameId = selectedItems.includes(gamesId);
+  const isEntirePackageSelected = checkedItems.includes(items[0]?.id);
+  const isSelectedGameId = checkedItems.includes(gamesId);
 
   const calculateTotal = useCallback(
     (selectedItems) => {
@@ -84,26 +83,45 @@ const ItemSelection = ({
 
   useEffect(() => {
     // Calculate total whenever selectedItems changes
-    const newTotal = calculateTotal(selectedItems);
+    const newTotal = calculateTotal(checkedItems);
     setTotalPrice(newTotal);
-  }, [isEntirePackageSelected, selectedItems, setTotalPrice, calculateTotal]);
+  }, [isEntirePackageSelected, checkedItems, setTotalPrice, calculateTotal]);
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
 
     if (name === items[0].id && checked) {
-      setPreviousSelectedItems([...selectedItems]);
-      setSelectedItems([items[0].id]);
+      setPreviousCheckedItems([...checkedItems]);
+      setCheckedItems([items[0].id]);
     } else if (name === items[0].id && !checked) {
-      setSelectedItems(previousSelectedItems);
+      setCheckedItems(previousCheckedItems);
     } else {
       if (checked) {
-        setSelectedItems((prev) => [...prev, name]);
+        setCheckedItems((prev) => [...prev, name]);
       } else {
-        setSelectedItems((prev) => prev.filter((itemId) => itemId !== name));
+        setCheckedItems((prev) => prev.filter((itemId) => itemId !== name));
       }
     }
   };
+
+  useEffect(() => {
+    let tempStructuredItems = [];
+
+    checkedItems.forEach((itemId) => {
+      if (itemId === gamesId) {
+        tempStructuredItems.push({
+          id: itemId,
+          games: selectedGames,
+        });
+      } else {
+        tempStructuredItems.push({
+          id: itemId,
+        });
+      }
+    });
+
+    setSelectedItems(tempStructuredItems);
+  }, [checkedItems, selectedGames]);
 
   return loading ? (
     <Loading />
@@ -120,7 +138,7 @@ const ItemSelection = ({
                 <Checkbox
                   name={item.id}
                   checked={
-                    selectedItems.includes(item.id) || isEntirePackageSelected
+                    checkedItems.includes(item.id) || isEntirePackageSelected
                   }
                   onChange={handleCheckboxChange}
                   color="primary"
@@ -146,9 +164,10 @@ const ItemSelection = ({
         <b>Total:</b> ${totalPrice.usd} / ₪{totalPrice.nis}
       </Typography>
       <Typography variant="body1" align="left" paragraph padding={1}>
-        Looking for an item that isn't listed? Add more itconst isSelectedGameId = selectedItems.includes(gamesId);ems in the "Additional
-        Notes" section at the bottom of the form and our team will review the
-        request and let you know if we can supply it for you.
+        Looking for an item that isn't listed? Add more itconst isSelectedGameId
+        = selectedItems.includes(gamesId);ems in the "Additional Notes" section
+        at the bottom of the form and our team will review the request and let
+        you know if we can supply it for you.
       </Typography>
     </Paper>
   );

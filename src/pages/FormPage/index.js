@@ -53,7 +53,6 @@ const FormPage = () => {
         <Header />
         <form onSubmit={handleSubmit}>
           <ItemSelection
-            selectedItems={selectedItems}
             setSelectedItems={setSelectedItems}
             totalPrice={totalPrice}
             setTotalPrice={setTotalPrice}

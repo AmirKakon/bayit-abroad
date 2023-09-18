@@ -6,6 +6,7 @@ import {
   Checkbox,
   Paper,
 } from "@mui/material";
+import Loading from "../../Loading";
 
 const ItemSelection = ({
   selectedItems,
@@ -13,6 +14,7 @@ const ItemSelection = ({
   totalPrice,
   setTotalPrice,
 }) => {
+  const [loading, setLoading] = useState(true);
   const [items, setItems] = useState([]);
   const [previousSelectedItems, setPreviousSelectedItems] = useState([]);
 
@@ -20,12 +22,12 @@ const ItemSelection = ({
 
   useEffect(() => {
     const apiBasrUrl = process.env.REACT_APP_API_BASE_URL;
-    console.log('API Base URL:', apiBasrUrl);
     
     fetch(`${apiBasrUrl}/getAllItems`)
       .then((response) => response.json())
       .then((data) => {
         setItems(data);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -80,6 +82,7 @@ const ItemSelection = ({
     }
   };
   return (
+    loading ? <Loading /> :
     <Paper elevation={2} sx={{ padding: 2, marginBottom: 2 }}>
       <FormControl component="fieldset">
         <Typography variant="h6" component="legend">

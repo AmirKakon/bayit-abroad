@@ -5,7 +5,6 @@ import {
   ItemSelection,
   ContactInformation,
 } from "../../components/Form";
-import Loading from "../../components/Loading";
 
 const FormPage = () => {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -42,7 +41,6 @@ const FormPage = () => {
   };
 
   return (
-    true ? <Loading /> :
     <Box
       flex={1}
       sx={{

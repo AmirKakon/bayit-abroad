@@ -5,7 +5,6 @@ import {
   ItemSelection,
   ContactInformation,
 } from "../../components/Form";
-import { items } from "../../dummyData/items";
 
 const FormPage = () => {
   const [selectedItems, setSelectedItems] = useState([]);
@@ -18,8 +17,6 @@ const FormPage = () => {
     additionalNotes: "",
     dateRange: { delivery: null, pickup: null },
   });
-
-  const isEntirePackageSelected = selectedItems.includes(items[0].name);
 
   const isFormComplete = () => {
     return (
@@ -35,14 +32,10 @@ const FormPage = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const orderItems = isEntirePackageSelected
-      ? items
-      : selectedItems.map((itemName) =>
-          items.find((item) => item.name === itemName)
-        );
+
     const submissionData = {
       ...formData,
-      orderItems,
+      selectedItems,
     };
     console.log("Form Data:", submissionData);
   };
@@ -55,7 +48,7 @@ const FormPage = () => {
         minHeight: "200",
         padding: 2,
       }}
-    >
+    >      
       <Container component="main" maxWidth="md">
         <Header />
         <form onSubmit={handleSubmit}>

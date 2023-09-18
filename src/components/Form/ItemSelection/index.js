@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Typography,
   FormControl,
@@ -6,7 +6,7 @@ import {
   Checkbox,
   Paper,
 } from "@mui/material";
-import { items } from "../../../dummyData/items";
+import Loading from "../../Loading";
 
 const ItemSelection = ({
   selectedItems,
@@ -14,12 +14,14 @@ const ItemSelection = ({
   totalPrice,
   setTotalPrice,
 }) => {
+  const [loading, setLoading] = useState(true);
+  const [items, setItems] = useState([]);
   const [previousSelectedItems, setPreviousSelectedItems] = useState([]);
 
-  const isEntirePackageSelected = selectedItems.includes(items[0].name);
+  const isEntirePackageSelected = selectedItems.includes(items[0]?.name);
 
-  useEffect(() => {
-    const calculateTotal = (selectedItems) => {
+  const calculateTotal = useCallback(
+    (selectedItems) => {
       if (isEntirePackageSelected) {
         return items[0].price;
       }
@@ -37,12 +39,29 @@ const ItemSelection = ({
       );
 
       return total;
-    };
+    },
+    [isEntirePackageSelected, items]
+  );
 
+  useEffect(() => {
+    const apiBasrUrl = process.env.REACT_APP_API_BASE_URL;
+
+    fetch(`${apiBasrUrl}/getAllItems`)
+      .then((response) => response.json())
+      .then((data) => {
+        setItems(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
+  useEffect(() => {
     // Calculate total whenever selectedItems changes
     const newTotal = calculateTotal(selectedItems);
     setTotalPrice(newTotal);
-  }, [isEntirePackageSelected, selectedItems, setTotalPrice]);
+  }, [isEntirePackageSelected, selectedItems, setTotalPrice, calculateTotal]);
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
@@ -65,7 +84,9 @@ const ItemSelection = ({
       }
     }
   };
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <Paper elevation={2} sx={{ padding: 2, marginBottom: 2 }}>
       <FormControl component="fieldset">
         <Typography variant="h6" component="legend">

@@ -116,10 +116,10 @@ const ItemSelection = ({
                 />
               }
               label={`${item.name} : $${item.price.usd} / ₪${item.price.nis}`}
+              sx={{width: "100%"}}
             />
             {item.id === gamesId && selectedItems.includes(item.id) && (
               <Select
-              sx={{minWidth: 100}}
                 value={selectedGames}
                 onChange={(event) => setSelectedGames(event.target.value)}
                 renderValue={(selected) => {
@@ -130,6 +130,7 @@ const ItemSelection = ({
               
                   return selectedGameNames.join(', ');
                 }}
+                sx={{minWidth: 300}}
                 multiple
               >
                 {games.map((game) => (

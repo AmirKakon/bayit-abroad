@@ -5,8 +5,13 @@ import {
   FormControlLabel,
   Checkbox,
   Paper,
+  Select,
+  MenuItem,
+  ListItemText,
+  Button,
 } from "@mui/material";
 import Loading from "../../Loading";
+import {games} from "../../../media/dummyData";
 
 const ItemSelection = ({
   selectedItems,
@@ -16,7 +21,10 @@ const ItemSelection = ({
 }) => {
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState([]);
+  const [selectedGames, setSelectedGames] = useState([]);
   const [previousSelectedItems, setPreviousSelectedItems] = useState([]);
+
+  const gamesId = "BhT9GsyGCCs7OsmklyJz";
 
   const isEntirePackageSelected = selectedItems.includes(items[0]?.id);
 
@@ -28,7 +36,7 @@ const ItemSelection = ({
 
       const total = selectedItems.reduce(
         (acc, currentItemName) => {
-          const item = items.find((i) => i.name === currentItemName);
+          const item = items.find((i) => i.id === currentItemName);
           if (item) {
             acc.usd += item.price.usd;
             acc.nis += item.price.nis;
@@ -64,8 +72,8 @@ const ItemSelection = ({
   }, [isEntirePackageSelected, selectedItems, setTotalPrice, calculateTotal]);
 
   const handleCheckboxChange = (event) => {
-    const { name, checked } = event.target;  // Here, 'name' will now contain the id
-  
+    const { name, checked } = event.target;
+
     if (name === items[0].id && checked) {
       setPreviousSelectedItems([...selectedItems]);
       setSelectedItems([items[0].id]);
@@ -79,33 +87,63 @@ const ItemSelection = ({
       }
     }
   };
-  
+
+  const handleGameChange = (event) => {
+    setSelectedGames(event.target.value);
+  };
+
   return loading ? (
     <Loading />
   ) : (
     <Paper elevation={2} sx={{ padding: 2, marginBottom: 2 }}>
+      
       <FormControl component="fieldset">
         <Typography variant="h6" component="legend">
           Select the Items to Order:
         </Typography>
         {items.map((item) => (
-          <FormControlLabel
-            key={item.name}
-            control={
-              <Checkbox
-                name={item.id} // Change this from item.name to item.id
-                checked={
-                  selectedItems.includes(item.id) || isEntirePackageSelected
-                } // Update the condition as well
-                onChange={handleCheckboxChange}
-                color="primary"
-                disabled={isEntirePackageSelected && item !== items[0]}
-              />
-            }
-            label={`${item.name} : $${item.price.usd} / ₪${item.price.nis}`}
-          />
+          <div key={item.id}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name={item.id}
+                  checked={
+                    selectedItems.includes(item.id) || isEntirePackageSelected
+                  }
+                  onChange={handleCheckboxChange}
+                  color="primary"
+                  disabled={isEntirePackageSelected && item !== items[0]}
+                />
+              }
+              label={`${item.name} : $${item.price.usd} / ₪${item.price.nis}`}
+            />
+            {item.id === gamesId && selectedItems.includes(item.id) && (
+              <Select
+              sx={{minWidth: 100}}
+                value={selectedGames}
+                onChange={(event) => setSelectedGames(event.target.value)}
+                renderValue={(selected) => {
+                  // Transforming the selected game IDs into game names
+                  const selectedGameNames = selected.map(
+                    (gameId) => games.find(game => game.id === gameId)?.name
+                  );
+              
+                  return selectedGameNames.join(', ');
+                }}
+                multiple
+              >
+                {games.map((game) => (
+                  <MenuItem key={game.id} value={game.id}>
+                    <Checkbox checked={selectedGames.indexOf(game.id) > -1} />
+                    <ListItemText primary={game.name} />
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+          </div>
         ))}
       </FormControl>
+
       <Typography variant="h6" align="left" paragraph padding={1}>
         <b>Total:</b> ${totalPrice.usd} / ₪{totalPrice.nis}
       </Typography>
@@ -114,6 +152,7 @@ const ItemSelection = ({
         Notes" section at the bottom of the form and our team will review the
         request and let you know if we can supply it for you.
       </Typography>
+      <Button onClick={() => {setSelectedGames([])}}>Click</Button>
     </Paper>
   );
 };

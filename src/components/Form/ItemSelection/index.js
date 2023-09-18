@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Typography,
   FormControl,
@@ -20,29 +20,32 @@ const ItemSelection = ({
 
   const isEntirePackageSelected = selectedItems.includes(items[0]?.name);
 
-  const calculateTotal = (selectedItems) => {
-    if (isEntirePackageSelected) {
-      return items[0].price;
-    }
+  const calculateTotal = useCallback(
+    (selectedItems) => {
+      if (isEntirePackageSelected) {
+        return items[0].price;
+      }
 
-    const total = selectedItems.reduce(
-      (acc, currentItemName) => {
-        const item = items.find((i) => i.name === currentItemName);
-        if (item) {
-          acc.usd += item.price.usd;
-          acc.nis += item.price.nis;
-        }
-        return acc;
-      },
-      { usd: 0, nis: 0 }
-    );
+      const total = selectedItems.reduce(
+        (acc, currentItemName) => {
+          const item = items.find((i) => i.name === currentItemName);
+          if (item) {
+            acc.usd += item.price.usd;
+            acc.nis += item.price.nis;
+          }
+          return acc;
+        },
+        { usd: 0, nis: 0 }
+      );
 
-    return total;
-  };
+      return total;
+    },
+    [isEntirePackageSelected, items]
+  );
 
   useEffect(() => {
     const apiBasrUrl = process.env.REACT_APP_API_BASE_URL;
-    
+
     fetch(`${apiBasrUrl}/getAllItems`)
       .then((response) => response.json())
       .then((data) => {
@@ -81,8 +84,9 @@ const ItemSelection = ({
       }
     }
   };
-  return (
-    loading ? <Loading /> :
+  return loading ? (
+    <Loading />
+  ) : (
     <Paper elevation={2} sx={{ padding: 2, marginBottom: 2 }}>
       <FormControl component="fieldset">
         <Typography variant="h6" component="legend">

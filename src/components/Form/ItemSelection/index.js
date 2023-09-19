@@ -130,7 +130,7 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
     });
 
     setSelectedItems(tempStructuredItems);
-  }, [checkedItems, selectedGames]);
+  }, [checkedItems, selectedGames, setSelectedItems]);
 
   return loading ? (
     <Loading />

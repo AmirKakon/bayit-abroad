@@ -6,41 +6,61 @@ import {
   Checkbox,
   Paper,
 } from "@mui/material";
+import GameDropdown from "../GameDropDown";
 import Loading from "../../Loading";
+import { gamesId } from "../../../config";
 
-const ItemSelection = ({
-  selectedItems,
-  setSelectedItems,
-  totalPrice,
-  setTotalPrice,
-}) => {
+const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState([]);
-  const [previousSelectedItems, setPreviousSelectedItems] = useState([]);
+  const [checkedItems, setCheckedItems] = useState([]);
+  const [games, setGames] = useState([]);
+  const [selectedGames, setSelectedGames] = useState([]);
+  const [previousCheckedItems, setPreviousCheckedItems] = useState([]);
 
-  const isEntirePackageSelected = selectedItems.includes(items[0]?.name);
+  const isEntirePackageSelected = checkedItems.includes(items[0]?.id);
+  const isSelectedGameId = checkedItems.includes(gamesId);
 
   const calculateTotal = useCallback(
     (selectedItems) => {
+      let total = { usd: 0, nis: 0 };
+
       if (isEntirePackageSelected) {
         return items[0].price;
       }
 
-      const total = selectedItems.reduce(
-        (acc, currentItemName) => {
-          const item = items.find((i) => i.name === currentItemName);
-          if (item) {
-            acc.usd += item.price.usd;
-            acc.nis += item.price.nis;
+      // Create a map of games for faster lookup by id
+      const gamesMap = {};
+      games.forEach((game) => {
+        gamesMap[game.id] = game;
+      });
+
+      // Create a map of items for faster lookup by id
+      const itemsMap = {};
+      items.forEach((item) => {
+        itemsMap[item.id] = item;
+      });
+
+      // Calculate the total for the main items and selected games
+      for (const itemId of selectedItems) {
+        if (itemsMap[itemId]) {
+          total.usd += itemsMap[itemId].price.usd;
+          total.nis += itemsMap[itemId].price.nis;
+        }
+
+        if (itemId === "BhT9GsyGCCs7OsmklyJz") {
+          for (const gameId of selectedGames) {
+            if (gamesMap[gameId]) {
+              total.usd += gamesMap[gameId].price.usd;
+              total.nis += gamesMap[gameId].price.nis;
+            }
           }
-          return acc;
-        },
-        { usd: 0, nis: 0 }
-      );
+        }
+      }
 
       return total;
     },
-    [isEntirePackageSelected, items]
+    [isEntirePackageSelected, items, selectedGames, games]
   );
 
   useEffect(() => {
@@ -55,35 +75,63 @@ const ItemSelection = ({
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
+
+    fetch(`${apiBasrUrl}/getAllGames`)
+      .then((response) => response.json())
+      .then((data) => {
+        setGames(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
   }, []);
 
   useEffect(() => {
     // Calculate total whenever selectedItems changes
-    const newTotal = calculateTotal(selectedItems);
+    const newTotal = calculateTotal(checkedItems);
     setTotalPrice(newTotal);
-  }, [isEntirePackageSelected, selectedItems, setTotalPrice, calculateTotal]);
+  }, [isEntirePackageSelected, checkedItems, setTotalPrice, calculateTotal]);
 
   const handleCheckboxChange = (event) => {
     const { name, checked } = event.target;
 
-    if (name === items[0].name && checked) {
-      // Save current state to memory (previousSelectedItems) and select the entire package
-      setPreviousSelectedItems([...selectedItems]);
-      setSelectedItems([items[0].name]);
-    } else if (name === items[0].name && !checked) {
-      // Revert to the previous selection state
-      setSelectedItems(previousSelectedItems);
+    if (name === items[0].id && checked) {
+      setPreviousCheckedItems([...checkedItems]);
+      setCheckedItems([items[0].id]);
+    } else if (name === items[0].id && !checked) {
+      setCheckedItems(previousCheckedItems);
     } else {
-      // Handle the case for all other items
       if (checked) {
-        setSelectedItems((prev) => [...prev, name]);
+        setCheckedItems((prev) => [...prev, name]);
       } else {
-        setSelectedItems((prev) =>
-          prev.filter((itemName) => itemName !== name)
-        );
+        setCheckedItems((prev) => prev.filter((itemId) => itemId !== name));
       }
     }
+
+    if (isSelectedGameId && !checked) {
+      setSelectedGames([]);
+    }
   };
+
+  useEffect(() => {
+    let tempStructuredItems = [];
+
+    checkedItems.forEach((itemId) => {
+      if (itemId === gamesId) {
+        tempStructuredItems.push({
+          id: itemId,
+          games: selectedGames,
+        });
+      } else {
+        tempStructuredItems.push({
+          id: itemId,
+        });
+      }
+    });
+
+    setSelectedItems(tempStructuredItems);
+  }, [checkedItems, selectedGames, setSelectedItems]);
+
   return loading ? (
     <Loading />
   ) : (
@@ -93,21 +141,33 @@ const ItemSelection = ({
           Select the Items to Order:
         </Typography>
         {items.map((item) => (
-          <FormControlLabel
-            key={item.name}
-            control={
-              <Checkbox
-                name={item.name}
-                checked={
-                  selectedItems.includes(item.name) || isEntirePackageSelected
-                }
-                onChange={handleCheckboxChange}
-                color="primary"
-                disabled={isEntirePackageSelected && item !== items[0]}
+          <div key={item.id}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name={item.id}
+                  checked={
+                    checkedItems.includes(item.id) || isEntirePackageSelected
+                  }
+                  onChange={handleCheckboxChange}
+                  color="primary"
+                  disabled={isEntirePackageSelected && item.id !== items[0].id}
+                />
+              }
+              label={
+                item.id === gamesId
+                  ? `${item.name} : per game`
+                  : `${item.name} : $${item.price.usd} / ₪${item.price.nis}`
+              }
+            />
+            {item.id === gamesId && isSelectedGameId && (
+              <GameDropdown
+                games={games}
+                selectedGames={selectedGames}
+                setSelectedGames={setSelectedGames}
               />
-            }
-            label={`${item.name} : $${item.price.usd} / ₪${item.price.nis}`}
-          />
+            )}
+          </div>
         ))}
       </FormControl>
       <Typography variant="h6" align="left" paragraph padding={1}>
@@ -116,7 +176,7 @@ const ItemSelection = ({
       <Typography variant="body1" align="left" paragraph padding={1}>
         Looking for an item that isn't listed? Add more items in the "Additional
         Notes" section at the bottom of the form and our team will review the
-        request and let you know if we can supply it for you.
+        request and get back to you if we can supply it for you.
       </Typography>
     </Paper>
   );

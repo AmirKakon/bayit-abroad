@@ -1,11 +1,12 @@
 const { app, logger, db } = require("../../setup");
 
-//create -> post()
+// create -> post()
 app.post("/api/tutorial/create", (req, res) => {
   // async waits for a response
   (async () => {
     try {
-      //await is the pair of async to tell the function which line to wait until completed.
+      // await is the pair of async to tell the
+      // function which line to wait until completed.
       await db.collection("userDetails").doc(`/${Date.now()}/`).create({
         id: Date.now(),
         name: req.body.name,
@@ -20,14 +21,14 @@ app.post("/api/tutorial/create", (req, res) => {
   })();
 });
 
-//get -> get()
-//fetch single data from firestore using specific id
+// get -> get()
+// fetch single data from firestore using specific id
 app.get("/api/tutorial/get/:id", (req, res) => {
   (async () => {
     try {
-      const reqDoc = db.collection("userDetails").doc(req.params.id); //reference
-      let userDetail = await reqDoc.get(); //gets doc
-      let response = userDetail.data(); //the actual data of the user
+      const reqDoc = db.collection("userDetails").doc(req.params.id);
+      const userDetail = await reqDoc.get(); // gets doc
+      const response = userDetail.data(); // the actual data of the user
 
       return res.status(200).send({ status: "Success", data: response });
     } catch (error) {
@@ -37,15 +38,15 @@ app.get("/api/tutorial/get/:id", (req, res) => {
   })();
 });
 
-//fetch all user data from firestore
+// fetch all user data from firestore
 app.get("/api/tutorial/getAll", (req, res) => {
   (async () => {
     try {
       const query = db.collection("userDetails");
-      let response = [];
+      const response = [];
 
       await query.get().then((data) => {
-        let docs = data.docs;
+        const docs = data.docs;
 
         docs.map((doc) => {
           const selectedItem = {
@@ -67,12 +68,12 @@ app.get("/api/tutorial/getAll", (req, res) => {
   })();
 });
 
-//update -> put()
+// update -> put()
 app.put("/api/tutorial/update/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {
-      const reqDoc = db.collection("userDetails").doc(req.params.id); //reference
+      const reqDoc = db.collection("userDetails").doc(req.params.id);
       await reqDoc.update({
         name: req.body.name,
         mobile: req.body.mobile,
@@ -86,12 +87,12 @@ app.put("/api/tutorial/update/:id", (req, res) => {
   })();
 });
 
-//delete -> delete()
+// delete -> delete()
 app.delete("/api/tutorial/delete/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {
-      const reqDoc = db.collection("userDetails").doc(req.params.id); //reference
+      const reqDoc = db.collection("userDetails").doc(req.params.id);
       await reqDoc.delete();
 
       return res.status(200).send({ status: "Success", msg: "Data Deleted" });

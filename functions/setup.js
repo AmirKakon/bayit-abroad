@@ -5,7 +5,7 @@ const cors = require("cors");
 
 const logger = functions.logger;
 
-var serviceAccount = require("./serviceAccountKey.json");
+const serviceAccount = require("./serviceAccountKey.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),

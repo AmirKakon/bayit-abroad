@@ -1,12 +1,12 @@
 const { app, logger, db } = require("../../setup");
 
-//get a single item using specific id
+// get a single item using specific id
 app.get("/api/form-items/get/:id", (req, res) => {
   (async () => {
     try {
       const itemRef = db.collection("items").doc(req.params.id);
-      let doc = await itemRef.get(); //gets doc
-      let item = doc.data(); //the actual data of the user
+      const doc = await itemRef.get(); // gets doc
+      const item = doc.data(); // the actual data of the user
 
       if (!item.exists) {
         logger.log("Error - No item found");
@@ -22,7 +22,7 @@ app.get("/api/form-items/get/:id", (req, res) => {
   })();
 });
 
-//get all items
+// get all items
 const preferredId = "myszTIFQHloPy7Xksgw2"; // 'entire package' id
 
 app.get("/api/form-items/getAll", (req, res) => {
@@ -56,7 +56,7 @@ app.get("/api/form-items/getAll", (req, res) => {
   })();
 });
 
-//get all games
+// get all games
 const gamesId = "BhT9GsyGCCs7OsmklyJz";
 
 app.get("/api/form-items/games/getAll", (req, res) => {
@@ -70,7 +70,7 @@ app.get("/api/form-items/games/getAll", (req, res) => {
         return res.status(404).send({ status: "Failed", msg: "No data found" });
       }
 
-      let items = snapshot.docs.map((doc) => ({
+      const items = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));

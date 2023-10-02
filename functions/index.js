@@ -79,7 +79,7 @@ app.get("/api/getAll", (req, res) => {
 
           response.push(selectedItem);
         });
-        return response
+        return response;
       });
 
       return res.status(200).send({ status: "Sucess", data: response });
@@ -97,9 +97,9 @@ app.put("/api/update/:id", (req, res) => {
     try {
       const reqDoc = db.collection("userDetails").doc(req.params.id); //reference
       await reqDoc.update({
-        name:req.body.name,
+        name: req.body.name,
         mobile: req.body.mobile,
-      })
+      });
 
       return res.status(200).send({ status: "Sucess", msg: "Data Updated" });
     } catch (error) {
@@ -110,6 +110,20 @@ app.put("/api/update/:id", (req, res) => {
 });
 
 //delete -> delete()
+app.delete("/api/delete/:id", (req, res) => {
+  // async waits for a response
+  (async () => {
+    try {
+      const reqDoc = db.collection("userDetails").doc(req.params.id); //reference
+      await reqDoc.delete();
+
+      return res.status(200).send({ status: "Sucess", msg: "Data Deleted" });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ status: "Failed", msg: error });
+    }
+  })();
+});
 
 //exports the api to firebase functions
 exports.app = functions.https.onRequest(app);

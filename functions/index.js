@@ -48,9 +48,11 @@ app.post("/api/create", (req, res) => {
 app.get("/api/get/:id", (req, res) => {
   (async () => {
     try {
-      const reqDoc = 
+      const reqDoc =db.collection("userDetails").doc(req.params.id); //reference
+      let userDetail = await reqDoc.get(); //gets doc
+      let response = userDetail.data(); //the actual data of the user
 
-      return res.status(200).send({ status: "Sucess", msg: "Data Saved" });
+      return res.status(200).send({ status: "Sucess", data: response });
     } catch (error) {
       console.log(error);
       return res.status(500).send({ status: "Failed", msg: error });

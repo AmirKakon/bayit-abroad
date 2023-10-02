@@ -91,6 +91,23 @@ app.get("/api/getAll", (req, res) => {
 });
 
 //update -> put()
+app.put("/api/update/:id", (req, res) => {
+  // async waits for a response
+  (async () => {
+    try {
+      const reqDoc = db.collection("userDetails").doc(req.params.id); //reference
+      await reqDoc.update({
+        name:req.body.name,
+        mobile: req.body.mobile,
+      })
+
+      return res.status(200).send({ status: "Sucess", msg: "Data Updated" });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ status: "Failed", msg: error });
+    }
+  })();
+});
 
 //delete -> delete()
 

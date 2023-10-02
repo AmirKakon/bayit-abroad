@@ -1,4 +1,4 @@
-const { app, db } = require("../../setup");
+const { app, logger, db } = require("../../setup");
 
 //create -> post()
 app.post("/api/tutorial/create", (req, res) => {
@@ -12,9 +12,9 @@ app.post("/api/tutorial/create", (req, res) => {
         mobile: req.body.mobile,
       });
 
-      return res.status(200).send({ status: "Sucess", msg: "Data Saved" });
+      return res.status(200).send({ status: "Success", msg: "Data Saved" });
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return res.status(500).send({ status: "Failed", msg: error });
     }
   })();
@@ -29,9 +29,9 @@ app.get("/api/tutorial/get/:id", (req, res) => {
       let userDetail = await reqDoc.get(); //gets doc
       let response = userDetail.data(); //the actual data of the user
 
-      return res.status(200).send({ status: "Sucess", data: response });
+      return res.status(200).send({ status: "Success", data: response });
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return res.status(500).send({ status: "Failed", msg: error });
     }
   })();
@@ -59,9 +59,9 @@ app.get("/api/tutorial/getAll", (req, res) => {
         return response;
       });
 
-      return res.status(200).send({ status: "Sucess", data: response });
+      return res.status(200).send({ status: "Success", data: response });
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return res.status(500).send({ status: "Failed", msg: error });
     }
   })();
@@ -78,9 +78,9 @@ app.put("/api/tutorial/update/:id", (req, res) => {
         mobile: req.body.mobile,
       });
 
-      return res.status(200).send({ status: "Sucess", msg: "Data Updated" });
+      return res.status(200).send({ status: "Success", msg: "Data Updated" });
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return res.status(500).send({ status: "Failed", msg: error });
     }
   })();
@@ -94,9 +94,9 @@ app.delete("/api/tutorial/delete/:id", (req, res) => {
       const reqDoc = db.collection("userDetails").doc(req.params.id); //reference
       await reqDoc.delete();
 
-      return res.status(200).send({ status: "Sucess", msg: "Data Deleted" });
+      return res.status(200).send({ status: "Success", msg: "Data Deleted" });
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return res.status(500).send({ status: "Failed", msg: error });
     }
   })();

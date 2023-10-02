@@ -3,6 +3,8 @@ const admin = require("firebase-admin");
 const express = require("express");
 const cors = require("cors");
 
+const logger = functions.logger;
+
 var serviceAccount = require("./serviceAccountKey.json");
 
 admin.initializeApp({
@@ -15,4 +17,4 @@ app.use(cors({ orgin: true }));
 
 const db = admin.firestore();
 
-module.exports = { app, functions, db };
+module.exports = { app, functions, logger, db };

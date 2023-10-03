@@ -1,4 +1,13 @@
-const { app, functions } = require("./setup");
+const { app, dev, functions } = require("./setup");
+
+// app routes
 require("./Routes/FormItems");
 
+// dev routes
+require("./DevRoutes/FormItems");
+
+// Export the main app
 exports.app = functions.https.onRequest(app);
+
+// Export the dev version
+exports.dev = functions.https.onRequest(dev);

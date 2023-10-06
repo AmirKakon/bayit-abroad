@@ -1,13 +1,15 @@
-const { app, logger, db } = require("../../setup");
+const { dev, logger, db } = require("../../setup");
+
+const baseDB = "userDetails_dev";
 
 // create -> post()
-app.post("/api/tutorial/create", (req, res) => {
+dev.post("/api/tutorial/create", (req, res) => {
   // async waits for a response
   (async () => {
     try {
       // await is the pair of async to tell the
       // function which line to wait until completed.
-      await db.collection("userDetails").doc(`/${Date.now()}/`).create({
+      await db.collection(baseDB).doc(`/${Date.now()}/`).create({
         id: Date.now(),
         name: req.body.name,
         mobile: req.body.mobile,
@@ -23,10 +25,10 @@ app.post("/api/tutorial/create", (req, res) => {
 
 // get -> get()
 // fetch single data from firestore using specific id
-app.get("/api/tutorial/get/:id", (req, res) => {
+dev.get("/api/tutorial/get/:id", (req, res) => {
   (async () => {
     try {
-      const reqDoc = db.collection("userDetails").doc(req.params.id);
+      const reqDoc = db.collection(baseDB).doc(req.params.id);
       const userDetail = await reqDoc.get(); // gets doc
       const response = userDetail.data(); // the actual data of the user
 
@@ -39,16 +41,16 @@ app.get("/api/tutorial/get/:id", (req, res) => {
 });
 
 // fetch all user data from firestore
-app.get("/api/tutorial/getAll", (req, res) => {
+dev.get("/api/tutorial/getAll", (req, res) => {
   (async () => {
     try {
-      const query = db.collection("userDetails");
+      const query = db.collection(baseDB);
       const response = [];
 
       await query.get().then((data) => {
         const docs = data.docs;
 
-        docs.map((doc) => {
+        docs.forEach((doc) => {
           const selectedItem = {
             id: doc.data().id,
             name: doc.data().name,
@@ -69,11 +71,11 @@ app.get("/api/tutorial/getAll", (req, res) => {
 });
 
 // update -> put()
-app.put("/api/tutorial/update/:id", (req, res) => {
+dev.put("/api/tutorial/update/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {
-      const reqDoc = db.collection("userDetails").doc(req.params.id);
+      const reqDoc = db.collection(baseDB).doc(req.params.id);
       await reqDoc.update({
         name: req.body.name,
         mobile: req.body.mobile,
@@ -88,11 +90,11 @@ app.put("/api/tutorial/update/:id", (req, res) => {
 });
 
 // delete -> delete()
-app.delete("/api/tutorial/delete/:id", (req, res) => {
+dev.delete("/api/tutorial/delete/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {
-      const reqDoc = db.collection("userDetails").doc(req.params.id);
+      const reqDoc = db.collection(baseDB).doc(req.params.id);
       await reqDoc.delete();
 
       return res.status(200).send({ status: "Success", msg: "Data Deleted" });
@@ -103,4 +105,4 @@ app.delete("/api/tutorial/delete/:id", (req, res) => {
   })();
 });
 
-module.exports = app;
+module.exports = dev;

@@ -1,4 +1,16 @@
-const { app, functions } = require("./setup");
-require("./Routes/FormItems");
+const { app, dev, functions } = require("./setup");
 
+// app routes
+require("./Routes/FormItems");
+require("./Routes/FormItems/GameItems");
+
+// // dev routes
+require("./DevRoutes/FormItems");
+require("./DevRoutes/FormItems/GameItems");
+require("./DevRoutes/Tutorial");
+
+// Export the main app
 exports.app = functions.https.onRequest(app);
+
+// Export the dev version
+exports.dev = functions.https.onRequest(dev);

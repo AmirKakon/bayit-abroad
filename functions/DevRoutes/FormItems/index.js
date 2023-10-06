@@ -1,16 +1,16 @@
-const { app, logger, db } = require("../../setup");
+const { dev, logger, db } = require("../../setup");
 
-const baseDB = "form-items";
+const baseDB = "form-items_dev";
 const preferredId = "XkfGiR95lXrZveSxToMl"; // 'entire package' id
 
 // create a form item
-app.post("/api/form-items/create", (req, res) => {
+dev.post("/api/form-items/create", (req, res) => {
   // async waits for a response
   (async () => {
     try {
       await db
         .collection(baseDB)
-        .doc(req.body.id)
+        .doc()
         .create({
           name: req.body.name,
           price: {
@@ -28,7 +28,7 @@ app.post("/api/form-items/create", (req, res) => {
 });
 
 // get a single item using specific id
-app.get("/api/form-items/get/:id", (req, res) => {
+dev.get("/api/form-items/get/:id", (req, res) => {
   (async () => {
     try {
       const itemRef = db.collection(baseDB).doc(req.params.id);
@@ -55,7 +55,7 @@ app.get("/api/form-items/get/:id", (req, res) => {
 });
 
 // get all items
-app.get("/api/form-items/getAll", (req, res) => {
+dev.get("/api/form-items/getAll", (req, res) => {
   (async () => {
     try {
       const itemsRef = db.collection(baseDB);
@@ -89,7 +89,7 @@ app.get("/api/form-items/getAll", (req, res) => {
 });
 
 // update item
-app.put("/api/form-items/update/:id", (req, res) => {
+dev.put("/api/form-items/update/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {
@@ -111,7 +111,7 @@ app.put("/api/form-items/update/:id", (req, res) => {
 });
 
 // delete item
-app.delete("/api/form-items/delete/:id", (req, res) => {
+dev.delete("/api/form-items/delete/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {
@@ -126,4 +126,4 @@ app.delete("/api/form-items/delete/:id", (req, res) => {
   })();
 });
 
-module.exports = app;
+module.exports = dev;

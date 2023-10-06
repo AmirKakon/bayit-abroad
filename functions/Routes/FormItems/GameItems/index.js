@@ -1,15 +1,18 @@
-const { app, logger, db } = require("../../setup");
+const { app, logger, db } = require("../../../setup");
 
 const baseDB = "form-items";
-const preferredId = "XkfGiR95lXrZveSxToMl"; // 'entire package' id
+const gamesDB = "games";
+const gamesId = "1tRC1jxs6fRXCA69eIal";
 
-// create a form item
-app.post("/api/form-items/create", (req, res) => {
+// create a game item
+app.post("/api/form-items/games/create", (req, res) => {
   // async waits for a response
   (async () => {
     try {
       await db
         .collection(baseDB)
+        .doc(gamesId)
+        .collection(gamesDB)
         .doc(req.body.id)
         .create({
           name: req.body.name,
@@ -19,7 +22,7 @@ app.post("/api/form-items/create", (req, res) => {
           },
         });
 
-      return res.status(200).send({ status: "Success", msg: "Item Saved" });
+      return res.status(200).send({ status: "Success", msg: "Game Saved" });
     } catch (error) {
       logger.error(error);
       return res.status(500).send({ status: "Failed", msg: error });
@@ -27,22 +30,24 @@ app.post("/api/form-items/create", (req, res) => {
   })();
 });
 
-// get a single item using specific id
+// get a single game item using specific id
 app.get("/api/form-items/get/:id", (req, res) => {
   (async () => {
     try {
-      const itemRef = db.collection(baseDB).doc(req.params.id);
-      const doc = await itemRef.get(); // gets doc
-      const item = doc.data(); // the actual data of the item
+      const itemRef = db
+        .collection(baseDB)
+        .doc(gamesId)
+        .collection(gamesDB)
+        .doc(req.params.id);
+      const doc = await itemRef.get();
+      const item = doc.data();
 
       if (!item.exists) {
-        logger.error(`Error - No item found with id: ${req.params.id}`);
-        return res
-          .status(404)
-          .send({
-            status: "Failed",
-            msg: `No item found with id: ${req.params.id}`,
-          });
+        logger.error(`Error - No game found with id: ${req.params.id}`);
+        return res.status(404).send({
+          status: "Failed",
+          msg: `No game found with id: ${req.params.id}`,
+        });
       }
 
       // logger.log("Item:", item);
@@ -54,32 +59,26 @@ app.get("/api/form-items/get/:id", (req, res) => {
   })();
 });
 
-// get all items
-app.get("/api/form-items/getAll", (req, res) => {
+// get all games
+app.get("/api/form-items/games/getAll", (req, res) => {
   (async () => {
     try {
-      const itemsRef = db.collection(baseDB);
+      const itemsRef = db.collection(baseDB).doc(gamesId).collection(gamesDB);
       const snapshot = await itemsRef.get();
 
       if (snapshot.empty) {
-        logger.error("No items found");
+        logger.error("No games found");
         return res
           .status(404)
-          .send({ status: "Failed", msg: "No items found" });
+          .send({ status: "Failed", msg: "No games found" });
       }
 
-      let items = snapshot.docs.map((doc) => ({
+      const items = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
 
-      const preferredItem = items.find((item) => item.id === preferredId);
-      if (preferredItem) {
-        items = items.filter((item) => item.id !== preferredId);
-        items.unshift(preferredItem);
-      }
-
-      // logger.log("Item List", items);
+      // logger.log("Games List", items);
       return res.status(200).send({ status: "Success", data: items });
     } catch (error) {
       logger.error(error);
@@ -88,12 +87,16 @@ app.get("/api/form-items/getAll", (req, res) => {
   })();
 });
 
-// update item
-app.put("/api/form-items/update/:id", (req, res) => {
+// update game
+app.put("/api/form-items/games/update/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {
-      const reqDoc = db.collection(baseDB).doc(req.params.id);
+      const reqDoc = db
+        .collection(baseDB)
+        .doc(gamesId)
+        .collection(gamesDB)
+        .doc(req.params.id);
       await reqDoc.update({
         name: req.body.name,
         price: {
@@ -102,7 +105,7 @@ app.put("/api/form-items/update/:id", (req, res) => {
         },
       });
 
-      return res.status(200).send({ status: "Success", msg: "Item Updated" });
+      return res.status(200).send({ status: "Success", msg: "Game Updated" });
     } catch (error) {
       logger.error(error);
       return res.status(500).send({ status: "Failed", msg: error });
@@ -110,15 +113,19 @@ app.put("/api/form-items/update/:id", (req, res) => {
   })();
 });
 
-// delete item
-app.delete("/api/form-items/delete/:id", (req, res) => {
+// delete game
+app.delete("/api/form-items/games/delete/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {
-      const reqDoc = db.collection(baseDB).doc(req.params.id);
+      const reqDoc = db
+        .collection(baseDB)
+        .doc(gamesId)
+        .collection(gamesDB)
+        .doc(req.params.id);
       await reqDoc.delete();
 
-      return res.status(200).send({ status: "Success", msg: "Item Deleted" });
+      return res.status(200).send({ status: "Success", msg: "Game Deleted" });
     } catch (error) {
       logger.error(error);
       return res.status(500).send({ status: "Failed", msg: error });

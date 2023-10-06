@@ -48,7 +48,7 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
           total.nis += itemsMap[itemId].price.nis;
         }
 
-        if (itemId === "BhT9GsyGCCs7OsmklyJz") {
+        if (itemId === gamesId) {
           for (const gameId of selectedGames) {
             if (gamesMap[gameId]) {
               total.usd += gamesMap[gameId].price.usd;
@@ -66,20 +66,20 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
   useEffect(() => {
     const apiBasrUrl = process.env.REACT_APP_API_BASE_URL;
 
-    fetch(`${apiBasrUrl}/getAllItems`)
+    fetch(`${apiBasrUrl}/api/form-items/getAll`)
       .then((response) => response.json())
-      .then((data) => {
-        setItems(data);
+      .then((res) => {
+        setItems(res.data);
         setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
       });
 
-    fetch(`${apiBasrUrl}/getAllGames`)
+    fetch(`${apiBasrUrl}/api/form-items/games/getAll`)
       .then((response) => response.json())
-      .then((data) => {
-        setGames(data);
+      .then((res) => {
+        setGames(res.data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);

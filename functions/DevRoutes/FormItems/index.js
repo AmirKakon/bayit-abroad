@@ -1,16 +1,44 @@
-const { dev, logger, dbDev } = require("../../setup");
+const { dev, logger, db } = require("../../setup");
+
+const baseDB = "form-items_dev";
+const preferredId = "XkfGiR95lXrZveSxToMl"; // 'entire package' id
+const gamesId = "1tRC1jxs6fRXCA69eIal";
+
+//create a form item
+dev.post("/api/form-items/create", (req, res) => {
+  // async waits for a response
+  (async () => {
+    try {
+      await db
+        .collection(baseDB)
+        .doc()
+        .create({
+          name: req.body.name,
+          price: {
+            nis: req.body.price.nis,
+            usd: req.body.price.usd,
+          },
+        });
+
+      return res.status(200).send({ status: "Success", msg: "Item Saved" });
+    } catch (error) {
+      logger.error(error);
+      return res.status(500).send({ status: "Failed", msg: error });
+    }
+  })();
+});
 
 // get a single item using specific id
 dev.get("/api/form-items/get/:id", (req, res) => {
   (async () => {
     try {
-      const itemRef = dbDev.collection("form-items").doc(req.params.id);
+      const itemRef = db.collection(baseDB).doc(req.params.id);
       const doc = await itemRef.get(); // gets doc
-      const item = doc.data(); // the actual data of the user
+      const item = doc.data(); // the actual data of the item
 
       if (!item.exists) {
-        logger.log("Error - No item found");
-        return res.status(404).send({ status: "Failed", msg: "No item found" });
+        logger.error(`Error - No item found with id: ${req.params.id}`);
+        return res.status(404).send({ status: "Failed", msg: `No item found with id: ${req.params.id}` });
       }
 
       // logger.log("Item:", item);
@@ -23,17 +51,15 @@ dev.get("/api/form-items/get/:id", (req, res) => {
 });
 
 // get all items
-const preferredId = "myszTIFQHloPy7Xksgw2"; // 'entire package' id
-
 dev.get("/api/form-items/getAll", (req, res) => {
   (async () => {
     try {
-      const itemsRef = dbDev.collection("form-items");
+      const itemsRef = db.collection(baseDB);
       const snapshot = await itemsRef.get();
 
       if (snapshot.empty) {
-        logger.log("No data found");
-        return res.status(404).send({ status: "Failed", msg: "No data found" });
+        logger.error("No items found");
+        return res.status(404).send({ status: "Failed", msg: "No items found" });
       }
 
       let items = snapshot.docs.map((doc) => ({
@@ -56,27 +82,37 @@ dev.get("/api/form-items/getAll", (req, res) => {
   })();
 });
 
-// get all games
-const gamesId = "BhT9GsyGCCs7OsmklyJz";
-
-dev.get("/api/form-items/games/getAll", (req, res) => {
+//update item
+dev.put("/api/form-items/update/:id", (req, res) => {
+  // async waits for a response
   (async () => {
     try {
-      const itemsRef = dbDev.collection("form-items").doc(gamesId).collection("games");
-      const snapshot = await itemsRef.get();
+      const reqDoc = db.collection(baseDB).doc(req.params.id);
+      await reqDoc.update({
+        name: req.body.name,
+        price: {
+          nis: req.body.price.nis,
+          usd: req.body.price.usd,
+        },
+      });
 
-      if (snapshot.empty) {
-        logger.log("No data found");
-        return res.status(404).send({ status: "Failed", msg: "No data found" });
-      }
+      return res.status(200).send({ status: "Success", msg: "Item Updated" });
+    } catch (error) {
+      logger.error(error);
+      return res.status(500).send({ status: "Failed", msg: error });
+    }
+  })();
+});
 
-      const items = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+// delete item
+dev.delete("/api/form-items/delete/:id", (req, res) => {
+  // async waits for a response
+  (async () => {
+    try {
+      const reqDoc = db.collection(baseDB).doc(req.params.id);
+      await reqDoc.delete();
 
-      // logger.log("Games List", items);
-      return res.status(200).send({ status: "Success", data: items });
+      return res.status(200).send({ status: "Success", msg: "Item Deleted" });
     } catch (error) {
       logger.error(error);
       return res.status(500).send({ status: "Failed", msg: error });

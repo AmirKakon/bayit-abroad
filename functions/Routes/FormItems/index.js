@@ -1,10 +1,12 @@
 const { app, logger, db } = require("../../setup");
 
+const baseDB = "form-items";
+
 // get a single item using specific id
 app.get("/api/form-items/get/:id", (req, res) => {
   (async () => {
     try {
-      const itemRef = db.collection("items").doc(req.params.id);
+      const itemRef = db.collection(baseDB).doc(req.params.id);
       const doc = await itemRef.get(); // gets doc
       const item = doc.data(); // the actual data of the user
 
@@ -28,7 +30,7 @@ const preferredId = "myszTIFQHloPy7Xksgw2"; // 'entire package' id
 app.get("/api/form-items/getAll", (req, res) => {
   (async () => {
     try {
-      const itemsRef = db.collection("items");
+      const itemsRef = db.collection(baseDB);
       const snapshot = await itemsRef.get();
 
       if (snapshot.empty) {
@@ -62,7 +64,7 @@ const gamesId = "BhT9GsyGCCs7OsmklyJz";
 app.get("/api/form-items/games/getAll", (req, res) => {
   (async () => {
     try {
-      const itemsRef = db.collection("items").doc(gamesId).collection("games");
+      const itemsRef = db.collection(baseDB).doc(gamesId).collection("games");
       const snapshot = await itemsRef.get();
 
       if (snapshot.empty) {

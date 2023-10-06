@@ -16,10 +16,9 @@ const app = express();
 const dev = express();
 
 // Apply the CORS middleware to both app and dev
-app.use(cors({ orgin: true }));
-dev.use(cors({ orgin: true }));
+app.use(cors({ origin: true }));
+dev.use(cors({ origin: true }));
 
 const db = admin.firestore();
-const dbDev = admin.firestore("develop")
 
-module.exports = { app, dev, functions, logger, db, dbDev };
+module.exports = { app, dev, functions, logger, db };

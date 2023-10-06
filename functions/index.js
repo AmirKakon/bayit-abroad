@@ -2,6 +2,7 @@ const { app, dev, functions } = require("./setup");
 
 // app routes
 require("./Routes/FormItems");
+require("./Routes/FormItems/GameItems");
 
 // // dev routes
 require("./DevRoutes/FormItems");

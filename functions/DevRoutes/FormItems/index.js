@@ -2,9 +2,8 @@ const { dev, logger, db } = require("../../setup");
 
 const baseDB = "form-items_dev";
 const preferredId = "XkfGiR95lXrZveSxToMl"; // 'entire package' id
-const gamesId = "1tRC1jxs6fRXCA69eIal";
 
-//create a form item
+// create a form item
 dev.post("/api/form-items/create", (req, res) => {
   // async waits for a response
   (async () => {
@@ -38,7 +37,12 @@ dev.get("/api/form-items/get/:id", (req, res) => {
 
       if (!item.exists) {
         logger.error(`Error - No item found with id: ${req.params.id}`);
-        return res.status(404).send({ status: "Failed", msg: `No item found with id: ${req.params.id}` });
+        return res
+          .status(404)
+          .send({
+            status: "Failed",
+            msg: `No item found with id: ${req.params.id}`,
+          });
       }
 
       // logger.log("Item:", item);
@@ -59,7 +63,9 @@ dev.get("/api/form-items/getAll", (req, res) => {
 
       if (snapshot.empty) {
         logger.error("No items found");
-        return res.status(404).send({ status: "Failed", msg: "No items found" });
+        return res
+          .status(404)
+          .send({ status: "Failed", msg: "No items found" });
       }
 
       let items = snapshot.docs.map((doc) => ({
@@ -82,7 +88,7 @@ dev.get("/api/form-items/getAll", (req, res) => {
   })();
 });
 
-//update item
+// update item
 dev.put("/api/form-items/update/:id", (req, res) => {
   // async waits for a response
   (async () => {

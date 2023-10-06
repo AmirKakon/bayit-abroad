@@ -50,7 +50,7 @@ dev.get("/api/tutorial/getAll", (req, res) => {
       await query.get().then((data) => {
         const docs = data.docs;
 
-        docs.map((doc) => {
+        docs.forEach((doc) => {
           const selectedItem = {
             id: doc.data().id,
             name: doc.data().name,

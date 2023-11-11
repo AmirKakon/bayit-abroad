@@ -5,8 +5,8 @@ require("./Routes/FormItems");
 require("./Routes/FormItems/GameItems");
 
 // // dev routes
-require("./DevRoutes/FormItems");
-require("./DevRoutes/FormItems/GameItems");
+require("./DevRoutes/Form/FormItems");
+require("./DevRoutes/Form/GameItems");
 require("./DevRoutes/Tutorial");
 
 // Export the main app

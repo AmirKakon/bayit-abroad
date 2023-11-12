@@ -5,7 +5,7 @@ const gamesDB = "games";
 const gamesId = "1tRC1jxs6fRXCA69eIal";
 
 // create a game item
-app.post("/api/form-items/games/create", (req, res) => {
+app.post("/api/form/game-items/create", (req, res) => {
   // async waits for a response
   (async () => {
     try {
@@ -13,7 +13,7 @@ app.post("/api/form-items/games/create", (req, res) => {
         .collection(baseDB)
         .doc(gamesId)
         .collection(gamesDB)
-        .doc(req.body.id)
+        .doc()
         .create({
           name: req.body.name,
           price: {
@@ -31,7 +31,7 @@ app.post("/api/form-items/games/create", (req, res) => {
 });
 
 // get a single game item using specific id
-app.get("/api/form-items/get/:id", (req, res) => {
+app.get("/api/form/game-items/get/:id", (req, res) => {
   (async () => {
     try {
       const itemRef = db
@@ -60,7 +60,7 @@ app.get("/api/form-items/get/:id", (req, res) => {
 });
 
 // get all games
-app.get("/api/form-items/games/getAll", (req, res) => {
+app.get("/api/form/game-items/getAll", (req, res) => {
   (async () => {
     try {
       const itemsRef = db.collection(baseDB).doc(gamesId).collection(gamesDB);
@@ -88,7 +88,7 @@ app.get("/api/form-items/games/getAll", (req, res) => {
 });
 
 // update game
-app.put("/api/form-items/games/update/:id", (req, res) => {
+app.put("/api/form/game-items/update/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {
@@ -114,7 +114,7 @@ app.put("/api/form-items/games/update/:id", (req, res) => {
 });
 
 // delete game
-app.delete("/api/form-items/games/delete/:id", (req, res) => {
+app.delete("/api/form/game-items/delete/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {

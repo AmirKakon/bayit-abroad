@@ -2,37 +2,43 @@ const { dev, logger, db, admin } = require("../../../setup");
 
 const baseDB = "orders_dev";
 
+const getTimestamps = (dateRange) => {
+  // Convert the timestamp string to a JavaScript Date object
+  const deliveryDate = new Date(dateRange.delivery);
+  // Convert the Date object to a Firebase Timestamp
+  const fbDeliveryDate = admin.firestore.Timestamp.fromDate(deliveryDate);
+
+  // Convert the timestamp string to a JavaScript Date object
+  const pickupDate = new Date(dateRange.pickup);
+  // Convert the Date object to a Firebase Timestamp
+  const fbPickupDate = admin.firestore.Timestamp.fromDate(pickupDate);
+
+  // Convert the timestamp string to a JavaScript Date object
+  const updated = new Date();
+  // Convert the Date object to a Firebase Timestamp
+  const fbUpdated = admin.firestore.Timestamp.fromDate(updated);
+
+  return { delivery: fbDeliveryDate, pickup: fbPickupDate, updated: fbUpdated };
+};
+
 // create an order
 dev.post("/api/form/orders/create", (req, res) => {
   // async waits for a response
   (async () => {
     try {
-      // Convert the timestamp string to a JavaScript Date object
-      const deliveryDate = new Date(req.body.deliveryDate);
-      // Convert the Date object to a Firebase Timestamp
-      const fbDeliveryDate = admin.firestore.Timestamp.fromDate(deliveryDate);
-
-      // Convert the timestamp string to a JavaScript Date object
-      const pickupDate = new Date(req.body.pickupDate);
-      // Convert the Date object to a Firebase Timestamp
-      const fbPickupDate = admin.firestore.Timestamp.fromDate(pickupDate);
-
-      // Convert the timestamp string to a JavaScript Date object
-      const created = new Date();
-      // Convert the Date object to a Firebase Timestamp
-      const fbCreated = admin.firestore.Timestamp.fromDate(created);
+      const timestamps = getTimestamps(req.body.dateRange);
 
       await db.collection(baseDB).doc().create({
         fullName: req.body.fullName,
-        notes: req.body.notes,
-        deliveryDate: fbDeliveryDate,
-        pickupDate: fbPickupDate,
+        notes: req.body.additionalNotes,
+        deliveryDate: timestamps.delivery,
+        pickupDate: timestamps.pickup,
         deliveryAddress: req.body.deliveryAddress,
         email: req.body.email,
-        phone: req.body.phone,
+        phone: req.body.phoneNumber,
         selectedItems: [],
-        created: fbCreated,
-        lastUpdated: fbCreated,
+        lastUpdated: timestamps.updated,
+        created: timestamps.updated,
       });
 
       return res.status(200).send({ status: "Success", msg: "Order Saved" });
@@ -99,32 +105,28 @@ dev.put("/api/form/orders/update/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {
-      // Convert the timestamp string to a JavaScript Date object
-      const deliveryDate = new Date(req.body.dateRange.delivery);
-      // Convert the Date object to a Firebase Timestamp
-      const fbDeliveryDate = admin.firestore.Timestamp.fromDate(deliveryDate);
-
-      // Convert the timestamp string to a JavaScript Date object
-      const pickupDate = new Date(req.body.dateRange.pickup);
-      // Convert the Date object to a Firebase Timestamp
-      const fbPickupDate = admin.firestore.Timestamp.fromDate(pickupDate);
-
-      // Convert the timestamp string to a JavaScript Date object
-      const updated = new Date();
-      // Convert the Date object to a Firebase Timestamp
-      const fbUpdated = admin.firestore.Timestamp.fromDate(updated);
+      const timestamps = getTimestamps(req.body.dateRange);
 
       const reqDoc = db.collection(baseDB).doc(req.params.id);
+
+      if (!reqDoc) {
+        logger.error(`Error - No order found with id: ${req.params.id}`);
+        return res.status(404).send({
+          status: "Failed",
+          msg: `No order found with id: ${req.params.id}`,
+        });
+      }
+
       await reqDoc.update({
         fullName: req.body.fullName,
         notes: req.body.additionalNotes,
-        deliveryDate: fbDeliveryDate,
-        pickupDate: fbPickupDate,
+        deliveryDate: timestamps.delivery,
+        pickupDate: timestamps.pickup,
         deliveryAddress: req.body.deliveryAddress,
         email: req.body.email,
         phone: req.body.phoneNumber,
         selectedItems: [],
-        lastUpdated: fbUpdated,
+        lastUpdated: timestamps.updated,
       });
 
       return res.status(200).send({ status: "Success", msg: "Order Updated" });

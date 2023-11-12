@@ -66,7 +66,7 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
   useEffect(() => {
     const apiBasrUrl = process.env.REACT_APP_API_BASE_URL;
 
-    fetch(`${apiBasrUrl}/api/form-items/getAll`)
+    fetch(`${apiBasrUrl}/api/form/form-items/getAll`)
       .then((response) => response.json())
       .then((res) => {
         setItems(res.data);
@@ -76,7 +76,7 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
         console.error("Error fetching data:", error);
       });
 
-    fetch(`${apiBasrUrl}/api/form-items/games/getAll`)
+    fetch(`${apiBasrUrl}/api/form/game-items/getAll`)
       .then((response) => response.json())
       .then((res) => {
         setGames(res.data);

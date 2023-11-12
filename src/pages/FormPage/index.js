@@ -38,6 +38,23 @@ const FormPage = () => {
       selectedItems,
     };
     console.log("Form Data:", submissionData);
+
+    const apiBasrUrl = process.env.REACT_APP_API_BASE_URL;
+
+    fetch(`${apiBasrUrl}/api/form/orders/create`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(submissionData),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   };
 
   return (

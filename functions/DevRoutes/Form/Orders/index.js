@@ -1,6 +1,18 @@
 const { dev, logger, db, admin } = require("../../../setup");
+const nodemailer = require("nodemailer");
 
 const baseDB = "orders_dev";
+
+const gmailEmail = "bayitabroad@gmail.com";
+const gmailPassword = "azja uaxq usfp tmif";
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: gmailEmail,
+    pass: gmailPassword,
+  },
+});
 
 const getTimestamps = (dateRange) => {
   // Convert the timestamp string to a JavaScript Date object
@@ -28,7 +40,7 @@ dev.post("/api/form/orders/create", (req, res) => {
     try {
       const timestamps = getTimestamps(req.body.dateRange);
 
-      await db.collection(baseDB).doc().create({
+      const order = {
         fullName: req.body.fullName,
         notes: req.body.additionalNotes,
         deliveryDate: timestamps.delivery,
@@ -39,7 +51,33 @@ dev.post("/api/form/orders/create", (req, res) => {
         selectedItems: [],
         lastUpdated: timestamps.updated,
         created: timestamps.updated,
-      });
+      };
+
+      const orderString = `name: ${order.fullName}\nemail: ${
+        order.email
+      }\nphone: ${order.phone}\naddress: ${
+        order.deliveryAddress
+      }\ndelivery on: ${order.deliveryDate.toDate()}
+      \npickup on: ${order.pickupDate.toDate()}
+      \nselected items: ${order.selectedItems.map((item) => {
+      return `${item}, `;
+    })}`;
+
+      await db.collection(baseDB).doc().create(order);
+
+      const mailOptions = {
+        from: "orders@bayitabroad.com",
+        to: gmailEmail,
+        subject: "New Order Placed",
+        text: `A new order was placed.\n\n ${orderString}`,
+      };
+
+      try {
+        await transporter.sendMail(mailOptions);
+        logger.log("Email notification sent successfully.");
+      } catch (error) {
+        logger.error("Error sending email:", error);
+      }
 
       return res.status(200).send({ status: "Success", msg: "Order Saved" });
     } catch (error) {

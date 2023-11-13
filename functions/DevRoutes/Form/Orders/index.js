@@ -48,7 +48,9 @@ dev.post("/api/form/orders/create", (req, res) => {
         deliveryAddress: req.body.deliveryAddress,
         email: req.body.email,
         phone: req.body.phoneNumber,
-        selectedItems: [],
+        selectedItems: req.body.selectedItems.map((item) => {
+          return `\n${item.id}`;
+        }),
         lastUpdated: timestamps.updated,
         created: timestamps.updated,
       };
@@ -58,8 +60,8 @@ dev.post("/api/form/orders/create", (req, res) => {
       }\nphone: ${order.phone}\naddress: ${
         order.deliveryAddress
       }\ndelivery on: ${order.deliveryDate.toDate()}
-      \npickup on: ${order.pickupDate.toDate()}
-      \nselected items: ${order.selectedItems.map((item) => {
+      pickup on: ${order.pickupDate.toDate()}
+      selected items: ${order.selectedItems.map((item) => {
       return `${item}, `;
     })}`;
 
@@ -69,7 +71,7 @@ dev.post("/api/form/orders/create", (req, res) => {
         from: "orders@bayitabroad.com",
         to: gmailEmail,
         subject: "New Order Placed",
-        text: `A new order was placed.\n\n ${orderString}`,
+        text: `A new order was placed.\n\n${orderString}`,
       };
 
       try {

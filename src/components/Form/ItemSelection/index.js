@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Typography,
   FormControl,
@@ -21,6 +21,24 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
   const isEntirePackageSelected = checkedItems.includes(items[0]?.id);
   const isSelectedGameId = checkedItems.includes(gamesId);
 
+  // Create a map of games for faster lookup by id
+  const gamesMap = useMemo(() => {
+    const map = {};
+    games.forEach((game) => {
+      map[game.id] = game;
+    });
+    return map;
+  }, [games]);
+
+  // Create a map of items for faster lookup by id
+  const itemsMap = useMemo(() => {
+    const map = {};
+    items.forEach((item) => {
+      map[item.id] = item;
+    });
+    return map;
+  }, [items]);
+
   const calculateTotal = useCallback(
     (selectedItems) => {
       let total = { usd: 0, nis: 0 };
@@ -28,18 +46,6 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
       if (isEntirePackageSelected) {
         return items[0].price;
       }
-
-      // Create a map of games for faster lookup by id
-      const gamesMap = {};
-      games.forEach((game) => {
-        gamesMap[game.id] = game;
-      });
-
-      // Create a map of items for faster lookup by id
-      const itemsMap = {};
-      items.forEach((item) => {
-        itemsMap[item.id] = item;
-      });
 
       // Calculate the total for the main items and selected games
       for (const itemId of selectedItems) {
@@ -60,7 +66,7 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
 
       return total;
     },
-    [isEntirePackageSelected, items, selectedGames, games]
+    [isEntirePackageSelected, items, selectedGames, gamesMap, itemsMap]
   );
 
   useEffect(() => {
@@ -120,17 +126,21 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
       if (itemId === gamesId) {
         tempStructuredItems.push({
           id: itemId,
+          name: itemsMap[itemId].name,
+          price: itemsMap[itemId].price,
           games: selectedGames,
         });
       } else {
         tempStructuredItems.push({
           id: itemId,
+          name: itemsMap[itemId].name,
+          price: itemsMap[itemId].price,
         });
       }
     });
 
     setSelectedItems(tempStructuredItems);
-  }, [checkedItems, selectedGames, setSelectedItems]);
+  }, [checkedItems, selectedGames, setSelectedItems, itemsMap]);
 
   return loading ? (
     <Loading />

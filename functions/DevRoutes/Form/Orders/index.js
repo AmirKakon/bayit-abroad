@@ -71,15 +71,21 @@ dev.post("/api/form/orders/create", (req, res) => {
         created: timestamps.updated,
       };
 
-      const orderString = `name: ${order.fullName}\nemail: ${
-        order.email
-      }\nphone: ${order.phone}\naddress: ${
-        order.deliveryAddress
-      }\ndelivery on: ${order.deliveryDate.toDate()
-      }\npickup on: ${order.pickupDate.toDate()
-      }\n\nselected items: \n${
-        order.selectedItems.join("\n")
-      }\n\ntotal: $${order.totalPrice.usd}`;
+      const selectedItemsList = order.selectedItems
+        .map((item) => `<li>${item}</li>`)
+        .join("");
+
+      const orderHtml = `
+        <p><strong>Name:</strong> ${order.fullName}</p>
+        <p><strong>Email:</strong> ${order.email}</p>
+        <p><strong>Phone:</strong> ${order.phone}</p>
+        <p><strong>Address:</strong> ${order.deliveryAddress}</p>
+        <p><strong>Delivery on:</strong> ${order.deliveryDate.toDate()}</p>
+        <p><strong>Pickup on:</strong> ${order.pickupDate.toDate()}</p>
+        <p><strong>Selected items:</strong></p>
+        <ul>${selectedItemsList}</ul>
+        <p><strong>Total:</strong> $${order.totalPrice.usd}</p>
+      `;
 
       await db.collection(baseDB).doc().create(order);
 
@@ -87,7 +93,7 @@ dev.post("/api/form/orders/create", (req, res) => {
         from: "orders@bayitabroad.com",
         to: gmailEmail,
         subject: "New Order Placed",
-        text: `A new order was placed.\n\n${orderString}`,
+        html: `<p>A new order was placed.</p>${orderHtml}`,
       };
 
       try {

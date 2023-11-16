@@ -36,16 +36,17 @@ const getTimestamps = (dateRange) => {
 };
 
 const getSelectedItems = (items) => {
-  const itemsMap = items.map((item) => {
+  const itemsMap = [];
+  items.forEach((item) => {
     if (item.id === gamesId) {
-      return item.games.map((game) => {
-        return `${game}: $${game.price.usd}`;
+      item.games.forEach((game) => {
+        itemsMap.push(`${game.name}: $${game.price.usd}`);
       });
     } else {
-      return `\n${item.name} : $${item.price.usd}`;
+      itemsMap.push(`${item.name} : $${item.price.usd}`);
     }
   });
-
+  console.log(itemsMap);
   return itemsMap;
 };
 
@@ -76,8 +77,9 @@ dev.post("/api/form/orders/create", (req, res) => {
         order.deliveryAddress
       }\ndelivery on: ${order.deliveryDate.toDate()
       }\npickup on: ${order.pickupDate.toDate()
-      }\nselected items: ${order.selectedItems
-      }\ntotal: $${order.totalPrice.usd}`;
+      }\n\nselected items: \n${
+        order.selectedItems.join("\n")
+      }\n\ntotal: $${order.totalPrice.usd}`;
 
       await db.collection(baseDB).doc().create(order);
 

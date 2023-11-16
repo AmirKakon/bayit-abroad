@@ -3,6 +3,8 @@ const nodemailer = require("nodemailer");
 
 const baseDB = "orders_dev";
 
+const gamesId = "1tRC1jxs6fRXCA69eIal";
+
 const gmailEmail = "bayitabroad@gmail.com";
 const gmailPassword = "azja uaxq usfp tmif";
 
@@ -33,6 +35,20 @@ const getTimestamps = (dateRange) => {
   return { delivery: fbDeliveryDate, pickup: fbPickupDate, updated: fbUpdated };
 };
 
+const getSelectedItems = (items) => {
+  const itemsMap = items.map((item) => {
+    if (item.id === gamesId) {
+      return item.games.map((game) => {
+        return `${game}: $${game.price.usd}`;
+      });
+    } else {
+      return `\n${item.name} : $${item.price.usd}`;
+    }
+  });
+
+  return itemsMap;
+};
+
 // create an order
 dev.post("/api/form/orders/create", (req, res) => {
   // async waits for a response
@@ -48,9 +64,8 @@ dev.post("/api/form/orders/create", (req, res) => {
         deliveryAddress: req.body.deliveryAddress,
         email: req.body.email,
         phone: req.body.phoneNumber,
-        selectedItems: req.body.selectedItems.map((item) => {
-          return `\n${item.id}`;
-        }),
+        selectedItems: getSelectedItems(req.body.selectedItems),
+        totalPrice: req.body.totalPrice,
         lastUpdated: timestamps.updated,
         created: timestamps.updated,
       };
@@ -59,11 +74,10 @@ dev.post("/api/form/orders/create", (req, res) => {
         order.email
       }\nphone: ${order.phone}\naddress: ${
         order.deliveryAddress
-      }\ndelivery on: ${order.deliveryDate.toDate()}
-      pickup on: ${order.pickupDate.toDate()}
-      selected items: ${order.selectedItems.map((item) => {
-      return `${item}, `;
-    })}`;
+      }\ndelivery on: ${order.deliveryDate.toDate()
+      }\npickup on: ${order.pickupDate.toDate()
+      }\nselected items: ${order.selectedItems
+      }\ntotal: $${order.totalPrice.usd}`;
 
       await db.collection(baseDB).doc().create(order);
 

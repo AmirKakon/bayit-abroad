@@ -11,7 +11,11 @@ const GameDropdown = ({ games, selectedGames, setSelectedGames }) => {
   const [noGameSelectedMessage, setNoGameSelectedMessage] = useState("No games have been selected");
 
   const handleGameChange = (event) => {
-    setSelectedGames(event.target.value);
+    // Find the full game objects based on the selected IDs
+    const selectedGameObjects = event.target.value.map(
+      (gameId) => games.find((game) => game.id === gameId)
+    );
+    setSelectedGames(selectedGameObjects);
   };
 
   useEffect(() => {
@@ -20,12 +24,12 @@ const GameDropdown = ({ games, selectedGames, setSelectedGames }) => {
     } else {
       setNoGameSelectedMessage("No games have been selected");
     }
-
   }, [selectedGames]);
+
   return (
     <div>
       <Select
-        value={selectedGames}
+        value={selectedGames.map((game) => game.id)} // Set the value to an array of IDs
         onChange={handleGameChange}
         renderValue={(selected) => {
           const selectedGameNames = selected.map(
@@ -38,7 +42,7 @@ const GameDropdown = ({ games, selectedGames, setSelectedGames }) => {
       >
         {games.map((game) => (
           <MenuItem key={game.id} value={game.id}>
-            <Checkbox checked={selectedGames.includes(game.id)} />
+            <Checkbox checked={selectedGames.some((selectedGame) => selectedGame.id === game.id)} />
             <ListItemText
               primary={`${game.name} : $${game.price.usd} / ₪${game.price.nis}`}
             />

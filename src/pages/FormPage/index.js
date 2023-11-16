@@ -36,25 +36,26 @@ const FormPage = () => {
     const submissionData = {
       ...formData,
       selectedItems,
+      totalPrice,
     };
     console.log("Form Data:", submissionData);
 
     const apiBasrUrl = process.env.REACT_APP_API_BASE_URL;
 
-    // fetch(`${apiBasrUrl}/api/form/orders/create`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(submissionData),
-    // })
-    //   .then(response => response.json())
-    //   .then(data => {
-    //     console.log('Success:', data);
-    //   })
-    //   .catch(error => {
-    //     console.error('Error:', error);
-    //   });
+    fetch(`${apiBasrUrl}/api/form/orders/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(submissionData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   return (
@@ -65,7 +66,7 @@ const FormPage = () => {
         minHeight: "200",
         padding: 2,
       }}
-    >      
+    >
       <Container component="main" maxWidth="md">
         <Header />
         <form onSubmit={handleSubmit}>

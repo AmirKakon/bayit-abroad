@@ -21,15 +21,6 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
   const isEntirePackageSelected = checkedItems.includes(items[0]?.id);
   const isSelectedGameId = checkedItems.includes(gamesId);
 
-  // Create a map of games for faster lookup by id
-  const gamesMap = useMemo(() => {
-    const map = {};
-    games.forEach((game) => {
-      map[game.id] = game;
-    });
-    return map;
-  }, [games]);
-
   // Create a map of items for faster lookup by id
   const itemsMap = useMemo(() => {
     const map = {};
@@ -55,18 +46,16 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
         }
 
         if (itemId === gamesId) {
-          for (const gameId of selectedGames) {
-            if (gamesMap[gameId]) {
-              total.usd += gamesMap[gameId].price.usd;
-              total.nis += gamesMap[gameId].price.nis;
-            }
-          }
+          selectedGames.forEach((game) => {
+            total.usd += game.price.usd;
+            total.nis += game.price.nis;
+          });
         }
       }
 
       return total;
     },
-    [isEntirePackageSelected, items, selectedGames, gamesMap, itemsMap]
+    [isEntirePackageSelected, items, selectedGames, itemsMap]
   );
 
   useEffect(() => {

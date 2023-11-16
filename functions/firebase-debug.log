@@ -1,0 +1,68 @@
+[debug] [2023-11-16T15:27:39.033Z] ----------------------------------------------------------------------
+[debug] [2023-11-16T15:27:39.037Z] Command:       C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2023-11-16T15:27:39.038Z] CLI Version:   12.9.1
+[debug] [2023-11-16T15:27:39.038Z] Platform:      win32
+[debug] [2023-11-16T15:27:39.038Z] Node Version:  v16.20.0
+[debug] [2023-11-16T15:27:39.040Z] Time:          Thu Nov 16 2023 17:27:39 GMT+0200 (Israel Standard Time)
+[debug] [2023-11-16T15:27:39.041Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-11-16T15:27:39.242Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-11-16T15:27:39.243Z] > authorizing via signed-in user (pppchevy@gmail.com)
+[debug] [2023-11-16T15:27:39.243Z] [iam] checking project bayitabroad-jkak for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2023-11-16T15:27:39.248Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/bayitabroad-jkak:testIamPermissions [none]
+[debug] [2023-11-16T15:27:39.249Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/bayitabroad-jkak:testIamPermissions x-goog-quota-user=projects/bayitabroad-jkak
+[debug] [2023-11-16T15:27:39.249Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/bayitabroad-jkak:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2023-11-16T15:27:40.483Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/bayitabroad-jkak:testIamPermissions 200
+[debug] [2023-11-16T15:27:40.484Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/bayitabroad-jkak:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2023-11-16T15:27:40.485Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/bayitabroad-jkak/serviceAccounts/bayitabroad-jkak@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2023-11-16T15:27:40.485Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/bayitabroad-jkak/serviceAccounts/bayitabroad-jkak@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2023-11-16T15:27:40.601Z] *** [apiv2] error from fetch(https://iam.googleapis.com/v1/projects/bayitabroad-jkak/serviceAccounts/bayitabroad-jkak@appspot.gserviceaccount.com:testIamPermissions, {"headers":{},"method":"POST","body":"{\"permissions\":[\"iam.serviceAccounts.actAs\"]}"}): FetchError: request to https://iam.googleapis.com/v1/projects/bayitabroad-jkak/serviceAccounts/bayitabroad-jkak@appspot.gserviceaccount.com:testIamPermissions failed, reason: connect EADDRINUSE 172.217.22.10:443
+[debug] [2023-11-16T15:27:40.603Z] [functions] service account IAM check errored, deploy may fail: Failed to make request to https://iam.googleapis.com/v1/projects/bayitabroad-jkak/serviceAccounts/bayitabroad-jkak@appspot.gserviceaccount.com:testIamPermissions {"name":"FirebaseError","children":[],"exit":1,"message":"Failed to make request to https://iam.googleapis.com/v1/projects/bayitabroad-jkak/serviceAccounts/bayitabroad-jkak@appspot.gserviceaccount.com:testIamPermissions","original":{"message":"request to https://iam.googleapis.com/v1/projects/bayitabroad-jkak/serviceAccounts/bayitabroad-jkak@appspot.gserviceaccount.com:testIamPermissions failed, reason: connect EADDRINUSE 172.217.22.10:443","type":"system","errno":"EADDRINUSE","code":"EADDRINUSE"},"status":500}
+[info] 
+[info] === Deploying to 'bayitabroad-jkak'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] +  functions: Finished running predeploy script. 
+[debug] [2023-11-16T15:27:53.503Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/bayitabroad-jkak [none]
+[debug] [2023-11-16T15:27:53.562Z] *** [apiv2] error from fetch(https://firebase.googleapis.com/v1beta1/projects/bayitabroad-jkak, {"headers":{},"method":"GET","signal":{}}): FetchError: request to https://firebase.googleapis.com/v1beta1/projects/bayitabroad-jkak failed, reason: connect EADDRINUSE 172.217.22.10:443
+[debug] [2023-11-16T15:27:53.562Z] Failed to make request to https://firebase.googleapis.com/v1beta1/projects/bayitabroad-jkak (original: request to https://firebase.googleapis.com/v1beta1/projects/bayitabroad-jkak failed, reason: connect EADDRINUSE 172.217.22.10:443)
+[debug] [2023-11-16T15:27:53.576Z] FirebaseError: Failed to make request to https://firebase.googleapis.com/v1beta1/projects/bayitabroad-jkak
+    at RetryOperation._fn (C:\Users\amirk\AppData\Roaming\nvm\v16.20.0\node_modules\firebase-tools\lib\apiv2.js:239:31)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[error] 
+[error] Error: Failed to get Firebase project bayitabroad-jkak. Please make sure the project exists and your account has permission to access it.
+[debug] [2023-11-16T15:39:12.228Z] ----------------------------------------------------------------------
+[debug] [2023-11-16T15:39:12.232Z] Command:       C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2023-11-16T15:39:12.233Z] CLI Version:   12.9.1
+[debug] [2023-11-16T15:39:12.233Z] Platform:      win32
+[debug] [2023-11-16T15:39:12.234Z] Node Version:  v16.20.0
+[debug] [2023-11-16T15:39:12.252Z] Time:          Thu Nov 16 2023 17:39:12 GMT+0200 (Israel Standard Time)
+[debug] [2023-11-16T15:39:12.253Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-11-16T15:39:12.397Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-11-16T15:39:12.399Z] > authorizing via signed-in user (pppchevy@gmail.com)
+[debug] [2023-11-16T15:39:12.399Z] [iam] checking project bayitabroad-jkak for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2023-11-16T15:39:12.405Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/bayitabroad-jkak:testIamPermissions [none]
+[debug] [2023-11-16T15:39:12.406Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/bayitabroad-jkak:testIamPermissions x-goog-quota-user=projects/bayitabroad-jkak
+[debug] [2023-11-16T15:39:12.406Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/bayitabroad-jkak:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2023-11-16T15:39:12.589Z] *** [apiv2] error from fetch(https://cloudresourcemanager.googleapis.com/v1/projects/bayitabroad-jkak:testIamPermissions, {"headers":{},"method":"POST","body":"{\"permissions\":[\"cloudfunctions.functions.create\",\"cloudfunctions.functions.delete\",\"cloudfunctions.functions.get\",\"cloudfunctions.functions.list\",\"cloudfunctions.functions.update\",\"cloudfunctions.operations.get\",\"firebase.projects.get\"]}"}): FetchError: request to https://cloudresourcemanager.googleapis.com/v1/projects/bayitabroad-jkak:testIamPermissions failed, reason: connect EADDRINUSE 172.217.22.10:443
+[debug] [2023-11-16T15:39:12.590Z] [iam] error while checking permissions, command may fail: FirebaseError: Failed to make request to https://cloudresourcemanager.googleapis.com/v1/projects/bayitabroad-jkak:testIamPermissions
+[debug] [2023-11-16T15:39:12.590Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/bayitabroad-jkak/serviceAccounts/bayitabroad-jkak@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2023-11-16T15:39:12.591Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/bayitabroad-jkak/serviceAccounts/bayitabroad-jkak@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2023-11-16T15:39:12.701Z] *** [apiv2] error from fetch(https://iam.googleapis.com/v1/projects/bayitabroad-jkak/serviceAccounts/bayitabroad-jkak@appspot.gserviceaccount.com:testIamPermissions, {"headers":{},"method":"POST","body":"{\"permissions\":[\"iam.serviceAccounts.actAs\"]}"}): FetchError: request to https://iam.googleapis.com/v1/projects/bayitabroad-jkak/serviceAccounts/bayitabroad-jkak@appspot.gserviceaccount.com:testIamPermissions failed, reason: connect EADDRINUSE 172.217.22.42:443
+[debug] [2023-11-16T15:39:12.701Z] [functions] service account IAM check errored, deploy may fail: Failed to make request to https://iam.googleapis.com/v1/projects/bayitabroad-jkak/serviceAccounts/bayitabroad-jkak@appspot.gserviceaccount.com:testIamPermissions {"name":"FirebaseError","children":[],"exit":1,"message":"Failed to make request to https://iam.googleapis.com/v1/projects/bayitabroad-jkak/serviceAccounts/bayitabroad-jkak@appspot.gserviceaccount.com:testIamPermissions","original":{"message":"request to https://iam.googleapis.com/v1/projects/bayitabroad-jkak/serviceAccounts/bayitabroad-jkak@appspot.gserviceaccount.com:testIamPermissions failed, reason: connect EADDRINUSE 172.217.22.42:443","type":"system","errno":"EADDRINUSE","code":"EADDRINUSE"},"status":500}
+[info] 
+[info] === Deploying to 'bayitabroad-jkak'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] +  functions: Finished running predeploy script. 
+[debug] [2023-11-16T15:39:27.082Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/bayitabroad-jkak [none]
+[debug] [2023-11-16T15:39:27.234Z] *** [apiv2] error from fetch(https://firebase.googleapis.com/v1beta1/projects/bayitabroad-jkak, {"headers":{},"method":"GET","signal":{}}): FetchError: request to https://firebase.googleapis.com/v1beta1/projects/bayitabroad-jkak failed, reason: connect EADDRINUSE 172.217.22.10:443
+[debug] [2023-11-16T15:39:27.234Z] Failed to make request to https://firebase.googleapis.com/v1beta1/projects/bayitabroad-jkak (original: request to https://firebase.googleapis.com/v1beta1/projects/bayitabroad-jkak failed, reason: connect EADDRINUSE 172.217.22.10:443)
+[debug] [2023-11-16T15:39:28.608Z] FirebaseError: Failed to make request to https://firebase.googleapis.com/v1beta1/projects/bayitabroad-jkak
+    at RetryOperation._fn (C:\Users\amirk\AppData\Roaming\nvm\v16.20.0\node_modules\firebase-tools\lib\apiv2.js:239:31)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[error] 
+[error] Error: Failed to get Firebase project bayitabroad-jkak. Please make sure the project exists and your account has permission to access it.

@@ -3,13 +3,13 @@ const { app, dev, functions } = require("./setup");
 // app routes
 require("./Routes/Form/FormItems");
 require("./Routes/Form/GameItems");
-
-require("./ExchangeRates");
+// require("./Routes/ExchangeRates");
 
 // // dev routes
 require("./DevRoutes/Form/FormItems");
 require("./DevRoutes/Form/GameItems");
 require("./DevRoutes/Form/Orders");
+require("./DevRoutes/ExchangeRates");
 
 require("./DevRoutes/Tutorial");
 

@@ -1,4 +1,4 @@
-const { app, logger } = require("../setup");
+const { app, logger } = require("../../setup");
 const fetch = require("node-fetch");
 
 const cacheDurationMinutes = 60;
@@ -18,7 +18,7 @@ app.get("/api/exchange-rates/usd-to-ils", async (req, res) => {
       );
       const exchangeRates = await response.json();
 
-      cachedExchangeRates = exchangeRates;
+      cachedExchangeRates = exchangeRates.conversion_rate;
       lastFetchTime = currentTime;
     } catch (error) {
       logger.error("Error fetching exchange rates:", error);

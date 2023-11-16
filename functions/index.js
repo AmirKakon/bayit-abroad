@@ -4,6 +4,8 @@ const { app, dev, functions } = require("./setup");
 require("./Routes/Form/FormItems");
 require("./Routes/Form/GameItems");
 
+require("./ExchangeRates");
+
 // // dev routes
 require("./DevRoutes/Form/FormItems");
 require("./DevRoutes/Form/GameItems");

@@ -1,7 +1,28 @@
 const { dev, logger, db } = require("../../../setup");
+const fetch = require("node-fetch");
 
 const baseDB = "form-items_dev";
 const preferredId = "XkfGiR95lXrZveSxToMl"; // 'entire package' id
+
+
+// Function to fetch exchange rate
+async function getExchangeRate() {
+  try {
+    const response = await fetch(
+      "https://us-central1-bayitabroad-jkak.cloudfunctions.net/dev/api/exchange-rates/usd-to-ils"
+    );
+    const exchangeRateData = await response.json();
+
+    if (exchangeRateData.status === "Success") {
+      return exchangeRateData.rate;
+    } else {
+      throw new Error("Failed to fetch exchange rates");
+    }
+  } catch (error) {
+    logger.error("Error fetching exchange rates:", error);
+    throw new Error("Failed to fetch exchange rates");
+  }
+}
 
 // create a form item
 dev.post("/api/form/form-items/create", (req, res) => {
@@ -52,38 +73,46 @@ dev.get("/api/form/form-items/get/:id", (req, res) => {
   })();
 });
 
-// get all items
-dev.get("/api/form/form-items/getAll", (req, res) => {
-  (async () => {
-    try {
-      const itemsRef = db.collection(baseDB);
-      const snapshot = await itemsRef.get();
+dev.get("/api/form/form-items/getAll", async (req, res) => {
+  try {
+    // Fetch the exchange rate
+    const exchangeRate = await getExchangeRate();
 
-      if (snapshot.empty) {
-        logger.error("No items found");
-        return res
-          .status(404)
-          .send({ status: "Failed", msg: "No items found" });
-      }
+    const itemsRef = db.collection(baseDB);
+    const snapshot = await itemsRef.get();
 
-      let items = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      const preferredItem = items.find((item) => item.id === preferredId);
-      if (preferredItem) {
-        items = items.filter((item) => item.id !== preferredId);
-        items.unshift(preferredItem);
-      }
-
-      // logger.log("Item List", items);
-      return res.status(200).send({ status: "Success", data: items });
-    } catch (error) {
-      logger.error(error);
-      return res.status(500).send({ status: "Failed", msg: error });
+    if (snapshot.empty) {
+      logger.error("No items found");
+      return res.status(404).send({ status: "Failed", msg: "No items found" });
     }
-  })();
+
+    let items = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    // Iterate through items and modify the price property
+    items.forEach((item) => {
+      if (item.price) {
+        item.price = {
+          usd: item.price,
+          nis: item.price * exchangeRate,
+        };
+      }
+    });
+
+    const preferredItem = items.find((item) => item.id === preferredId);
+    if (preferredItem) {
+      items = items.filter((item) => item.id !== preferredId);
+      items.unshift(preferredItem);
+    }
+
+    // Send the mutated items as a response
+    return res.status(200).send({ status: "Success", data: items });
+  } catch (error) {
+    console.error("Function error:", error);
+    return res.status(500).send({ status: "Failed", msg: error.message });
+  }
 });
 
 // update item

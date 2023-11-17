@@ -27,12 +27,12 @@ dev.get("/api/exchange-rates/usd-to-ils", async (req, res) => {
         rate: cachedExchangeRates,
       });
     } catch (error) {
-      logger.error("Error fetching exchange rates:", error);
+      logger.error("Error fetching exchange rate:", error);
       return res.status(500).send("Internal Server Error");
     }
   }
 
-  logger.log("Successful cache exchange rate", currentTime);
+  logger.log("Successful cached exchange rate", currentTime);
   res.status(200).json(cachedExchangeRates);
 });
 

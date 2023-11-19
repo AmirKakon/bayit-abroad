@@ -38,15 +38,26 @@ dev.get("/api/exchange-rates/usd-to-ils", async (req, res) => {
 
 const getExchangeRate = async () => {
   try {
-    const response = await fetch(
-      "https://us-central1-bayitabroad-jkak.cloudfunctions.net/dev/api/exchange-rates/usd-to-ils",
-    );
-    const exchangeRateData = await response.json();
+    const currentTime = Date.now();
 
-    if (exchangeRateData.status === "Success") {
-      return exchangeRateData.rate;
+    if (
+      !cachedExchangeRates ||
+      currentTime - lastFetchTime > cacheDurationMinutes * 60 * 1000
+    ) {
+      const response = await fetch(
+        "https://us-central1-bayitabroad-jkak.cloudfunctions.net/dev/api/exchange-rates/usd-to-ils",
+      );
+      const exchangeRateData = await response.json();
+
+      if (exchangeRateData.status === "Success") {
+        cachedExchangeRates = exchangeRateData.rate;
+        lastFetchTime = currentTime;
+        return cachedExchangeRates;
+      } else {
+        throw new Error("Failed to fetch exchange rates");
+      }
     } else {
-      throw new Error("Failed to fetch exchange rates");
+      return cachedExchangeRates;
     }
   } catch (error) {
     logger.error("Error fetching exchange rates:", error);

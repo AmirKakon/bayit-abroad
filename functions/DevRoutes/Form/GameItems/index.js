@@ -1,4 +1,5 @@
 const { dev, logger, db } = require("../../../setup");
+const { getExchangeRate } = require("../../ExchangeRates");
 
 const baseDB = "form-items_dev";
 const gamesDB = "games";
@@ -16,10 +17,7 @@ dev.post("/api/form/game-items/create", (req, res) => {
         .doc()
         .create({
           name: req.body.name,
-          price: {
-            nis: req.body.price.nis,
-            usd: req.body.price.usd,
-          },
+          price: req.body.price,
         });
 
       return res.status(200).send({ status: "Success", msg: "Game Saved" });
@@ -34,6 +32,9 @@ dev.post("/api/form/game-items/create", (req, res) => {
 dev.get("/api/form/game-items/get/:id", (req, res) => {
   (async () => {
     try {
+      // Fetch the exchange rate
+      const exchangeRate = await getExchangeRate();
+
       const itemRef = db
         .collection(baseDB)
         .doc(gamesId)
@@ -50,7 +51,14 @@ dev.get("/api/form/game-items/get/:id", (req, res) => {
         });
       }
 
-      // logger.log("Item:", item);
+      // update price
+      if (item.price) {
+        item.price = {
+          usd: item.price,
+          nis: Math.ceil(item.price * exchangeRate),
+        };
+      }
+
       return res.status(200).send({ status: "Success", data: item });
     } catch (error) {
       logger.error(error);
@@ -63,6 +71,9 @@ dev.get("/api/form/game-items/get/:id", (req, res) => {
 dev.get("/api/form/game-items/getAll", (req, res) => {
   (async () => {
     try {
+      // Fetch the exchange rate
+      const exchangeRate = await getExchangeRate();
+
       const itemsRef = db.collection(baseDB).doc(gamesId).collection(gamesDB);
       const snapshot = await itemsRef.get();
 
@@ -77,6 +88,16 @@ dev.get("/api/form/game-items/getAll", (req, res) => {
         id: doc.id,
         ...doc.data(),
       }));
+
+      // Iterate through items and modify the price property
+      items.forEach((item) => {
+        if (item.price) {
+          item.price = {
+            usd: item.price,
+            nis: Math.ceil(item.price * exchangeRate),
+          };
+        }
+      });
 
       // logger.log("Games List", items);
       return res.status(200).send({ status: "Success", data: items });
@@ -99,10 +120,7 @@ dev.put("/api/form/game-items/update/:id", (req, res) => {
         .doc(req.params.id);
       await reqDoc.update({
         name: req.body.name,
-        price: {
-          nis: req.body.price.nis,
-          usd: req.body.price.usd,
-        },
+        price: req.body.price,
       });
 
       return res.status(200).send({ status: "Success", msg: "Game Updated" });

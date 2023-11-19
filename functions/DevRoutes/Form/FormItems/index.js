@@ -1,44 +1,18 @@
 const { dev, logger, db } = require("../../../setup");
-const fetch = require("node-fetch");
+const { getExchangeRate } = require("../../ExchangeRates");
 
 const baseDB = "form-items_dev";
 const preferredId = "XkfGiR95lXrZveSxToMl"; // 'entire package' id
-
-
-// Function to fetch exchange rate
-async function getExchangeRate() {
-  try {
-    const response = await fetch(
-      "https://us-central1-bayitabroad-jkak.cloudfunctions.net/dev/api/exchange-rates/usd-to-ils"
-    );
-    const exchangeRateData = await response.json();
-
-    if (exchangeRateData.status === "Success") {
-      return exchangeRateData.rate;
-    } else {
-      throw new Error("Failed to fetch exchange rates");
-    }
-  } catch (error) {
-    logger.error("Error fetching exchange rates:", error);
-    throw new Error("Failed to fetch exchange rates");
-  }
-}
 
 // create a form item
 dev.post("/api/form/form-items/create", (req, res) => {
   // async waits for a response
   (async () => {
     try {
-      await db
-        .collection(baseDB)
-        .doc()
-        .create({
-          name: req.body.name,
-          price: {
-            nis: req.body.price.nis,
-            usd: req.body.price.usd,
-          },
-        });
+      await db.collection(baseDB).doc().create({
+        name: req.body.name,
+        price: req.body.price,
+      });
 
       return res.status(200).send({ status: "Success", msg: "Item Saved" });
     } catch (error) {
@@ -52,6 +26,9 @@ dev.post("/api/form/form-items/create", (req, res) => {
 dev.get("/api/form/form-items/get/:id", (req, res) => {
   (async () => {
     try {
+      // Fetch the exchange rate
+      const exchangeRate = await getExchangeRate();
+
       const itemRef = db.collection(baseDB).doc(req.params.id);
       const doc = await itemRef.get(); // gets doc
       const item = doc.data(); // the actual data of the item
@@ -64,7 +41,14 @@ dev.get("/api/form/form-items/get/:id", (req, res) => {
         });
       }
 
-      // logger.log("Item:", item);
+      // update price
+      if (item.price) {
+        item.price = {
+          usd: item.price,
+          nis: Math.ceil(item.price * exchangeRate),
+        };
+      }
+
       return res.status(200).send({ status: "Success", data: item });
     } catch (error) {
       logger.error(error);
@@ -96,7 +80,7 @@ dev.get("/api/form/form-items/getAll", async (req, res) => {
       if (item.price) {
         item.price = {
           usd: item.price,
-          nis: item.price * exchangeRate,
+          nis: Math.ceil(item.price * exchangeRate),
         };
       }
     });
@@ -123,10 +107,7 @@ dev.put("/api/form/form-items/update/:id", (req, res) => {
       const reqDoc = db.collection(baseDB).doc(req.params.id);
       await reqDoc.update({
         name: req.body.name,
-        price: {
-          nis: req.body.price.nis,
-          usd: req.body.price.usd,
-        },
+        price: req.body.price,
       });
 
       return res.status(200).send({ status: "Success", msg: "Item Updated" });

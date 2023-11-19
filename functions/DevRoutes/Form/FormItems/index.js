@@ -1,8 +1,8 @@
-const { dev, logger, db } = require("../../../setup");
+const { dev, logger, db, functions } = require("../../../setup");
 const { getExchangeRate } = require("../../ExchangeRates");
 
 const baseDB = "form-items_dev";
-const preferredId = "XkfGiR95lXrZveSxToMl"; // 'entire package' id
+const preferredId = functions.config().entirepackage.id;
 
 // create a form item
 dev.post("/api/form/form-items/create", (req, res) => {

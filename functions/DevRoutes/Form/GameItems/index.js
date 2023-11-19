@@ -1,9 +1,9 @@
-const { dev, logger, db } = require("../../../setup");
+const { dev, logger, db, functions } = require("../../../setup");
 const { getExchangeRate } = require("../../ExchangeRates");
 
 const baseDB = "form-items_dev";
 const gamesDB = "games";
-const gamesId = "1tRC1jxs6fRXCA69eIal";
+const gamesId = functions.config().games.id;
 
 // create a game item
 dev.post("/api/form/game-items/create", (req, res) => {

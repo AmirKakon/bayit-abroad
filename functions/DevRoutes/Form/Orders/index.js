@@ -1,12 +1,12 @@
-const { dev, logger, db, admin } = require("../../../setup");
+const { dev, logger, db, admin, functions } = require("../../../setup");
 const nodemailer = require("nodemailer");
 
 const baseDB = "orders_dev";
 
-const gamesId = "1tRC1jxs6fRXCA69eIal";
+const gamesId = functions.config().games.id;
 
 const gmailEmail = "bayitabroad@gmail.com";
-const gmailPassword = "azja uaxq usfp tmif";
+const gmailPassword = functions.config().gmail.password;
 
 const transporter = nodemailer.createTransport({
   service: "gmail",

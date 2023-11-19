@@ -6,6 +6,7 @@ let lastFetchTime = 0;
 let cachedExchangeRates = null;
 
 const exchangeRateApiKey = functions.config().exchangerateapi.key;
+const apibaseurl = functions.config().apibaseurl.dev;
 
 dev.get("/api/exchange-rates/usd-to-ils", async (req, res) => {
   const currentTime = Date.now();
@@ -45,7 +46,7 @@ const getExchangeRate = async () => {
       currentTime - lastFetchTime > cacheDurationMinutes * 60 * 1000
     ) {
       const response = await fetch(
-        "https://us-central1-bayitabroad-jkak.cloudfunctions.net/dev/api/exchange-rates/usd-to-ils",
+        `${apibaseurl}/api/exchange-rates/usd-to-ils`,
       );
       const exchangeRateData = await response.json();
 

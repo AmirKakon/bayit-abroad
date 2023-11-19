@@ -51,64 +51,69 @@ const getSelectedItems = (items) => {
 };
 
 // create an order
-dev.post("/api/form/orders/create", (req, res) => {
-  // async waits for a response
-  (async () => {
+dev.post("/api/form/orders/create", async (req, res) => {
+  try {
+    const timestamps = getTimestamps(req.body.dateRange);
+
+    const order = {
+      fullName: req.body.fullName,
+      notes: req.body.additionalNotes,
+      deliveryDate: timestamps.delivery,
+      pickupDate: timestamps.pickup,
+      deliveryAddress: req.body.deliveryAddress,
+      email: req.body.email,
+      phone: req.body.phoneNumber,
+      selectedItems: getSelectedItems(req.body.selectedItems),
+      totalPrice: req.body.totalPrice,
+      lastUpdated: timestamps.updated,
+      created: timestamps.updated,
+    };
+
+    // Get a reference to a new document with an auto-generated ID
+    const orderRef = db.collection(baseDB).doc();
+
+    // Set the data of the document using the obtained reference
+    await orderRef.set(order);
+
+    const selectedItemsList = order.selectedItems
+      .map((item) => `<li>${item}</li>`)
+      .join("");
+
+    const orderHtml = `
+      <p><strong>Order Id:</strong> ${orderRef.id}</p>
+      <p><strong>Name:</strong> ${order.fullName}</p>
+      <p><strong>Email:</strong> ${order.email}</p>
+      <p><strong>Phone:</strong> ${order.phone}</p>
+      <p><strong>Address:</strong> ${order.deliveryAddress}</p>
+      <p><strong>Delivery on:</strong> ${order.deliveryDate.toDate()}</p>
+      <p><strong>Pickup on:</strong> ${order.pickupDate.toDate()}</p>
+      <p><strong>Selected items:</strong></p>
+      <ul>${selectedItemsList}</ul>
+      <p><strong>Total:</strong> $${order.totalPrice.usd}</p>
+    `;
+
+    const mailOptions = {
+      from: "orders@bayitabroad.com",
+      to: gmailEmail,
+      subject: `New Order Placed! Order Id: ${orderRef.id}`,
+      html: `<p>A new order was placed.</p>${orderHtml}`,
+    };
+
     try {
-      const timestamps = getTimestamps(req.body.dateRange);
-
-      const order = {
-        fullName: req.body.fullName,
-        notes: req.body.additionalNotes,
-        deliveryDate: timestamps.delivery,
-        pickupDate: timestamps.pickup,
-        deliveryAddress: req.body.deliveryAddress,
-        email: req.body.email,
-        phone: req.body.phoneNumber,
-        selectedItems: getSelectedItems(req.body.selectedItems),
-        totalPrice: req.body.totalPrice,
-        lastUpdated: timestamps.updated,
-        created: timestamps.updated,
-      };
-
-      const selectedItemsList = order.selectedItems
-        .map((item) => `<li>${item}</li>`)
-        .join("");
-
-      const orderHtml = `
-        <p><strong>Name:</strong> ${order.fullName}</p>
-        <p><strong>Email:</strong> ${order.email}</p>
-        <p><strong>Phone:</strong> ${order.phone}</p>
-        <p><strong>Address:</strong> ${order.deliveryAddress}</p>
-        <p><strong>Delivery on:</strong> ${order.deliveryDate.toDate()}</p>
-        <p><strong>Pickup on:</strong> ${order.pickupDate.toDate()}</p>
-        <p><strong>Selected items:</strong></p>
-        <ul>${selectedItemsList}</ul>
-        <p><strong>Total:</strong> $${order.totalPrice.usd}</p>
-      `;
-
-      await db.collection(baseDB).doc().create(order);
-
-      const mailOptions = {
-        from: "orders@bayitabroad.com",
-        to: gmailEmail,
-        subject: "New Order Placed",
-        html: `<p>A new order was placed.</p>${orderHtml}`,
-      };
-
-      try {
-        await transporter.sendMail(mailOptions);
-        logger.log("Email notification sent successfully.");
-      } catch (error) {
-        logger.error("Error sending email:", error);
-      }
-
-      return res.status(200).send({ status: "Success", msg: "Order Saved" });
+      await transporter.sendMail(mailOptions);
+      logger.log("Email notification sent successfully.");
     } catch (error) {
-      logger.error(error);
-      return res.status(500).send({ status: "Failed", msg: error });
+      logger.error("Error sending email:", error);
     }
-  })();
+
+    // Return the ID of the created document in the response
+    return res
+      .status(200)
+      .send({ status: "Success", msg: "Order Saved", orderId: orderRef.id });
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({ status: "Failed", msg: error });
+  }
 });
 
 // get a single order using specific id

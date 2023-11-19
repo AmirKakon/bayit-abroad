@@ -52,7 +52,7 @@ dev.get("/api/form/game-items/get/:id", (req, res) => {
       }
 
       // update price
-      if (item.price) {
+      if (item.price !== null && item.price !== undefined) {
         item.price = {
           usd: item.price,
           nis: Math.ceil(item.price * exchangeRate),
@@ -91,7 +91,7 @@ dev.get("/api/form/game-items/getAll", (req, res) => {
 
       // Iterate through items and modify the price property
       items.forEach((item) => {
-        if (item.price) {
+        if (item.price !== null && item.price !== undefined) {
           item.price = {
             usd: item.price,
             nis: Math.ceil(item.price * exchangeRate),

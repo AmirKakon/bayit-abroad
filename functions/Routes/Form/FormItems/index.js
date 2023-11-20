@@ -1,16 +1,16 @@
-const { app, logger, db } = require("../../setup");
+const { app, logger, db } = require("../../../setup");
 
 const baseDB = "form-items";
 const preferredId = "XkfGiR95lXrZveSxToMl"; // 'entire package' id
 
 // create a form item
-app.post("/api/form-items/create", (req, res) => {
+app.post("/api/form/form-items/create", (req, res) => {
   // async waits for a response
   (async () => {
     try {
       await db
         .collection(baseDB)
-        .doc(req.body.id)
+        .doc()
         .create({
           name: req.body.name,
           price: {
@@ -28,21 +28,19 @@ app.post("/api/form-items/create", (req, res) => {
 });
 
 // get a single item using specific id
-app.get("/api/form-items/get/:id", (req, res) => {
+app.get("/api/form/form-items/get/:id", (req, res) => {
   (async () => {
     try {
       const itemRef = db.collection(baseDB).doc(req.params.id);
       const doc = await itemRef.get(); // gets doc
       const item = doc.data(); // the actual data of the item
 
-      if (!item.exists) {
+      if (!item) {
         logger.error(`Error - No item found with id: ${req.params.id}`);
-        return res
-          .status(404)
-          .send({
-            status: "Failed",
-            msg: `No item found with id: ${req.params.id}`,
-          });
+        return res.status(404).send({
+          status: "Failed",
+          msg: `No item found with id: ${req.params.id}`,
+        });
       }
 
       // logger.log("Item:", item);
@@ -55,7 +53,7 @@ app.get("/api/form-items/get/:id", (req, res) => {
 });
 
 // get all items
-app.get("/api/form-items/getAll", (req, res) => {
+app.get("/api/form/form-items/getAll", (req, res) => {
   (async () => {
     try {
       const itemsRef = db.collection(baseDB);
@@ -89,7 +87,7 @@ app.get("/api/form-items/getAll", (req, res) => {
 });
 
 // update item
-app.put("/api/form-items/update/:id", (req, res) => {
+app.put("/api/form/form-items/update/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {
@@ -111,7 +109,7 @@ app.put("/api/form-items/update/:id", (req, res) => {
 });
 
 // delete item
-app.delete("/api/form-items/delete/:id", (req, res) => {
+app.delete("/api/form/form-items/delete/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {

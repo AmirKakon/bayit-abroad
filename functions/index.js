@@ -1,12 +1,16 @@
 const { app, dev, functions } = require("./setup");
 
 // app routes
-require("./Routes/FormItems");
-require("./Routes/FormItems/GameItems");
+require("./Routes/Form/FormItems");
+require("./Routes/Form/GameItems");
+// require("./Routes/ExchangeRates");
 
 // // dev routes
-require("./DevRoutes/FormItems");
-require("./DevRoutes/FormItems/GameItems");
+require("./DevRoutes/Form/FormItems");
+require("./DevRoutes/Form/GameItems");
+require("./DevRoutes/Form/Orders");
+require("./DevRoutes/ExchangeRates");
+
 require("./DevRoutes/Tutorial");
 
 // Export the main app

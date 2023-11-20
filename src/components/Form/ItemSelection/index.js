@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Typography,
   FormControl,
@@ -21,6 +21,15 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
   const isEntirePackageSelected = checkedItems.includes(items[0]?.id);
   const isSelectedGameId = checkedItems.includes(gamesId);
 
+  // Create a map of items for faster lookup by id
+  const itemsMap = useMemo(() => {
+    const map = {};
+    items.forEach((item) => {
+      map[item.id] = item;
+    });
+    return map;
+  }, [items]);
+
   const calculateTotal = useCallback(
     (selectedItems) => {
       let total = { usd: 0, nis: 0 };
@@ -28,18 +37,6 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
       if (isEntirePackageSelected) {
         return items[0].price;
       }
-
-      // Create a map of games for faster lookup by id
-      const gamesMap = {};
-      games.forEach((game) => {
-        gamesMap[game.id] = game;
-      });
-
-      // Create a map of items for faster lookup by id
-      const itemsMap = {};
-      items.forEach((item) => {
-        itemsMap[item.id] = item;
-      });
 
       // Calculate the total for the main items and selected games
       for (const itemId of selectedItems) {
@@ -49,24 +46,22 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
         }
 
         if (itemId === gamesId) {
-          for (const gameId of selectedGames) {
-            if (gamesMap[gameId]) {
-              total.usd += gamesMap[gameId].price.usd;
-              total.nis += gamesMap[gameId].price.nis;
-            }
-          }
+          selectedGames.forEach((game) => {
+            total.usd += game.price.usd;
+            total.nis += game.price.nis;
+          });
         }
       }
 
       return total;
     },
-    [isEntirePackageSelected, items, selectedGames, games]
+    [isEntirePackageSelected, items, selectedGames, itemsMap]
   );
 
   useEffect(() => {
     const apiBasrUrl = process.env.REACT_APP_API_BASE_URL;
 
-    fetch(`${apiBasrUrl}/api/form-items/getAll`)
+    fetch(`${apiBasrUrl}/api/form/form-items/getAll`)
       .then((response) => response.json())
       .then((res) => {
         setItems(res.data);
@@ -76,7 +71,7 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
         console.error("Error fetching data:", error);
       });
 
-    fetch(`${apiBasrUrl}/api/form-items/games/getAll`)
+    fetch(`${apiBasrUrl}/api/form/game-items/getAll`)
       .then((response) => response.json())
       .then((res) => {
         setGames(res.data);
@@ -120,17 +115,21 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
       if (itemId === gamesId) {
         tempStructuredItems.push({
           id: itemId,
+          name: itemsMap[itemId].name,
+          price: itemsMap[itemId].price,
           games: selectedGames,
         });
       } else {
         tempStructuredItems.push({
           id: itemId,
+          name: itemsMap[itemId].name,
+          price: itemsMap[itemId].price,
         });
       }
     });
 
     setSelectedItems(tempStructuredItems);
-  }, [checkedItems, selectedGames, setSelectedItems]);
+  }, [checkedItems, selectedGames, setSelectedItems, itemsMap]);
 
   return loading ? (
     <Loading />

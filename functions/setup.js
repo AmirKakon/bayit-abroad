@@ -21,4 +21,4 @@ dev.use(cors({ origin: true }));
 
 const db = admin.firestore();
 
-module.exports = { app, dev, functions, logger, db };
+module.exports = { app, dev, functions, logger, db, admin };

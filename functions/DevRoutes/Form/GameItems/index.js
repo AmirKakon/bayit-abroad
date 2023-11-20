@@ -1,11 +1,12 @@
-const { app, logger, db } = require("../../../setup");
+const { dev, logger, db, functions } = require("../../../setup");
+const { getExchangeRate } = require("../../ExchangeRates");
 
-const baseDB = "form-items";
+const baseDB = "form-items_dev";
 const gamesDB = "games";
-const gamesId = "1tRC1jxs6fRXCA69eIal";
+const gamesId = functions.config().games.id;
 
 // create a game item
-app.post("/api/form-items/games/create", (req, res) => {
+dev.post("/api/form/game-items/create", (req, res) => {
   // async waits for a response
   (async () => {
     try {
@@ -13,13 +14,10 @@ app.post("/api/form-items/games/create", (req, res) => {
         .collection(baseDB)
         .doc(gamesId)
         .collection(gamesDB)
-        .doc(req.body.id)
+        .doc()
         .create({
           name: req.body.name,
-          price: {
-            nis: req.body.price.nis,
-            usd: req.body.price.usd,
-          },
+          price: req.body.price,
         });
 
       return res.status(200).send({ status: "Success", msg: "Game Saved" });
@@ -31,9 +29,12 @@ app.post("/api/form-items/games/create", (req, res) => {
 });
 
 // get a single game item using specific id
-app.get("/api/form-items/get/:id", (req, res) => {
+dev.get("/api/form/game-items/get/:id", (req, res) => {
   (async () => {
     try {
+      // Fetch the exchange rate
+      const exchangeRate = await getExchangeRate();
+
       const itemRef = db
         .collection(baseDB)
         .doc(gamesId)
@@ -50,7 +51,14 @@ app.get("/api/form-items/get/:id", (req, res) => {
         });
       }
 
-      // logger.log("Item:", item);
+      // update price
+      if (item.price !== null && item.price !== undefined) {
+        item.price = {
+          usd: item.price,
+          nis: Math.ceil(item.price * exchangeRate),
+        };
+      }
+
       return res.status(200).send({ status: "Success", data: item });
     } catch (error) {
       logger.error(error);
@@ -60,9 +68,12 @@ app.get("/api/form-items/get/:id", (req, res) => {
 });
 
 // get all games
-app.get("/api/form-items/games/getAll", (req, res) => {
+dev.get("/api/form/game-items/getAll", (req, res) => {
   (async () => {
     try {
+      // Fetch the exchange rate
+      const exchangeRate = await getExchangeRate();
+
       const itemsRef = db.collection(baseDB).doc(gamesId).collection(gamesDB);
       const snapshot = await itemsRef.get();
 
@@ -78,6 +89,16 @@ app.get("/api/form-items/games/getAll", (req, res) => {
         ...doc.data(),
       }));
 
+      // Iterate through items and modify the price property
+      items.forEach((item) => {
+        if (item.price !== null && item.price !== undefined) {
+          item.price = {
+            usd: item.price,
+            nis: Math.ceil(item.price * exchangeRate),
+          };
+        }
+      });
+
       // logger.log("Games List", items);
       return res.status(200).send({ status: "Success", data: items });
     } catch (error) {
@@ -88,7 +109,7 @@ app.get("/api/form-items/games/getAll", (req, res) => {
 });
 
 // update game
-app.put("/api/form-items/games/update/:id", (req, res) => {
+dev.put("/api/form/game-items/update/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {
@@ -99,10 +120,7 @@ app.put("/api/form-items/games/update/:id", (req, res) => {
         .doc(req.params.id);
       await reqDoc.update({
         name: req.body.name,
-        price: {
-          nis: req.body.price.nis,
-          usd: req.body.price.usd,
-        },
+        price: req.body.price,
       });
 
       return res.status(200).send({ status: "Success", msg: "Game Updated" });
@@ -114,7 +132,7 @@ app.put("/api/form-items/games/update/:id", (req, res) => {
 });
 
 // delete game
-app.delete("/api/form-items/games/delete/:id", (req, res) => {
+dev.delete("/api/form/game-items/delete/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {
@@ -133,4 +151,4 @@ app.delete("/api/form-items/games/delete/:id", (req, res) => {
   })();
 });
 
-module.exports = app;
+module.exports = dev;

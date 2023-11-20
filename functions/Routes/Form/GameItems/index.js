@@ -1,11 +1,11 @@
-const { dev, logger, db } = require("../../../setup");
+const { app, logger, db } = require("../../../setup");
 
-const baseDB = "form-items_dev";
+const baseDB = "form-items";
 const gamesDB = "games";
 const gamesId = "1tRC1jxs6fRXCA69eIal";
 
 // create a game item
-dev.post("/api/form-items/games/create", (req, res) => {
+app.post("/api/form/game-items/create", (req, res) => {
   // async waits for a response
   (async () => {
     try {
@@ -31,7 +31,7 @@ dev.post("/api/form-items/games/create", (req, res) => {
 });
 
 // get a single game item using specific id
-dev.get("/api/form-items/get/:id", (req, res) => {
+app.get("/api/form/game-items/get/:id", (req, res) => {
   (async () => {
     try {
       const itemRef = db
@@ -60,7 +60,7 @@ dev.get("/api/form-items/get/:id", (req, res) => {
 });
 
 // get all games
-dev.get("/api/form-items/games/getAll", (req, res) => {
+app.get("/api/form/game-items/getAll", (req, res) => {
   (async () => {
     try {
       const itemsRef = db.collection(baseDB).doc(gamesId).collection(gamesDB);
@@ -88,7 +88,7 @@ dev.get("/api/form-items/games/getAll", (req, res) => {
 });
 
 // update game
-dev.put("/api/form-items/games/update/:id", (req, res) => {
+app.put("/api/form/game-items/update/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {
@@ -114,7 +114,7 @@ dev.put("/api/form-items/games/update/:id", (req, res) => {
 });
 
 // delete game
-dev.delete("/api/form-items/games/delete/:id", (req, res) => {
+app.delete("/api/form/game-items/delete/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {
@@ -133,4 +133,4 @@ dev.delete("/api/form-items/games/delete/:id", (req, res) => {
   })();
 });
 
-module.exports = dev;
+module.exports = app;

@@ -46,7 +46,7 @@ const getSelectedItems = (items) => {
       itemsMap.push(`${item.name} : $${item.price.usd}`);
     }
   });
-  console.log(itemsMap);
+
   return itemsMap;
 };
 
@@ -90,6 +90,7 @@ dev.post("/api/form/orders/create", async (req, res) => {
       <p><strong>Selected items:</strong></p>
       <ul>${selectedItemsList}</ul>
       <p><strong>Total:</strong> $${order.totalPrice.usd}</p>
+      <p><strong>Notes:</strong> ${order.notes}</p>
     `;
 
     const mailOptions = {

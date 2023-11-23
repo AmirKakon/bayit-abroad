@@ -12,10 +12,10 @@ const Header = () => {
         </Typography>
         <Typography variant="body1" align="left" paragraph>
           Please fill out the equipment you'd like to rent, the dates of the
-          rental and the location and submit the form.
+          rental and the location.
           <br /> Feel free to reach out to us for any questions or requests.
           <br />
-          <br />* Please note that delivery is only in Jerusalem. Drop off is depending on our availability and your preference.
+          <br />* Please note that delivery is only in Jerusalem. Drop off is dependent on our availability and your preference.
           <br />* Payment is at time of delivery via cash, bit or bank transfer.
         </Typography>
       </Paper>

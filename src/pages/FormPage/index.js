@@ -14,6 +14,8 @@ import {
   ContactInformation,
 } from "../../components/Form";
 
+import QuantityInput from "../../components/Form/NumberInput";
+
 const FormPage = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState({ usd: 0, nis: 0 });
@@ -160,6 +162,7 @@ const FormPage = () => {
           )}
         </form>
       </Container>
+      <QuantityInput />
     </Box>
   );
 };

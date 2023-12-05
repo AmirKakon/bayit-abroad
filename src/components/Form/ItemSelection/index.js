@@ -176,7 +176,7 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
         Notes" section at the bottom of the form and our team will review the
         request and get back to you if we can supply it for you.
       </Typography>
-      <ItemsList items={items}/>
+      <ItemsList items={items} loading={loading}/>
     </Paper>
   );
 };

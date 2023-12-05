@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { List, ListItem, Button, ListItemText, TextField } from "@mui/material";
+import { Paper, Typography, List, ListItem, Button, ListItemText, TextField } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import {
   AddCircle,
   RemoveCircle,
 } from "@mui/icons-material";
+import Loading from "../../Loading";
 
-const ItemsList = ({ items }) => {
+const ItemsList = ({ items, loading }) => {
   const [amounts, setAmounts] = useState(() => {
     const initialState = {};
     items.forEach((item) => {
@@ -31,12 +32,23 @@ const ItemsList = ({ items }) => {
 
   const handleSubmit = () => {
     const selectedItems = items.filter((item) => amounts[item.id] > 0);
-    console.log("Selected items:", selectedItems);
+    const itemsList = selectedItems.map((item) => {
+      return {
+        ...item,
+        amount: amounts[item.id],
+      }
+    })
+    console.log("Selected items:", itemsList);
     console.log("Amounts:", amounts);
   };
 
-  return (
-    <div>
+  return loading ? (
+    <Loading />
+  ) : (
+    <Paper elevation={2} sx={{ padding: 2, marginBottom: 2 }}>
+        <Typography variant="h6" component="legend">
+          Select the Items to Order:
+        </Typography>
       <List>
         {items.map((item) => (
           <ListItem key={item.id}>
@@ -71,7 +83,7 @@ const ItemsList = ({ items }) => {
       <Button onClick={handleSubmit} variant="contained" color="primary">
         Submit
       </Button>
-    </div>
+    </Paper>
   );
 };
 

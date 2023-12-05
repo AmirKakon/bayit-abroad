@@ -1,13 +1,21 @@
 import React, { useState } from "react";
-import { Paper, Typography, List, ListItem, Button, ListItemText, TextField } from "@mui/material";
-import IconButton from '@mui/material/IconButton';
 import {
-  AddCircle,
-  RemoveCircle,
-} from "@mui/icons-material";
-import Loading from "../../Loading";
+  Paper,
+  Typography,
+  List,
+  ListItem,
+  Button,
+  ListItemText,
+  TextField,
+} from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import { AddCircle, RemoveCircle } from "@mui/icons-material";
+import GameDropdown from "../GameDropDown";
+import { gamesId } from "../../../config";
 
-const ItemsList = ({ items, loading }) => {
+
+
+const ItemsList = ({ items, games, selectedGames, setSelectedGames}) => {
   const [amounts, setAmounts] = useState(() => {
     const initialState = {};
     items.forEach((item) => {
@@ -15,6 +23,8 @@ const ItemsList = ({ items, loading }) => {
     });
     return initialState;
   });
+  
+  const isSelectedGameId = amounts[gamesId] > 0;
 
   const handleRemove = (id) => {
     setAmounts((prevAmounts) => ({
@@ -36,19 +46,17 @@ const ItemsList = ({ items, loading }) => {
       return {
         ...item,
         amount: amounts[item.id],
-      }
-    })
+      };
+    });
     console.log("Selected items:", itemsList);
     console.log("Amounts:", amounts);
   };
 
-  return loading ? (
-    <Loading />
-  ) : (
+  return (
     <Paper elevation={2} sx={{ padding: 2, marginBottom: 2 }}>
-        <Typography variant="h6" component="legend">
-          Select the Items to Order:
-        </Typography>
+      <Typography variant="h6" component="legend">
+        Select the Items to Order:
+      </Typography>
       <List>
         {items.map((item) => (
           <ListItem key={item.id}>
@@ -56,14 +64,20 @@ const ItemsList = ({ items, loading }) => {
               primary={item.name}
               secondary={`Price: $${item.price.usd} / ₪${item.price.nis}`}
             />
-            <IconButton>
-            <RemoveCircle
-              color="primary"
-              onClick={() => handleRemove(item.id)}
-            />
+
+            {item.id === gamesId && isSelectedGameId && (
+              <GameDropdown
+                games={games}
+                selectedGames={selectedGames}
+                setSelectedGames={setSelectedGames}
+              />
+            )}
+
+            <IconButton onClick={() => handleRemove(item.id)}>
+              <RemoveCircle color="primary" />
             </IconButton>
             <TextField
-              sx={{ maxWidth: 70 }}
+              sx={{ maxWidth: 50 }}
               type="number"
               size="small"
               value={amounts[item.id]}
@@ -71,11 +85,8 @@ const ItemsList = ({ items, loading }) => {
                 readOnly: true,
               }}
             />
-            <IconButton>
-            <AddCircle
-              color="primary"
-              onClick={() => handleAdd(item.id)}
-            />
+            <IconButton onClick={() => handleAdd(item.id)}>
+              <AddCircle color="primary" />
             </IconButton>
           </ListItem>
         ))}

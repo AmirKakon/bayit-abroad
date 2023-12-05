@@ -155,9 +155,9 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
                   ? `${item.name} : per game`
                   : `${item.name} : $${item.price.usd} / ₪${item.price.nis}`
               }
-              sx={{borderColor: "black", border: 1}}
+              sx={{ borderColor: "black", border: 1 }}
             />
-            
+
             {item.id === gamesId && isSelectedGameId && (
               <GameDropdown
                 games={games}
@@ -176,7 +176,12 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
         Notes" section at the bottom of the form and our team will review the
         request and get back to you if we can supply it for you.
       </Typography>
-      <ItemsList items={items} loading={loading}/>
+      <ItemsList
+        items={items}
+        games={games}
+        selectedGames={selectedGames}
+        setSelectedGames={setSelectedGames}
+      />
     </Paper>
   );
 };

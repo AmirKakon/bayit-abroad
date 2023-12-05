@@ -1,15 +1,16 @@
-import { List, ListItem, Button, ListItemText, TextField } from "@mui/material";
 import React, { useState } from "react";
+import { List, ListItem, Button, ListItemText, TextField } from "@mui/material";
+import IconButton from '@mui/material/IconButton';
 import {
-  AddCircleOutlineOutlined,
-  RemoveCircleOutlineOutlined,
+  AddCircle,
+  RemoveCircle,
 } from "@mui/icons-material";
 
 const ItemsList = ({ items }) => {
   const [amounts, setAmounts] = useState(() => {
     const initialState = {};
     items.forEach((item) => {
-      initialState[item.id] = 5;
+      initialState[item.id] = 0;
     });
     return initialState;
   });
@@ -28,11 +29,6 @@ const ItemsList = ({ items }) => {
     }));
   };
 
-  //  const handleChange = (event, id) => {
-  //     const { value } = event.target;
-  //     setAmounts((prevAmounts) => ({ ...prevAmounts, [id]: value }));
-  //  };
-
   const handleSubmit = () => {
     const selectedItems = items.filter((item) => amounts[item.id] > 0);
     console.log("Selected items:", selectedItems);
@@ -48,10 +44,12 @@ const ItemsList = ({ items }) => {
               primary={item.name}
               secondary={`Price: $${item.price.usd} / ₪${item.price.nis}`}
             />
-            <RemoveCircleOutlineOutlined
+            <IconButton>
+            <RemoveCircle
               color="primary"
               onClick={() => handleRemove(item.id)}
             />
+            </IconButton>
             <TextField
               sx={{ maxWidth: 70 }}
               type="number"
@@ -61,10 +59,12 @@ const ItemsList = ({ items }) => {
                 readOnly: true,
               }}
             />
-            <AddCircleOutlineOutlined
+            <IconButton>
+            <AddCircle
               color="primary"
               onClick={() => handleAdd(item.id)}
             />
+            </IconButton>
           </ListItem>
         ))}
       </List>

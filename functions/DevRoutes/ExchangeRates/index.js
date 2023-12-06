@@ -29,7 +29,9 @@ dev.get("/api/exchange-rates/usd-to-ils", async (req, res) => {
       });
     } catch (error) {
       logger.error("Error fetching exchange rate:", error);
-      return res.status(500).send("Internal Server Error");
+      return res.status(500).send({
+        status: "Error", rate: cachedExchangeRates ?? 0,
+      });
     }
   }
 
@@ -50,7 +52,7 @@ const getExchangeRate = async () => {
       );
       const exchangeRateData = await response.json();
 
-      if (exchangeRateData.status === "Success") {
+      if (exchangeRateData.rate !== 0) {
         cachedExchangeRates = exchangeRateData.rate;
         lastFetchTime = currentTime;
         return cachedExchangeRates;

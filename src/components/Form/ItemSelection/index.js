@@ -181,6 +181,7 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
         games={games}
         selectedGames={selectedGames}
         setSelectedGames={setSelectedGames}
+        totalPrice={totalPrice}
       />
     </Paper>
   );

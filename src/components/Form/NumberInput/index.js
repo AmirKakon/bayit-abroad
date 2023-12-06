@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Paper,
   Typography,
@@ -15,7 +15,7 @@ import { gamesId } from "../../../config";
 
 
 
-const ItemsList = ({ items, games, selectedGames, setSelectedGames}) => {
+const ItemsList = ({ items, games, selectedGames, setSelectedGames, totalPrice}) => {
   const [amounts, setAmounts] = useState(() => {
     const initialState = {};
     items.forEach((item) => {
@@ -91,6 +91,14 @@ const ItemsList = ({ items, games, selectedGames, setSelectedGames}) => {
           </ListItem>
         ))}
       </List>
+      <Typography variant="h6" align="left" paragraph padding={1}>
+        <b>Total:</b> ${totalPrice.usd} / ₪{totalPrice.nis}
+      </Typography>
+      <Typography variant="body1" align="left" paragraph padding={1}>
+        Looking for an item that isn't listed? Add more items in the "Additional
+        Notes" section at the bottom of the form and our team will review the
+        request and get back to you if we can supply it for you.
+      </Typography>
       <Button onClick={handleSubmit} variant="contained" color="primary">
         Submit
       </Button>

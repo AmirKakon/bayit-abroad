@@ -1,173 +1,134 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
-  Typography,
-  FormControl,
-  FormControlLabel,
-  Checkbox,
   Paper,
+  Typography,
+  List,
+  ListItem,
+  Button,
+  ListItemText,
+  TextField,
 } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import { AddCircle, RemoveCircle } from "@mui/icons-material";
 import GameDropdown from "../GameDropDown";
-import ItemsList from "../NumberInput";
-import Loading from "../../Loading";
 import { gamesId } from "../../../config";
 
-const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
-  const [loading, setLoading] = useState(true);
-  const [items, setItems] = useState([]);
-  const [checkedItems, setCheckedItems] = useState([]);
-  const [games, setGames] = useState([]);
+const ItemSelection = ({
+  items,
+  games,
+  setSelectedItems,
+  totalPrice,
+  setTotalPrice,
+}) => {
   const [selectedGames, setSelectedGames] = useState([]);
-  const [previousCheckedItems, setPreviousCheckedItems] = useState([]);
-
-  const isEntirePackageSelected = checkedItems.includes(items[0]?.id);
-  const isSelectedGameId = checkedItems.includes(gamesId);
-
-  // Create a map of items for faster lookup by id
-  const itemsMap = useMemo(() => {
-    const map = {};
+  const [amounts, setAmounts] = useState(() => {
+    const initialState = {};
     items.forEach((item) => {
-      map[item.id] = item;
+      initialState[item.id] = 0;
     });
-    return map;
-  }, [items]);
+    return initialState;
+  });
+
+  const isSelectedGameId = amounts[gamesId] > 0;
 
   const calculateTotal = useCallback(
     (selectedItems) => {
       let total = { usd: 0, nis: 0 };
 
-      if (isEntirePackageSelected) {
-        return items[0].price;
-      }
-
       // Calculate the total for the main items and selected games
-      for (const itemId of selectedItems) {
-        if (itemsMap[itemId]) {
-          total.usd += itemsMap[itemId].price.usd;
-          total.nis += itemsMap[itemId].price.nis;
-        }
-
-        if (itemId === gamesId) {
-          selectedGames.forEach((game) => {
-            total.usd += game.price.usd;
-            total.nis += game.price.nis;
-          });
-        }
-      }
+      selectedItems.forEach((item) => {
+        total.usd += item.price.usd * item.amount;
+        total.nis += item.price.nis * item.amount;
+      });
 
       return total;
     },
-    [isEntirePackageSelected, items, selectedGames, itemsMap]
+    [items, selectedGames]
   );
 
   useEffect(() => {
-    const apiBasrUrl = process.env.REACT_APP_API_BASE_URL;
-
-    fetch(`${apiBasrUrl}/api/form/form-items/getAll`)
-      .then((response) => response.json())
-      .then((res) => {
-        setItems(res.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-
-    fetch(`${apiBasrUrl}/api/form/game-items/getAll`)
-      .then((response) => response.json())
-      .then((res) => {
-        setGames(res.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  }, []);
-
-  useEffect(() => {
-    // Calculate total whenever selectedItems changes
-    const newTotal = calculateTotal(checkedItems);
-    setTotalPrice(newTotal);
-  }, [isEntirePackageSelected, checkedItems, setTotalPrice, calculateTotal]);
-
-  const handleCheckboxChange = (event) => {
-    const { name, checked } = event.target;
-
-    if (name === items[0].id && checked) {
-      setPreviousCheckedItems([...checkedItems]);
-      setCheckedItems([items[0].id]);
-    } else if (name === items[0].id && !checked) {
-      setCheckedItems(previousCheckedItems);
-    } else {
-      if (checked) {
-        setCheckedItems((prev) => [...prev, name]);
-      } else {
-        setCheckedItems((prev) => prev.filter((itemId) => itemId !== name));
-      }
-    }
-  };
-
-  useEffect(() => {
-    let tempStructuredItems = [];
-
-    checkedItems.forEach((itemId) => {
-      if (itemId === gamesId) {
-        tempStructuredItems.push({
-          id: itemId,
-          name: itemsMap[itemId].name,
-          price: itemsMap[itemId].price,
-          games: selectedGames,
-        });
-      } else {
-        tempStructuredItems.push({
-          id: itemId,
-          name: itemsMap[itemId].name,
-          price: itemsMap[itemId].price,
-        });
-      }
+    const selectedItems = items
+      .filter((item) => amounts[item.id] > 0)
+      .concat(selectedGames);
+    const itemsList = selectedItems.map((item) => {
+      return {
+        ...item,
+        amount: amounts[item.id] ?? 1,
+      };
     });
 
-    setSelectedItems(tempStructuredItems);
-  }, [checkedItems, selectedGames, setSelectedItems, itemsMap]);
+    console.log(itemsList);
+    // Calculate total whenever selectedItems changes
+    const newTotal = calculateTotal(itemsList);
+    setTotalPrice(newTotal);
+  }, [amounts, setTotalPrice, calculateTotal]);
 
-  return loading ? (
-    <Loading />
-  ) : (
+  const handleRemove = (id) => {
+    setAmounts((prevAmounts) => ({
+      ...prevAmounts,
+      [id]: Math.max(0, prevAmounts[id] - 1),
+    }));
+  };
+
+  const handleAdd = (id) => {
+    setAmounts((prevAmounts) => ({
+      ...prevAmounts,
+      [id]: Math.min(5, prevAmounts[id] + 1),
+    }));
+  };
+
+  const handleSubmit = () => {
+    const selectedItems = items.filter((item) => amounts[item.id] > 0);
+    const itemsList = selectedItems.map((item) => {
+      return {
+        ...item,
+        amount: amounts[item.id],
+      };
+    });
+    console.log("Selected items:", itemsList);
+  };
+
+  return (
     <Paper elevation={2} sx={{ padding: 2, marginBottom: 2 }}>
-      <FormControl component="fieldset">
-        <Typography variant="h6" component="legend">
-          Select the Items to Order:
-        </Typography>
+      <Typography variant="h6" component="legend">
+        Select the Items to Order:
+      </Typography>
+      <List>
         {items.map((item) => (
-          <div key={item.id}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name={item.id}
-                  checked={
-                    checkedItems.includes(item.id) || isEntirePackageSelected
-                  }
-                  onChange={handleCheckboxChange}
-                  color="primary"
-                  disabled={isEntirePackageSelected && item.id !== items[0].id}
-                />
-              }
-              label={
-                item.id === gamesId
-                  ? `${item.name} : per game`
-                  : `${item.name} : $${item.price.usd} / ₪${item.price.nis}`
-              }
-              sx={{ borderColor: "black", border: 1 }}
+          <ListItem key={item.id}>
+            <ListItemText
+              primary={item.name}
+              secondary={`Price: $${item.price.usd} / ₪${item.price.nis}`}
             />
 
-            {item.id === gamesId && isSelectedGameId && (
+            {item.id === gamesId ? (
               <GameDropdown
                 games={games}
                 selectedGames={selectedGames}
                 setSelectedGames={setSelectedGames}
               />
+            ) : (
+              <div>
+                <IconButton onClick={() => handleRemove(item.id)}>
+                  <RemoveCircle color="primary" />
+                </IconButton>
+                <TextField
+                  sx={{ maxWidth: 50 }}
+                  type="number"
+                  size="small"
+                  value={amounts[item.id]}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+                <IconButton onClick={() => handleAdd(item.id)}>
+                  <AddCircle color="primary" />
+                </IconButton>
+              </div>
             )}
-          </div>
+          </ListItem>
         ))}
-      </FormControl>
+      </List>
       <Typography variant="h6" align="left" paragraph padding={1}>
         <b>Total:</b> ${totalPrice.usd} / ₪{totalPrice.nis}
       </Typography>
@@ -176,13 +137,9 @@ const ItemSelection = ({ setSelectedItems, totalPrice, setTotalPrice }) => {
         Notes" section at the bottom of the form and our team will review the
         request and get back to you if we can supply it for you.
       </Typography>
-      <ItemsList
-        items={items}
-        games={games}
-        selectedGames={selectedGames}
-        setSelectedGames={setSelectedGames}
-        totalPrice={totalPrice}
-      />
+      <Button onClick={handleSubmit} variant="contained" color="primary">
+        Submit
+      </Button>
     </Paper>
   );
 };

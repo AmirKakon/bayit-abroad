@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Paper,
   Typography,
@@ -29,22 +29,17 @@ const ItemSelection = ({
     return initialState;
   });
 
-  const isSelectedGameId = amounts[gamesId] > 0;
+  const calculateTotal = useCallback((selectedItems) => {
+    let total = { usd: 0, nis: 0 };
 
-  const calculateTotal = useCallback(
-    (selectedItems) => {
-      let total = { usd: 0, nis: 0 };
+    // Calculate the total for the main items and selected games
+    selectedItems.forEach((item) => {
+      total.usd += item.price.usd * item.amount;
+      total.nis += item.price.nis * item.amount;
+    });
 
-      // Calculate the total for the main items and selected games
-      selectedItems.forEach((item) => {
-        total.usd += item.price.usd * item.amount;
-        total.nis += item.price.nis * item.amount;
-      });
-
-      return total;
-    },
-    [items, selectedGames]
-  );
+    return total;
+  }, []);
 
   useEffect(() => {
     const selectedItems = items
@@ -57,11 +52,10 @@ const ItemSelection = ({
       };
     });
 
-    console.log(itemsList);
     // Calculate total whenever selectedItems changes
     const newTotal = calculateTotal(itemsList);
     setTotalPrice(newTotal);
-  }, [amounts, setTotalPrice, calculateTotal]);
+  }, [amounts, items, selectedGames, setTotalPrice, calculateTotal]);
 
   const handleRemove = (id) => {
     setAmounts((prevAmounts) => ({

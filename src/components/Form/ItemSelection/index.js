@@ -4,7 +4,6 @@ import {
   Typography,
   List,
   ListItem,
-  Button,
   ListItemText,
   TextField,
 } from "@mui/material";
@@ -52,10 +51,12 @@ const ItemSelection = ({
       };
     });
 
+    setSelectedItems(selectedItems);
+
     // Calculate total whenever selectedItems changes
     const newTotal = calculateTotal(itemsList);
     setTotalPrice(newTotal);
-  }, [amounts, items, selectedGames, setTotalPrice, calculateTotal]);
+  }, [amounts, items, selectedGames, setSelectedItems, setTotalPrice, calculateTotal]);
 
   const handleRemove = (id) => {
     setAmounts((prevAmounts) => ({
@@ -69,17 +70,6 @@ const ItemSelection = ({
       ...prevAmounts,
       [id]: Math.min(5, prevAmounts[id] + 1),
     }));
-  };
-
-  const handleSubmit = () => {
-    const selectedItems = items.filter((item) => amounts[item.id] > 0);
-    const itemsList = selectedItems.map((item) => {
-      return {
-        ...item,
-        amount: amounts[item.id],
-      };
-    });
-    console.log("Selected items:", itemsList);
   };
 
   return (
@@ -131,9 +121,6 @@ const ItemSelection = ({
         Notes" section at the bottom of the form and our team will review the
         request and get back to you if we can supply it for you.
       </Typography>
-      <Button onClick={handleSubmit} variant="contained" color="primary">
-        Submit
-      </Button>
     </Paper>
   );
 };

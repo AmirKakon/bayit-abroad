@@ -82,7 +82,7 @@ const ItemSelection = ({
           <ListItem key={item.id}>
             <ListItemText
               primary={item.name}
-              secondary={`Price: $${item.price.usd} / ₪${item.price.nis}`}
+              secondary={item.id === gamesId ? "Price: per game" : `Price: $${item.price.usd} / ₪${item.price.nis}`}
             />
 
             {item.id === gamesId ? (

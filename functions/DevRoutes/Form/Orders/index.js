@@ -59,8 +59,8 @@ dev.post("/api/form/orders/create", async (req, res) => {
     await orderRef.set(order);
 
     const selectedItemsList = order.selectedItems
-      .map(
-        (item) => `<li>${item}: $${item.price.usd} / ₪${item.price.nis}</li>`,
+      .map((item) =>
+        `<li>${item.name}: $${item.price.usd} / ₪${item.price.nis}</li>`,
       )
       .join("");
 

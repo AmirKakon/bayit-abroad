@@ -82,32 +82,27 @@ const FormPage = () => {
     console.log(submissionData);
     setLoadingPopup(true);
 
-    // const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+    const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
-    // fetch(`${apiBaseUrl}/api/form/orders/create`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(submissionData),
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log(data);
-    //     setResponseStatus(data.status);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error:", error);
-    //     setResponseStatus("Failed");
-    //   })
-    //   .finally(() => {
-      setTimeout(() => {
-        // Your code after the delay
-        console.log('Three seconds have passed!');
+    fetch(`${apiBaseUrl}/api/form/orders/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(submissionData),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setResponseStatus(data.status);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        setResponseStatus("Failed");
+      })
+      .finally(() => {
         setLoadingPopup(false);
-      }, 3000);
-    
-    //   });
+      });
   };
 
   const handleOkButtonClick = () => {

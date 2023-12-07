@@ -51,7 +51,7 @@ const ItemSelection = ({
       };
     });
 
-    setSelectedItems(selectedItems);
+    setSelectedItems(itemsList);
 
     // Calculate total whenever selectedItems changes
     const newTotal = calculateTotal(itemsList);

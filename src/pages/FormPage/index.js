@@ -16,6 +16,8 @@ import {
 } from "../../components/Form";
 
 const FormPage = () => {
+  window.scrollTo({ top: 0, behavior: "auto" });
+
   const [items, setItems] = useState([]);
   const [games, setGames] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);

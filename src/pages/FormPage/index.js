@@ -41,13 +41,15 @@ const FormPage = () => {
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
 
     fetch(`${apiBasrUrl}/api/form/game-items/getAll`)
       .then((response) => response.json())
       .then((res) => {
         setGames(res.data);
-        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);

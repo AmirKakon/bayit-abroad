@@ -100,7 +100,7 @@ const ItemSelection = ({
                   sx={{ maxWidth: 50 }}
                   type="number"
                   size="small"
-                  value={amounts[item.id]}
+                  value={amounts[item.id] ?? 0}
                   InputProps={{
                     readOnly: true,
                   }}

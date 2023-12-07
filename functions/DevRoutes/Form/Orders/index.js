@@ -3,8 +3,6 @@ const nodemailer = require("nodemailer");
 
 const baseDB = "orders_dev";
 
-const gamesId = functions.config().games.id;
-
 const gmailEmail = "bayitabroad@gmail.com";
 const gmailPassword = functions.config().gmail.password;
 
@@ -35,21 +33,6 @@ const getTimestamps = (dateRange) => {
   return { delivery: fbDeliveryDate, pickup: fbPickupDate, updated: fbUpdated };
 };
 
-const getSelectedItems = (items) => {
-  const itemsMap = [];
-  items.forEach((item) => {
-    if (item.id === gamesId) {
-      item.games.forEach((game) => {
-        itemsMap.push(`${game.name}: $${game.price.usd}`);
-      });
-    } else {
-      itemsMap.push(`${item.name} : $${item.price.usd}`);
-    }
-  });
-
-  return itemsMap;
-};
-
 // create an order
 dev.post("/api/form/orders/create", async (req, res) => {
   try {
@@ -63,7 +46,7 @@ dev.post("/api/form/orders/create", async (req, res) => {
       deliveryAddress: req.body.deliveryAddress,
       email: req.body.email,
       phone: req.body.phoneNumber,
-      selectedItems: getSelectedItems(req.body.selectedItems),
+      selectedItems: req.body.selectedItems,
       totalPrice: req.body.totalPrice,
       lastUpdated: timestamps.updated,
       created: timestamps.updated,
@@ -76,7 +59,9 @@ dev.post("/api/form/orders/create", async (req, res) => {
     await orderRef.set(order);
 
     const selectedItemsList = order.selectedItems
-      .map((item) => `<li>${item}</li>`)
+      .map(
+        (item) => `<li>${item}: $${item.price.usd} / ₪${item.price.nis}</li>`,
+      )
       .join("");
 
     const orderHtml = `
@@ -193,7 +178,7 @@ dev.put("/api/form/orders/update/:id", (req, res) => {
         deliveryAddress: req.body.deliveryAddress,
         email: req.body.email,
         phone: req.body.phoneNumber,
-        selectedItems: [],
+        selectedItems: req.body.selectedItems,
         lastUpdated: timestamps.updated,
       });
 

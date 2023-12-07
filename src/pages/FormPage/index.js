@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   Container,
@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
+import Loading from "../../components/Loading";
 import {
   Header,
   ItemSelection,
@@ -15,6 +16,8 @@ import {
 } from "../../components/Form";
 
 const FormPage = () => {
+  const [items, setItems] = useState([]);
+  const [games, setGames] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState({ usd: 0, nis: 0 });
   const [formData, setFormData] = useState({
@@ -25,8 +28,36 @@ const FormPage = () => {
     additionalNotes: "",
     dateRange: { delivery: null, pickup: null },
   });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loadingPopup, setLoadingPopup] = useState(false);
   const [responseStatus, setResponseStatus] = useState(null);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+    
+    const apiBasrUrl = process.env.REACT_APP_API_BASE_URL;
+
+    fetch(`${apiBasrUrl}/api/form/form-items/getAll`)
+      .then((response) => response.json())
+      .then((res) => {
+        setItems(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+
+    fetch(`${apiBasrUrl}/api/form/game-items/getAll`)
+      .then((response) => response.json())
+      .then((res) => {
+        setGames(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
 
   const isFormComplete = () => {
     return (
@@ -49,7 +80,9 @@ const FormPage = () => {
       totalPrice,
     };
 
-    setLoading(true);
+
+    console.log(submissionData);
+    setLoadingPopup(true);
 
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
@@ -70,7 +103,7 @@ const FormPage = () => {
         setResponseStatus("Failed");
       })
       .finally(() => {
-        setLoading(false);
+        setLoadingPopup(false);
       });
   };
 
@@ -78,7 +111,9 @@ const FormPage = () => {
     setResponseStatus(null);
   };
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <Box
       flex={1}
       sx={{
@@ -91,6 +126,8 @@ const FormPage = () => {
         <Header />
         <form onSubmit={handleSubmit}>
           <ItemSelection
+            items={items}
+            games={games}
             setSelectedItems={setSelectedItems}
             totalPrice={totalPrice}
             setTotalPrice={setTotalPrice}
@@ -103,14 +140,14 @@ const FormPage = () => {
             fullWidth
             variant="contained"
             color="primary"
-            disabled={!isFormComplete() || loading}
+            disabled={!isFormComplete() || loadingPopup}
             sx={{ marginTop: 2 }}
           >
             Submit
           </Button>
 
           <Dialog
-            open={loading}
+            open={loadingPopup}
             sx={{ alignItems: "center", justifyContent: "center" }}
           >
             <DialogTitle

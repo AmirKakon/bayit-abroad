@@ -7,7 +7,8 @@ import { Box, Grid } from "@mui/material";
 import Divider from "@mui/material/Divider";
 
 const HomePage = () => {
-
+  window.scrollTo({ top: 0, behavior: "auto" });
+  
   return (
     <Box
       sx={{

@@ -2,7 +2,7 @@ const { dev, logger, db, functions } = require("../../../setup");
 const { getExchangeRate } = require("../../ExchangeRates");
 
 const baseDB = "form-items_dev";
-const preferredId = functions.config().entirepackage.id;
+const preferredId = functions.config().games.id;
 
 // create a form item
 dev.post("/api/form/form-items/create", (req, res) => {
@@ -88,7 +88,7 @@ dev.get("/api/form/form-items/getAll", async (req, res) => {
     const preferredItem = items.find((item) => item.id === preferredId);
     if (preferredItem) {
       items = items.filter((item) => item.id !== preferredId);
-      items.unshift(preferredItem);
+      items.push(preferredItem);
     }
 
     // Send the mutated items as a response

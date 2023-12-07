@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
-  Typography,
   Checkbox,
   Select,
   MenuItem,
@@ -8,7 +7,6 @@ import {
 } from "@mui/material";
 
 const GameDropdown = ({ games, selectedGames, setSelectedGames }) => {
-  const [noGameSelectedMessage, setNoGameSelectedMessage] = useState("No games have been selected");
 
   const handleGameChange = (event) => {
     // Find the full game objects based on the selected IDs
@@ -18,16 +16,7 @@ const GameDropdown = ({ games, selectedGames, setSelectedGames }) => {
     setSelectedGames(selectedGameObjects);
   };
 
-  useEffect(() => {
-    if (selectedGames.length > 0) {
-      setNoGameSelectedMessage("");
-    } else {
-      setNoGameSelectedMessage("No games have been selected");
-    }
-  }, [selectedGames]);
-
   return (
-    <div>
       <Select
         value={selectedGames.map((game) => game.id)} // Set the value to an array of IDs
         onChange={handleGameChange}
@@ -49,12 +38,6 @@ const GameDropdown = ({ games, selectedGames, setSelectedGames }) => {
           </MenuItem>
         ))}
       </Select>
-      {noGameSelectedMessage && (
-        <Typography variant="body2" color="error" align="left" paragraph>
-          {noGameSelectedMessage}
-        </Typography>
-      )}
-    </div>
   );
 };
 

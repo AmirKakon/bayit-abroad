@@ -16,8 +16,6 @@ import {
 } from "../../components/Form";
 
 const FormPage = () => {
-  window.scrollTo({ top: 0, behavior: "auto" });
-
   const [items, setItems] = useState([]);
   const [games, setGames] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -35,6 +33,8 @@ const FormPage = () => {
   const [responseStatus, setResponseStatus] = useState(null);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+    
     const apiBasrUrl = process.env.REACT_APP_API_BASE_URL;
 
     fetch(`${apiBasrUrl}/api/form/form-items/getAll`)

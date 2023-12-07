@@ -29,6 +29,7 @@ const FormPage = () => {
     dateRange: { delivery: null, pickup: null },
   });
   const [loading, setLoading] = useState(true);
+  const [loadingPopup, setLoadingPopup] = useState(false);
   const [responseStatus, setResponseStatus] = useState(null);
 
   useEffect(() => {
@@ -77,29 +78,36 @@ const FormPage = () => {
       totalPrice,
     };
 
-    setLoading(true);
 
-    const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+    console.log(submissionData);
+    setLoadingPopup(true);
 
-    fetch(`${apiBaseUrl}/api/form/orders/create`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(submissionData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setResponseStatus(data.status);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        setResponseStatus("Failed");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    // const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+
+    // fetch(`${apiBaseUrl}/api/form/orders/create`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(submissionData),
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     console.log(data);
+    //     setResponseStatus(data.status);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error:", error);
+    //     setResponseStatus("Failed");
+    //   })
+    //   .finally(() => {
+      setTimeout(() => {
+        // Your code after the delay
+        console.log('Three seconds have passed!');
+        setLoadingPopup(false);
+      }, 3000);
+    
+    //   });
   };
 
   const handleOkButtonClick = () => {
@@ -135,14 +143,14 @@ const FormPage = () => {
             fullWidth
             variant="contained"
             color="primary"
-            disabled={!isFormComplete() || loading}
+            disabled={!isFormComplete() || loadingPopup}
             sx={{ marginTop: 2 }}
           >
             Submit
           </Button>
 
           <Dialog
-            open={loading}
+            open={loadingPopup}
             sx={{ alignItems: "center", justifyContent: "center" }}
           >
             <DialogTitle

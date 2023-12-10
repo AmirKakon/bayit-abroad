@@ -80,8 +80,6 @@ const FormPage = () => {
       totalPrice,
     };
 
-
-    console.log(submissionData);
     setLoadingPopup(true);
 
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;

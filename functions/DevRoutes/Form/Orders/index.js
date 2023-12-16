@@ -14,16 +14,26 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const getTimestamps = (dateRange) => {
-  // Convert the timestamp string to a JavaScript Date object
-  const deliveryDate = new Date(dateRange.delivery);
-  // Convert the Date object to a Firebase Timestamp
-  const fbDeliveryDate = admin.firestore.Timestamp.fromDate(deliveryDate);
+const adjustDate = (date) => {
+  const adjustedDate = new Date(date);
+  adjustedDate.setMinutes(
+    adjustedDate.getMinutes() -
+    adjustedDate.getTimezoneOffset(),
+  );
 
-  // Convert the timestamp string to a JavaScript Date object
-  const pickupDate = new Date(dateRange.pickup);
+  logger.log(date);
+  logger.log(adjustedDate);
+  return adjustedDate;
+};
+
+const getTimestamps = (dateRange) => {
   // Convert the Date object to a Firebase Timestamp
-  const fbPickupDate = admin.firestore.Timestamp.fromDate(pickupDate);
+  const fbDeliveryDate =
+    admin.firestore.Timestamp.fromDate(adjustDate(dateRange.delivery));
+
+  // Convert the Date object to a Firebase Timestamp
+  const fbPickupDate = admin.firestore.Timestamp
+    .fromDate(adjustDate(dateRange.pickup));
 
   // Convert the timestamp string to a JavaScript Date object
   const updated = new Date();
@@ -58,54 +68,50 @@ dev.post("/api/form/orders/create", async (req, res) => {
     // Set the data of the document using the obtained reference
     await orderRef.set(order);
 
+    let totalAmount = 0;
+
     const selectedItemsList = order.selectedItems
-      .map(
-        (item) =>
-          `<li>
+      .map((item) => {
+        totalAmount += item.amount;
+        return `<li>
           <b><u>${item.name}</u></b>
           <b>Price:</b> $${item.price.usd} / ₪${item.price.nis}
           <b>Amount:</b> ${item.amount}
-          </li>`,
-      )
+          </li>`;
+      })
       .join("");
 
     const orderHtml = `
-    <table width="100%" cellspacing="0" cellpadding="0">
-    <tr>
-      <td align="left" style="background-color: #2c3c30; padding: 10px;">
-        <img 
-          src="https://firebasestorage.googleapis.com/v0/b/bayitabroad-jkak.appspot.com/o/logo%2Fbayit-abroad-logo.png?alt=media&token=ca798017-62a0-4190-a1e9-eedaba78f18d"
-          alt="BayitAbroad Logo"
-          width="100"
-          height="100"
-          align="left"
-          style="vertical-align: middle;"
-        >
-        <h1
-        height="100"
-        style="color: #c49f79;
-        margin-left: 10px;
-        vertical-align: middle;
-        display: inline-block;"
-        >
-        BayitAbroad New Order
-        </h1>
-      </td>
-    </tr>
-    </table>
-      
+      <table width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="left" style="background-color: #2c3c30; padding: 10px">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/bayitabroad-jkak.appspot.com/o/logo%2Fbayit-abroad-logo.png?alt=media&token=ca798017-62a0-4190-a1e9-eedaba78f18d"
+              alt="BayitAbroad Logo"
+              width="100"
+              height="100"
+              align="left"
+              style="vertical-align: middle"
+            />
+            <h1
+              height="100"
+              style="color: #c49f79; margin-left: 10px; padding-top: 15px"
+            >
+              BayitAbroad New Order
+            </h1>
+          </td>
+        </tr>
+      </table>
+
       <table
-      width="100%"
-      cellspacing="0"
-      cellpadding="5"
-      style="border: 1px solid #ddd; border-collapse: collapse;"
+        width="100%"
+        cellspacing="0"
+        cellpadding="5"
+        style="border: 1px solid #ddd; border-collapse: collapse"
       >
         <tr>
-          <td
-          colspan="2"
-          style="background-color: #f2f2f2; padding: 10px;"
-          >
-          <strong>Information</strong>
+          <td colspan="2" style="background-color: #f2f2f2; padding: 10px">
+            <strong>Information</strong>
           </td>
         </tr>
         <tr>
@@ -130,63 +136,68 @@ dev.post("/api/form/orders/create", async (req, res) => {
         </tr>
         <tr>
           <td><strong>Delivery on:</strong></td>
-          <td>${order.deliveryDate.toDate()}</td>
+          <td>${order.deliveryDate.toDate().toISOString()}</td>
         </tr>
         <tr>
           <td><strong>Pickup on:</strong></td>
-          <td>${order.pickupDate.toDate()}</td>
+          <td>${order.pickupDate.toDate().toISOString()}</td>
         </tr>
-    
+
         <tr>
-          <td 
-          colspan="2"
-          style="background-color: #f2f2f2; padding: 10px;"
-          >
-          <strong>Selected Items</strong>
+          <td colspan="2" style="background-color: #f2f2f2; padding: 10px">
+            <strong>Selected Items</strong>
           </td>
         </tr>
         <tr>
           <td colspan="2">
-            <ul>${selectedItemsList}</ul>
+            <ul>
+              ${selectedItemsList}
+            </ul>
           </td>
         </tr>
         <!-- Add more item-related rows as needed -->
-    
+
         <tr>
-          <td colspan="2" 
-          style="background-color: #f2f2f2; padding: 10px;"
-          >
-          <strong>Additional Notes</strong>
+          <td colspan="2" style="background-color: #f2f2f2; padding: 10px">
+            <strong>Additional Notes</strong>
           </td>
         </tr>
         <tr>
           <td colspan="2">${order.notes}</td>
         </tr>
       </table>
-    
+
       <table
-      width="100%"
-      cellspacing="0"
-      cellpadding="5"
-      style="border: 1px solid #ddd; border-collapse: collapse;"
+        width="100%"
+        cellspacing="0"
+        cellpadding="5"
+        style="border: 1px solid #ddd; border-collapse: collapse"
       >
         <tr>
-          <td
-          colspan="2"
-          style="background-color: #f2f2f2; padding: 10px;"
-          >
-          <strong>Summary</strong>
+          <td colspan="3" style="background-color: #f2f2f2; padding: 10px">
+            <strong>Summary</strong>
           </td>
         </tr>
         <tr>
           <td width="30%"><strong>Total:</strong></td>
-          <td>$${order.totalPrice.usd}</td>
+          <td>$${order.totalPrice.usd} / ₪${order.totalPrice.nis}</td>
         </tr>
         <tr>
-          <td width="30%"><strong>Last Updated:</strong></td>
-          <td>${order.lastUpdated.toDate()}</td>
+          <td width="30%"><strong>Total Amount of Items:</strong></td>
+          <td>${totalAmount}</td>
+        </tr>
+        <tr>
+          <td 
+            colspan="1" style="background-color: #f2f2f2; padding: 10px"
+          >
+            <strong>Last Updated:</strong>
+          </td>
+          <td style="background-color: #f2f2f2">
+            ${order.lastUpdated.toDate()}
+          </td>
         </tr>
       </table>
+
     `;
 
     const mailOptions = {
@@ -198,7 +209,7 @@ dev.post("/api/form/orders/create", async (req, res) => {
 
     try {
       await transporter.sendMail(mailOptions);
-      logger.log("Email notification sent successfully.", order.deliveryDate);
+      logger.log("Email notification sent successfully.");
     } catch (error) {
       logger.error("Error sending email:", error);
     }

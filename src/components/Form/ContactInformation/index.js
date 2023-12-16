@@ -2,9 +2,13 @@ import React, { useState, useMemo } from "react";
 import { TextField, Typography, Paper } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 
 dayjs.extend(isSameOrBefore);
+dayjs.extend(timezone);
+dayjs.extend(utc);
 
 const ContactInformation = ({ formData, setFormData }) => {
   const [dateError, setDateError] = useState(null);
@@ -15,6 +19,12 @@ const ContactInformation = ({ formData, setFormData }) => {
     // This is a basic regex for validating phone numbers, consider using a library like libphonenumber-js for a comprehensive solution
     //const pattern = /^[0-9]{10}$/;
     return true; //pattern.test(number);
+  };
+
+  const setDateString = (date) => {
+    const d = dayjs(date);
+    const formatedD = d.format("YYYY-MM-DD").concat("T00:00:00+00:00");
+    return formatedD;
   };
 
   const errorMessage = useMemo(() => {
@@ -72,8 +82,8 @@ const ContactInformation = ({ formData, setFormData }) => {
     }
 
     let range = {
-      delivery: updatedDeliveryDate ? updatedDeliveryDate.$d : null,
-      pickup: updatedPickupDate ? updatedPickupDate.$d : null,
+      delivery: updatedDeliveryDate ? setDateString(updatedDeliveryDate.$d) : null,
+      pickup: updatedPickupDate ? setDateString(updatedPickupDate.$d) : null,
     };
 
     setFormData((prevData) => ({

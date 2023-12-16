@@ -14,6 +14,10 @@ import {
   ItemSelection,
   ContactInformation,
 } from "../../components/Form";
+import dayjs from "dayjs";
+import isBefore from "dayjs/plugin/isSameOrBefore";
+
+dayjs.extend(isBefore);
 
 const FormPage = () => {
   const [items, setItems] = useState([]);
@@ -67,7 +71,7 @@ const FormPage = () => {
       formData.deliveryAddress &&
       formData.dateRange.delivery &&
       formData.dateRange.pickup &&
-      formData.dateRange.delivery < formData.dateRange.pickup
+      dayjs(formData.dateRange.delivery).isBefore(formData.dateRange.pickup)
     );
   };
 
@@ -79,6 +83,8 @@ const FormPage = () => {
       selectedItems,
       totalPrice,
     };
+
+    console.log(dayjs(formData.dateRange.delivery).isBefore(formData.dateRange.pickup))
 
     setLoadingPopup(true);
 

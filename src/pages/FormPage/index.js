@@ -7,13 +7,12 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Typography,
+  Paper,
 } from "@mui/material";
 import Loading from "../../components/Loading";
-import {
-  Header,
-  ItemSelection,
-  ContactInformation,
-} from "../../components/Form";
+import StepsContainer from "../../components/Form/StepsContainer";
+import { ItemSelection, ContactInformation } from "../../components/Form";
 import dayjs from "dayjs";
 import isBefore from "dayjs/plugin/isSameOrBefore";
 
@@ -35,10 +34,32 @@ const FormPage = () => {
   const [loading, setLoading] = useState(true);
   const [loadingPopup, setLoadingPopup] = useState(false);
   const [responseStatus, setResponseStatus] = useState(null);
+  const [activeStep, setActiveStep] = useState(0);
+
+  const isFormComplete = () => {
+    return (
+      formData.fullName &&
+      formData.email &&
+      formData.phoneNumber &&
+      formData.deliveryAddress &&
+      formData.dateRange.delivery &&
+      formData.dateRange.pickup &&
+      dayjs(formData.dateRange.delivery).isBefore(formData.dateRange.pickup)
+    );
+  };
+
+  const steps = [
+    { label: "Select Items", limitations: selectedItems.length > 0 },
+    {
+      label: "Provide Information and Choose Delivery Dates",
+      limitations: isFormComplete(),
+    },
+    { label: "Review and Pay", limitations: true },
+  ];
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
-    
+
     const apiBasrUrl = process.env.REACT_APP_API_BASE_URL;
 
     fetch(`${apiBasrUrl}/api/form/form-items/getAll`)
@@ -63,26 +84,14 @@ const FormPage = () => {
       });
   }, []);
 
-  const isFormComplete = () => {
-    return (
-      formData.fullName &&
-      formData.email &&
-      formData.phoneNumber &&
-      formData.deliveryAddress &&
-      formData.dateRange.delivery &&
-      formData.dateRange.pickup &&
-      dayjs(formData.dateRange.delivery).isBefore(formData.dateRange.pickup)
-    );
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
+  const handleSubmit = () => {
     const submissionData = {
       ...formData,
       selectedItems,
       totalPrice,
     };
+
+    console.log(submissionData);
 
     setLoadingPopup(true);
 
@@ -112,6 +121,53 @@ const FormPage = () => {
     setResponseStatus(null);
   };
 
+  const renderStep = (step) => {
+    switch (step) {
+      case 0:
+        return (
+          <>
+            <Paper elevation={2} sx={{ padding: 2, marginBottom: 2 }}>
+              <Typography variant="subtitle1" align="center" paragraph>
+                Thanks for choosing to order from us!
+              </Typography>
+              <Typography variant="body1" align="left" paragraph>
+                Please fill out the equipment you'd like to rent, the dates of
+                the rental and the location.
+                <br /> Feel free to reach out to us for any questions or
+                requests.
+                <br />
+                <br />* Please note that delivery is only in Jerusalem. Drop off
+                is dependent on our availability and your preference.
+                <br />* Payment is at time of delivery via cash, bit or bank
+                transfer.
+                <br />
+                <br />
+                Looking for an item that isn't listed? Add more items in the
+                "Additional Notes" section on the next page and our team will
+                review the request and get back to you if we can supply it for
+                you.
+              </Typography>
+            </Paper>
+
+            <ItemSelection
+              items={items}
+              games={games}
+              selectedItems={selectedItems}
+              setSelectedItems={setSelectedItems}
+              totalPrice={totalPrice}
+              setTotalPrice={setTotalPrice}
+            />
+          </>
+        );
+      case 1:
+        return (
+          <ContactInformation formData={formData} setFormData={setFormData} />
+        );
+      default:
+        return <Typography>DEFAULT</Typography>;
+    }
+  };
+
   return loading ? (
     <Loading />
   ) : (
@@ -124,79 +180,64 @@ const FormPage = () => {
       }}
     >
       <Container component="main" maxWidth="md">
-        <Header />
-        <form onSubmit={handleSubmit}>
-          <ItemSelection
-            items={items}
-            games={games}
-            setSelectedItems={setSelectedItems}
-            totalPrice={totalPrice}
-            setTotalPrice={setTotalPrice}
-          />
+        <Typography variant="h4" align="center" gutterBottom>
+          Bayit Abroad Order Form
+        </Typography>
+        <StepsContainer
+          activeStep={activeStep}
+          setActiveStep={setActiveStep}
+          steps={steps}
+          renderStep={renderStep}
+          onFinish={handleSubmit}
+        />
 
-          <ContactInformation formData={formData} setFormData={setFormData} />
-
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            disabled={!isFormComplete() || loadingPopup}
-            sx={{ marginTop: 2 }}
+        <Dialog
+          open={loadingPopup}
+          sx={{ alignItems: "center", justifyContent: "center" }}
+        >
+          <DialogTitle sx={{ backgroundColor: "primary.main", color: "white" }}>
+            Loading...
+          </DialogTitle>
+          <DialogContent
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 2,
+            }}
           >
-            Submit
-          </Button>
+            <CircularProgress sx={{ padding: 2 }} />
+          </DialogContent>
+        </Dialog>
 
+        {responseStatus && (
           <Dialog
-            open={loadingPopup}
+            open={true}
+            color="primary"
             sx={{ alignItems: "center", justifyContent: "center" }}
           >
             <DialogTitle
               sx={{ backgroundColor: "primary.main", color: "white" }}
             >
-              Loading...
+              {responseStatus === "Success" ? "Success" : "Failed"}
             </DialogTitle>
-            <DialogContent
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: 2,
-              }}
-            >
-              <CircularProgress sx={{ padding: 2 }} />
+            <DialogContent sx={{ padding: 2 }}>
+              {responseStatus === "Success" ? (
+                <p>Order processed successfully!</p>
+              ) : (
+                <p>Failed to process the order. Please try again.</p>
+              )}
+              <Button
+                onClick={handleOkButtonClick}
+                fullWidth
+                variant="contained"
+                color="primary"
+              >
+                OK
+              </Button>
             </DialogContent>
           </Dialog>
-
-          {responseStatus && (
-            <Dialog
-              open={true}
-              color="primary"
-              sx={{ alignItems: "center", justifyContent: "center" }}
-            >
-              <DialogTitle
-                sx={{ backgroundColor: "primary.main", color: "white" }}
-              >
-                {responseStatus === "Success" ? "Success" : "Failed"}
-              </DialogTitle>
-              <DialogContent sx={{ padding: 2 }}>
-                {responseStatus === "Success" ? (
-                  <p>Order processed successfully!</p>
-                ) : (
-                  <p>Failed to process the order. Please try again.</p>
-                )}
-                <Button
-                  onClick={handleOkButtonClick}
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                >
-                  OK
-                </Button>
-              </DialogContent>
-            </Dialog>
-          )}
-        </form>
+        )}
       </Container>
     </Box>
   );

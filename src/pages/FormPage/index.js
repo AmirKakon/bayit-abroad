@@ -122,7 +122,7 @@ const FormPage = () => {
 
   const handleOkButtonClick = () => {
     setResponseStatus(null);
-    const url = `/form/${orderId}/thankyou`;
+    const url = `/form/orders/${orderId}/thankyou`;
 
     navigate(url);
   };

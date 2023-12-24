@@ -15,6 +15,7 @@ import StepsContainer from "../../components/StepsContainer";
 import { ItemSelection, ContactInformation, OrderSummary } from "../../components/Form";
 import dayjs from "dayjs";
 import isBefore from "dayjs/plugin/isSameOrBefore";
+import { useNavigate } from "react-router-dom";
 
 dayjs.extend(isBefore);
 
@@ -35,6 +36,9 @@ const FormPage = () => {
   const [loadingPopup, setLoadingPopup] = useState(false);
   const [responseStatus, setResponseStatus] = useState(null);
   const [activeStep, setActiveStep] = useState(0);
+  const [orderId, setOrderId] = useState("000");
+
+  const navigate = useNavigate();
 
   const isFormComplete = () => {
     return (
@@ -105,6 +109,7 @@ const FormPage = () => {
       .then((response) => response.json())
       .then((data) => {
         setResponseStatus(data.status);
+        setOrderId(data.orderId);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -117,6 +122,9 @@ const FormPage = () => {
 
   const handleOkButtonClick = () => {
     setResponseStatus(null);
+    const url = `/form/${orderId}/thankyou`;
+
+    navigate(url);
   };
 
   const renderStep = (step) => {

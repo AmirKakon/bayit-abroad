@@ -119,13 +119,13 @@ const ItemsSection = ({ items, totalPrice }) => {
       </TableHead>
       <TableBody>
         {itemList}
-        <TableRow>
+        <TableRow style={{backgroundColor: "#d5d5d5"}}>
           <TableCell colSpan={3}>
             <strong>Total:</strong>
           </TableCell>
-          <TableCell>{totalAmountOfItems}</TableCell>
-          <TableCell>${totalPrice.usd}</TableCell>
-          <TableCell>₪{totalPrice.nis}</TableCell>
+          <TableCell><strong>{totalAmountOfItems}</strong></TableCell>
+          <TableCell><strong>${totalPrice.usd}</strong></TableCell>
+          <TableCell><strong>₪{totalPrice.nis}</strong></TableCell>
         </TableRow>
       </TableBody>
     </>

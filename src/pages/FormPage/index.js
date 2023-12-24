@@ -84,8 +84,6 @@ const FormPage = () => {
       totalPrice,
     };
 
-    console.log(dayjs(formData.dateRange.delivery).isBefore(formData.dateRange.pickup))
-
     setLoadingPopup(true);
 
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
@@ -99,7 +97,6 @@ const FormPage = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setResponseStatus(data.status);
       })
       .catch((error) => {

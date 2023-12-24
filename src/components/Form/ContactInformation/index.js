@@ -2,13 +2,9 @@ import React, { useState, useMemo } from "react";
 import { TextField, Typography, Paper } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
-import timezone from "dayjs/plugin/timezone";
-import utc from "dayjs/plugin/utc";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 
 dayjs.extend(isSameOrBefore);
-dayjs.extend(timezone);
-dayjs.extend(utc);
 
 const ContactInformation = ({ formData, setFormData }) => {
   const [dateError, setDateError] = useState(null);

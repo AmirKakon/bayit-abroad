@@ -1,3 +1,4 @@
+const dayjs = require("dayjs");
 const { dev, logger, db, admin, functions } = require("../../../setup");
 const nodemailer = require("nodemailer");
 
@@ -14,31 +15,23 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const adjustDate = (date) => {
-  const adjustedDate = new Date(date);
-  adjustedDate.setMinutes(
-    adjustedDate.getMinutes() -
-    adjustedDate.getTimezoneOffset(),
-  );
-
-  logger.log(date);
-  logger.log(adjustedDate);
-  return adjustedDate;
+const setDateString = (date) => {
+  const d = dayjs(date);
+  const formatedD = d.format("ddd MMM D YYYY");
+  return formatedD;
 };
 
 const getTimestamps = (dateRange) => {
   // Convert the Date object to a Firebase Timestamp
   const fbDeliveryDate =
-    admin.firestore.Timestamp.fromDate(adjustDate(dateRange.delivery));
+    admin.firestore.Timestamp.fromDate(new Date(dateRange.delivery));
 
   // Convert the Date object to a Firebase Timestamp
   const fbPickupDate = admin.firestore.Timestamp
-    .fromDate(adjustDate(dateRange.pickup));
+    .fromDate(new Date(dateRange.pickup));
 
-  // Convert the timestamp string to a JavaScript Date object
-  const updated = new Date();
   // Convert the Date object to a Firebase Timestamp
-  const fbUpdated = admin.firestore.Timestamp.fromDate(updated);
+  const fbUpdated = admin.firestore.Timestamp.now();
 
   return { delivery: fbDeliveryDate, pickup: fbPickupDate, updated: fbUpdated };
 };
@@ -136,11 +129,11 @@ dev.post("/api/form/orders/create", async (req, res) => {
         </tr>
         <tr>
           <td><strong>Delivery on:</strong></td>
-          <td>${order.deliveryDate.toDate().toISOString()}</td>
+          <td>${setDateString(order.deliveryDate.toDate())}</td>
         </tr>
         <tr>
           <td><strong>Pickup on:</strong></td>
-          <td>${order.pickupDate.toDate().toISOString()}</td>
+          <td>${setDateString(order.pickupDate.toDate())}</td>
         </tr>
 
         <tr>

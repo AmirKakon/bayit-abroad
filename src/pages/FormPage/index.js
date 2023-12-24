@@ -11,8 +11,8 @@ import {
   Paper,
 } from "@mui/material";
 import Loading from "../../components/Loading";
-import StepsContainer from "../../components/Form/StepsContainer";
-import { ItemSelection, ContactInformation } from "../../components/Form";
+import StepsContainer from "../../components/StepsContainer";
+import { ItemSelection, ContactInformation, OrderSummary } from "../../components/Form";
 import dayjs from "dayjs";
 import isBefore from "dayjs/plugin/isSameOrBefore";
 
@@ -162,6 +162,11 @@ const FormPage = () => {
       case 1:
         return (
           <ContactInformation formData={formData} setFormData={setFormData} />
+        );
+      case 2:
+        console.log(formData, selectedItems, totalPrice);
+        return (
+          <OrderSummary order={{...formData, selectedItems, totalPrice}}/> 
         );
       default:
         return <Typography>DEFAULT</Typography>;

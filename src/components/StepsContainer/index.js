@@ -15,9 +15,8 @@ const StepsContainer = ({
 }) => {
   const handleNext = () => {
     if (activeStep === steps.length - 1) {
-      console.log("finish 1");
       onFinish();
-      console.log("finish 2");
+      return;
     }
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);

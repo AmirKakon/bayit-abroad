@@ -17,6 +17,12 @@ const ContactInformation = ({ formData, setFormData }) => {
     return true; //pattern.test(number);
   };
 
+  const setDateString = (date) => {
+    const d = dayjs(date);
+    const formatedD = d.format("YYYY-MM-DD").concat("T00:00:00+00:00");
+    return formatedD;
+  };
+
   const errorMessage = useMemo(() => {
     switch (dateError) {
       case "maxDate":
@@ -72,8 +78,8 @@ const ContactInformation = ({ formData, setFormData }) => {
     }
 
     let range = {
-      delivery: updatedDeliveryDate ? updatedDeliveryDate.$d : null,
-      pickup: updatedPickupDate ? updatedPickupDate.$d : null,
+      delivery: updatedDeliveryDate ? setDateString(updatedDeliveryDate.$d) : null,
+      pickup: updatedPickupDate ? setDateString(updatedPickupDate.$d) : null,
     };
 
     setFormData((prevData) => ({

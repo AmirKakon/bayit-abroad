@@ -1,3 +1,4 @@
+const dayjs = require("dayjs");
 const { dev, logger, db, admin, functions } = require("../../../setup");
 const nodemailer = require("nodemailer");
 
@@ -14,21 +15,23 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+const setDateString = (date) => {
+  const d = dayjs(date);
+  const formatedD = d.format("ddd MMM D YYYY");
+  return formatedD;
+};
+
 const getTimestamps = (dateRange) => {
-  // Convert the timestamp string to a JavaScript Date object
-  const deliveryDate = new Date(dateRange.delivery);
   // Convert the Date object to a Firebase Timestamp
-  const fbDeliveryDate = admin.firestore.Timestamp.fromDate(deliveryDate);
+  const fbDeliveryDate =
+    admin.firestore.Timestamp.fromDate(new Date(dateRange.delivery));
 
-  // Convert the timestamp string to a JavaScript Date object
-  const pickupDate = new Date(dateRange.pickup);
   // Convert the Date object to a Firebase Timestamp
-  const fbPickupDate = admin.firestore.Timestamp.fromDate(pickupDate);
+  const fbPickupDate = admin.firestore.Timestamp
+    .fromDate(new Date(dateRange.pickup));
 
-  // Convert the timestamp string to a JavaScript Date object
-  const updated = new Date();
   // Convert the Date object to a Firebase Timestamp
-  const fbUpdated = admin.firestore.Timestamp.fromDate(updated);
+  const fbUpdated = admin.firestore.Timestamp.now();
 
   return { delivery: fbDeliveryDate, pickup: fbPickupDate, updated: fbUpdated };
 };
@@ -58,36 +61,143 @@ dev.post("/api/form/orders/create", async (req, res) => {
     // Set the data of the document using the obtained reference
     await orderRef.set(order);
 
+    let totalAmount = 0;
+
     const selectedItemsList = order.selectedItems
-      .map(
-        (item) =>
-          `<li>
+      .map((item) => {
+        totalAmount += item.amount;
+        return `<li>
           <b><u>${item.name}</u></b>
           <b>Price:</b> $${item.price.usd} / ₪${item.price.nis}
           <b>Amount:</b> ${item.amount}
-          </li>`,
-      )
+          </li>`;
+      })
       .join("");
 
     const orderHtml = `
-      <p><strong>Order Id:</strong> ${orderRef.id}</p>
-      <p><strong>Name:</strong> ${order.fullName}</p>
-      <p><strong>Email:</strong> ${order.email}</p>
-      <p><strong>Phone:</strong> ${order.phone}</p>
-      <p><strong>Address:</strong> ${order.deliveryAddress}</p>
-      <p><strong>Delivery on:</strong> ${order.deliveryDate.toDate()}</p>
-      <p><strong>Pickup on:</strong> ${order.pickupDate.toDate()}</p>
-      <p><strong>Selected items:</strong></p>
-      <ul>${selectedItemsList}</ul>
-      <p><strong>Total:</strong> $${order.totalPrice.usd}</p>
-      <p><strong>Notes:</strong> ${order.notes}</p>
+      <table width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="left" style="background-color: #2c3c30; padding: 10px">
+            <img
+              src="https://firebasestorage.googleapis.com/v0/b/bayitabroad-jkak.appspot.com/o/logo%2Fbayit-abroad-logo.png?alt=media&token=ca798017-62a0-4190-a1e9-eedaba78f18d"
+              alt="BayitAbroad Logo"
+              width="100"
+              height="100"
+              align="left"
+              style="vertical-align: middle"
+            />
+            <h1
+              height="100"
+              style="color: #c49f79; margin-left: 10px; padding-top: 15px"
+            >
+              BayitAbroad New Order
+            </h1>
+          </td>
+        </tr>
+      </table>
+
+      <table
+        width="100%"
+        cellspacing="0"
+        cellpadding="5"
+        style="border: 1px solid #ddd; border-collapse: collapse"
+      >
+        <tr>
+          <td colspan="2" style="background-color: #f2f2f2; padding: 10px">
+            <strong>Information</strong>
+          </td>
+        </tr>
+        <tr>
+          <td width="30%"><strong>Order Id:</strong></td>
+          <td>${orderRef.id}</td>
+        </tr>
+        <tr>
+          <td><strong>Name:</strong></td>
+          <td>${order.fullName}</td>
+        </tr>
+        <tr>
+          <td><strong>Email:</strong></td>
+          <td>${order.email}</td>
+        </tr>
+        <tr>
+          <td><strong>Phone:</strong></td>
+          <td>${order.phone}</td>
+        </tr>
+        <tr>
+          <td><strong>Delivery Address:</strong></td>
+          <td>${order.deliveryAddress}</td>
+        </tr>
+        <tr>
+          <td><strong>Delivery on:</strong></td>
+          <td>${setDateString(order.deliveryDate.toDate())}</td>
+        </tr>
+        <tr>
+          <td><strong>Pickup on:</strong></td>
+          <td>${setDateString(order.pickupDate.toDate())}</td>
+        </tr>
+
+        <tr>
+          <td colspan="2" style="background-color: #f2f2f2; padding: 10px">
+            <strong>Selected Items</strong>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <ul>
+              ${selectedItemsList}
+            </ul>
+          </td>
+        </tr>
+        <!-- Add more item-related rows as needed -->
+
+        <tr>
+          <td colspan="2" style="background-color: #f2f2f2; padding: 10px">
+            <strong>Additional Notes</strong>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2">${order.notes}</td>
+        </tr>
+      </table>
+
+      <table
+        width="100%"
+        cellspacing="0"
+        cellpadding="5"
+        style="border: 1px solid #ddd; border-collapse: collapse"
+      >
+        <tr>
+          <td colspan="3" style="background-color: #f2f2f2; padding: 10px">
+            <strong>Summary</strong>
+          </td>
+        </tr>
+        <tr>
+          <td width="30%"><strong>Total:</strong></td>
+          <td>$${order.totalPrice.usd} / ₪${order.totalPrice.nis}</td>
+        </tr>
+        <tr>
+          <td width="30%"><strong>Total Amount of Items:</strong></td>
+          <td>${totalAmount}</td>
+        </tr>
+        <tr>
+          <td 
+            colspan="1" style="background-color: #f2f2f2; padding: 10px"
+          >
+            <strong>Last Updated:</strong>
+          </td>
+          <td style="background-color: #f2f2f2">
+            ${order.lastUpdated.toDate()}
+          </td>
+        </tr>
+      </table>
+
     `;
 
     const mailOptions = {
       from: "orders@bayitabroad.com",
       to: gmailEmail,
       subject: `New Order Placed! Order Id: ${orderRef.id}`,
-      html: `<p>A new order was placed.</p>${orderHtml}`,
+      html: `${orderHtml}`,
     };
 
     try {

@@ -91,8 +91,6 @@ const FormPage = () => {
       totalPrice,
     };
 
-    console.log(submissionData);
-
     setLoadingPopup(true);
 
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
@@ -164,7 +162,6 @@ const FormPage = () => {
           <ContactInformation formData={formData} setFormData={setFormData} />
         );
       case 2:
-        console.log(formData, selectedItems, totalPrice);
         return (
           <OrderSummary order={{...formData, selectedItems, totalPrice}}/> 
         );

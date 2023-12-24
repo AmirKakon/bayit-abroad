@@ -152,6 +152,7 @@ const ContactInformation = ({ formData, setFormData }) => {
             }}
             disablePast
             sx={{width: "100%"}}
+            defaultValue={formData.dateRange.delivery !==null ? dayjs(formData.dateRange.delivery) : dayjs()}
           />
         </Grid>
         <Grid item xs={6}>
@@ -171,6 +172,7 @@ const ContactInformation = ({ formData, setFormData }) => {
                 ? dayjs(deliveryDate).add(1, "day")
                 : dayjs().add(1, "day")
             }
+            defaultValue={formData.dateRange.pickup !==null ? dayjs(formData.dateRange.pickup) : dayjs().add(1, "day")}
             sx={{width: "100%"}}
           />
         </Grid>

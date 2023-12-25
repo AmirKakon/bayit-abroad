@@ -40,8 +40,8 @@ const InformationSection = ({ order }) => {
             dayjs(order.dateRange.delivery).format("ddd MMM D YYYY"),
           ],
           [
-            "Pickup Date:",
-            dayjs(order.dateRange.pickup).format("ddd MMM D YYYY"),
+            "Return Date:",
+            dayjs(order.dateRange.return).format("ddd MMM D YYYY"),
           ],
           ["Additional Notes:", order.additionalNotes],
         ].map((row) => (

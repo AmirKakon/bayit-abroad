@@ -29,7 +29,7 @@ const FormPage = () => {
     phoneNumber: "",
     deliveryAddress: "",
     additionalNotes: "",
-    dateRange: { delivery: null, pickup: null },
+    dateRange: { delivery: null, return: null },
   });
   const [loading, setLoading] = useState(true);
   const [loadingPopup, setLoadingPopup] = useState(false);
@@ -46,8 +46,8 @@ const FormPage = () => {
       formData.phoneNumber &&
       formData.deliveryAddress &&
       formData.dateRange.delivery &&
-      formData.dateRange.pickup &&
-      dayjs(formData.dateRange.delivery).isBefore(formData.dateRange.pickup)
+      formData.dateRange.return &&
+      dayjs(formData.dateRange.delivery).isBefore(formData.dateRange.return)
     );
   };
 

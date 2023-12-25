@@ -41,8 +41,8 @@ const InformationSection = ({ order }) => {
             dayjs.unix(order.deliveryDate._seconds).format("ddd MMM D YYYY"),
           ],
           [
-            "Pickup Date:",
-            dayjs.unix(order.pickupDate._seconds).format("ddd MMM D YYYY"),
+            "Return Date:",
+            dayjs.unix(order.returnDate._seconds).format("ddd MMM D YYYY"),
           ],
           ["Additional Notes:", order.notes],
         ].map((row) => (

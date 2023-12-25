@@ -27,13 +27,13 @@ const getTimestamps = (dateRange) => {
     admin.firestore.Timestamp.fromDate(new Date(dateRange.delivery));
 
   // Convert the Date object to a Firebase Timestamp
-  const fbPickupDate = admin.firestore.Timestamp
-    .fromDate(new Date(dateRange.pickup));
+  const fbReturnDate = admin.firestore.Timestamp
+    .fromDate(new Date(dateRange.return));
 
   // Convert the Date object to a Firebase Timestamp
   const fbUpdated = admin.firestore.Timestamp.now();
 
-  return { delivery: fbDeliveryDate, pickup: fbPickupDate, updated: fbUpdated };
+  return { delivery: fbDeliveryDate, return: fbReturnDate, updated: fbUpdated };
 };
 
 // create an order
@@ -45,7 +45,7 @@ dev.post("/api/form/orders/create", async (req, res) => {
       fullName: req.body.fullName,
       notes: req.body.additionalNotes,
       deliveryDate: timestamps.delivery,
-      pickupDate: timestamps.pickup,
+      returnDate: timestamps.return,
       deliveryAddress: req.body.deliveryAddress,
       email: req.body.email,
       phone: req.body.phoneNumber,
@@ -132,8 +132,8 @@ dev.post("/api/form/orders/create", async (req, res) => {
           <td>${setDateString(order.deliveryDate.toDate())}</td>
         </tr>
         <tr>
-          <td><strong>Pickup on:</strong></td>
-          <td>${setDateString(order.pickupDate.toDate())}</td>
+          <td><strong>Return on:</strong></td>
+          <td>${setDateString(order.returnDate.toDate())}</td>
         </tr>
 
         <tr>
@@ -294,7 +294,7 @@ dev.put("/api/form/orders/update/:id", (req, res) => {
         fullName: req.body.fullName,
         notes: req.body.additionalNotes,
         deliveryDate: timestamps.delivery,
-        pickupDate: timestamps.pickup,
+        returnDate: timestamps.return,
         deliveryAddress: req.body.deliveryAddress,
         email: req.body.email,
         phone: req.body.phoneNumber,

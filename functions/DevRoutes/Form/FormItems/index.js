@@ -12,6 +12,7 @@ dev.post("/api/form/form-items/create", (req, res) => {
       await db.collection(baseDB).doc().create({
         name: req.body.name,
         price: req.body.price,
+        category: req.body.category,
       });
 
       return res.status(200).send({ status: "Success", msg: "Item Saved" });
@@ -108,6 +109,7 @@ dev.put("/api/form/form-items/update/:id", (req, res) => {
       await reqDoc.update({
         name: req.body.name,
         price: req.body.price,
+        category: req.body.category,
       });
 
       return res.status(200).send({ status: "Success", msg: "Item Updated" });

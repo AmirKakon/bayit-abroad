@@ -15,6 +15,7 @@ import { gamesId } from "../../../config";
 const ItemSelection = ({
   items,
   games,
+  selectedItems,
   setSelectedItems,
   totalPrice,
   setTotalPrice,
@@ -23,7 +24,7 @@ const ItemSelection = ({
   const [amounts, setAmounts] = useState(() => {
     const initialState = {};
     items.forEach((item) => {
-      initialState[item.id] = 0;
+      initialState[item.id] = selectedItems.find((selectedItem) => selectedItem.id === item.id)?.amount || 0;
     });
     return initialState;
   });
@@ -115,11 +116,6 @@ const ItemSelection = ({
       </List>
       <Typography variant="h6" align="left" paragraph padding={1}>
         <b>Total:</b> ${totalPrice.usd} / ₪{totalPrice.nis}
-      </Typography>
-      <Typography variant="body1" align="left" paragraph padding={1}>
-        Looking for an item that isn't listed? Add more items in the "Additional
-        Notes" section at the bottom of the form and our team will review the
-        request and get back to you if we can supply it for you.
       </Typography>
     </Paper>
   );

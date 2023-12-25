@@ -190,7 +190,12 @@ dev.post("/api/form/orders/create", async (req, res) => {
           </td>
         </tr>
       </table>
-
+      <br />
+      <br />
+      <p>* Please note that delivery is only in Jerusalem.
+      Drop off is dependent on our availability and your preference.
+      <br />* Payment is at time of delivery via cash, bit or bank transfer.
+      </p>
     `;
 
     const mailOptions = {

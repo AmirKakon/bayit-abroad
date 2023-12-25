@@ -1,5 +1,5 @@
-import Header from "./Header";
 import ItemSelection from "./ItemSelection";
 import ContactInformation from "./ContactInformation";
+import OrderSummary from "./OrderSummary";
 
-export { Header, ItemSelection, ContactInformation };
+export { ItemSelection, ContactInformation, OrderSummary };

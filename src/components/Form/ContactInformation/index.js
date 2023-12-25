@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { TextField, Typography, Paper } from "@mui/material";
+import { TextField, Typography, Grid, Paper } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
@@ -143,34 +143,40 @@ const ContactInformation = ({ formData, setFormData }) => {
         required
       />
 
-      <DatePicker
-        label="Delivery Date *"
-        onChange={(newDate) => {
-          handleDateChange(newDate, 0);
-        }}
-        disablePast
-        sx={{ marginRight: 2, marginTop: 2 }}
-      />
-
-      <DatePicker
-        label="Pickup Date *"
-        onError={(error) => setDateError(error)}
-        slotProps={{
-          textField: {
-            helperText: errorMessage,
-          },
-        }}
-        onChange={(newDate) => {
-          handleDateChange(newDate, 1);
-        }}
-        minDate={
-          deliveryDate
-            ? dayjs(deliveryDate).add(1, "day")
-            : dayjs().add(1, "day")
-        }
-        sx={{ marginTop: 2 }}
-      />
-
+<Grid container spacing={2}>
+        <Grid item xs={6}>
+          <DatePicker
+            label="Delivery Date *"
+            onChange={(newDate) => {
+              handleDateChange(newDate, 0);
+            }}
+            disablePast
+            sx={{width: "100%"}}
+            defaultValue={formData.dateRange.delivery !==null ? dayjs(formData.dateRange.delivery) : dayjs()}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <DatePicker
+            label="Pickup Date *"
+            onError={(error) => setDateError(error)}
+            slotProps={{
+              textField: {
+                helperText: errorMessage,
+              },
+            }}
+            onChange={(newDate) => {
+              handleDateChange(newDate, 1);
+            }}
+            minDate={
+              deliveryDate
+                ? dayjs(deliveryDate).add(1, "day")
+                : dayjs().add(1, "day")
+            }
+            defaultValue={formData.dateRange.pickup !==null ? dayjs(formData.dateRange.pickup) : dayjs().add(1, "day")}
+            sx={{width: "100%"}}
+          />
+        </Grid>
+      </Grid>
       <TextField
         fullWidth
         margin="normal"

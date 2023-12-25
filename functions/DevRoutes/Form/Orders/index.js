@@ -43,12 +43,12 @@ dev.post("/api/form/orders/create", async (req, res) => {
 
     const order = {
       fullName: req.body.fullName,
-      notes: req.body.additionalNotes,
+      additionalNotes: req.body.additionalNotes,
       deliveryDate: timestamps.delivery,
       returnDate: timestamps.return,
       deliveryAddress: req.body.deliveryAddress,
       email: req.body.email,
-      phone: req.body.phoneNumber,
+      phone: req.body.phone,
       selectedItems: req.body.selectedItems,
       totalPrice: req.body.totalPrice,
       lastUpdated: timestamps.updated,
@@ -61,15 +61,15 @@ dev.post("/api/form/orders/create", async (req, res) => {
     // Set the data of the document using the obtained reference
     await orderRef.set(order);
 
-    let totalAmount = 0;
+    let totalQuantity = 0;
 
     const selectedItemsList = order.selectedItems
       .map((item) => {
-        totalAmount += item.amount;
+        totalQuantity += item.quantity;
         return `<li>
           <b><u>${item.name}</u></b>
           <b>Price:</b> $${item.price.usd} / ₪${item.price.nis}
-          <b>Amount:</b> ${item.amount}
+          <b>Quantity:</b> ${item.quantity}
           </li>`;
       })
       .join("");
@@ -120,7 +120,7 @@ dev.post("/api/form/orders/create", async (req, res) => {
           <td>${order.email}</td>
         </tr>
         <tr>
-          <td><strong>Phone:</strong></td>
+          <td><strong>Phone in Israel:</strong></td>
           <td>${order.phone}</td>
         </tr>
         <tr>
@@ -156,7 +156,7 @@ dev.post("/api/form/orders/create", async (req, res) => {
           </td>
         </tr>
         <tr>
-          <td colspan="2">${order.notes}</td>
+          <td colspan="2">${order.additionalNotes}</td>
         </tr>
       </table>
 
@@ -176,8 +176,8 @@ dev.post("/api/form/orders/create", async (req, res) => {
           <td>$${order.totalPrice.usd} / ₪${order.totalPrice.nis}</td>
         </tr>
         <tr>
-          <td width="30%"><strong>Total Amount of Items:</strong></td>
-          <td>${totalAmount}</td>
+          <td width="30%"><strong>Total Quantity of Items:</strong></td>
+          <td>${totalQuantity}</td>
         </tr>
         <tr>
           <td 
@@ -292,12 +292,12 @@ dev.put("/api/form/orders/update/:id", (req, res) => {
 
       await reqDoc.update({
         fullName: req.body.fullName,
-        notes: req.body.additionalNotes,
+        additionalNotes: req.body.additionalNotes,
         deliveryDate: timestamps.delivery,
         returnDate: timestamps.return,
         deliveryAddress: req.body.deliveryAddress,
         email: req.body.email,
-        phone: req.body.phoneNumber,
+        phone: req.body.phone,
         selectedItems: req.body.selectedItems,
         lastUpdated: timestamps.updated,
       });

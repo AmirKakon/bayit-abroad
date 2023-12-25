@@ -34,8 +34,8 @@ const InformationSection = ({ order }) => {
           ["Tracking Number:", order.id],
           ["Name:", order.fullName],
           ["Email:", order.email],
-          ["Phone:", order.phone],
-          ["Address:", order.deliveryAddress],
+          ["Phone in Israel:", order.phone],
+          ["Delivery Address:", order.deliveryAddress],
           [
             "Delivery Date:",
             dayjs.unix(order.deliveryDate._seconds).format("ddd MMM D YYYY"),
@@ -44,10 +44,10 @@ const InformationSection = ({ order }) => {
             "Return Date:",
             dayjs.unix(order.returnDate._seconds).format("ddd MMM D YYYY"),
           ],
-          ["Additional Notes:", order.notes],
+          ["Additional Notes:", order.additionalNotes],
         ].map((row) => (
           <TableRow key={row[0]}>
-            <TableCell width="10%">{row[0]}</TableCell>
+            <TableCell width="20%">{row[0]}</TableCell>
             <TableCell>{row[1]}</TableCell>
           </TableRow>
         ))}
@@ -57,10 +57,10 @@ const InformationSection = ({ order }) => {
 };
 
 const ItemsSection = ({ items, totalPrice }) => {
-  let totalAmountOfItems = 0;
+  let totalQuantityOfItems = 0;
 
   const itemList = items.map((item) => {
-    totalAmountOfItems += item.amount;
+    totalQuantityOfItems += item.quantity;
 
     return (
       <TableRow key={item.name}>
@@ -69,12 +69,12 @@ const ItemsSection = ({ items, totalPrice }) => {
           ${item.price.usd}
         </TableCell>
         <TableCell sx={{ textAlign: "center" }}>₪{item.price.nis}</TableCell>
-        <TableCell sx={{ textAlign: "center" }}>{item.amount}</TableCell>
+        <TableCell sx={{ textAlign: "center" }}>{item.quantity}</TableCell>
         <TableCell width="10%" sx={{ textAlign: "center" }}>
-          ${item.amount * item.price.usd}
+          ${item.quantity * item.price.usd}
         </TableCell>
         <TableCell sx={{ textAlign: "center" }}>
-          ₪{item.amount * item.price.nis}
+          ₪{item.quantity * item.price.nis}
         </TableCell>
       </TableRow>
     );
@@ -112,7 +112,7 @@ const ItemsSection = ({ items, totalPrice }) => {
             }}
           >
             <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-              Amount
+              Quantity
             </Typography>
           </TableCell>
           <TableCell
@@ -136,7 +136,7 @@ const ItemsSection = ({ items, totalPrice }) => {
             <strong>Total:</strong>
           </TableCell>
           <TableCell sx={{ textAlign: "center" }}>
-            <strong>{totalAmountOfItems}</strong>
+            <strong>{totalQuantityOfItems}</strong>
           </TableCell>
           <TableCell sx={{ textAlign: "center" }}>
             <strong>${totalPrice.usd}</strong>

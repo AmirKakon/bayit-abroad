@@ -33,8 +33,8 @@ const InformationSection = ({ order }) => {
         {[
           ["Name:", order.fullName],
           ["Email:", order.email],
-          ["Phone:", order.phoneNumber],
-          ["Address:", order.deliveryAddress],
+          ["Phone in Israel:", order.phone],
+          ["Delivery Address:", order.deliveryAddress],
           [
             "Delivery Date:",
             dayjs(order.dateRange.delivery).format("ddd MMM D YYYY"),
@@ -46,7 +46,7 @@ const InformationSection = ({ order }) => {
           ["Additional Notes:", order.additionalNotes],
         ].map((row) => (
           <TableRow key={row[0]}>
-            <TableCell width="10%">{row[0]}</TableCell>
+            <TableCell width="20%">{row[0]}</TableCell>
             <TableCell>{row[1]}</TableCell>
           </TableRow>
         ))}
@@ -56,19 +56,19 @@ const InformationSection = ({ order }) => {
 };
 
 const ItemsSection = ({ items, totalPrice }) => {
-  let totalAmountOfItems = 0;
+  let totalQuantityOfItems = 0;
 
   const itemList = items.map((item) => {
-    totalAmountOfItems += item.amount;
+    totalQuantityOfItems += item.quantity;
 
     return (
       <TableRow key={item.name}>
         <TableCell width="40%">{item.name}</TableCell>
         <TableCell width="10%">${item.price.usd}</TableCell>
         <TableCell>₪{item.price.nis}</TableCell>
-        <TableCell>{item.amount}</TableCell>
-        <TableCell width="10%">${item.amount * item.price.usd}</TableCell>
-        <TableCell>₪{item.amount * item.price.nis}</TableCell>
+        <TableCell>{item.quantity}</TableCell>
+        <TableCell width="10%">${item.quantity * item.price.usd}</TableCell>
+        <TableCell>₪{item.quantity * item.price.nis}</TableCell>
       </TableRow>
     );
   });
@@ -101,7 +101,7 @@ const ItemsSection = ({ items, totalPrice }) => {
               variant="body1"
               sx={{ paddingRight: 3, fontWeight: "bold" }}
             >
-              Amount
+              Quantity
             </Typography>
           </TableCell>
           <TableCell
@@ -123,7 +123,7 @@ const ItemsSection = ({ items, totalPrice }) => {
           <TableCell colSpan={3}>
             <strong>Total:</strong>
           </TableCell>
-          <TableCell><strong>{totalAmountOfItems}</strong></TableCell>
+          <TableCell><strong>{totalQuantityOfItems}</strong></TableCell>
           <TableCell><strong>${totalPrice.usd}</strong></TableCell>
           <TableCell><strong>₪{totalPrice.nis}</strong></TableCell>
         </TableRow>

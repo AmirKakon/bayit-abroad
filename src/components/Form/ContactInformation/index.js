@@ -43,7 +43,7 @@ const ContactInformation = ({ formData, setFormData }) => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
-    if (name === "phoneNumber" && !validatePhoneNumber(value)) {
+    if (name === "phone" && !validatePhoneNumber(value)) {
       return; // Do not update state if the phone number is invalid
     }
 
@@ -121,13 +121,13 @@ const ContactInformation = ({ formData, setFormData }) => {
         fullWidth
         variant="outlined"
         margin="normal"
-        label="Phone Number"
-        name="phoneNumber"
-        error={!validatePhoneNumber(formData.phoneNumber)}
+        label="Phone Number in Israel"
+        name="phone"
+        error={!validatePhoneNumber(formData.phone)}
         helperText={
-          !validatePhoneNumber(formData.phoneNumber) && "Invalid phone number"
+          !validatePhoneNumber(formData.phone) && "Invalid phone number"
         }
-        value={formData.phoneNumber}
+        value={formData.phone}
         onChange={handleInputChange}
         required
       />

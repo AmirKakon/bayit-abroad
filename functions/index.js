@@ -7,7 +7,6 @@ require("./Routes/Form/GameItems");
 
 // // dev routes
 require("./DevRoutes/Form/FormItems");
-require("./DevRoutes/Form/GameItems");
 require("./DevRoutes/Form/Orders");
 require("./DevRoutes/ExchangeRates");
 

@@ -1,38 +1,58 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   Paper,
   Typography,
   List,
-  ListItem,
-  ListItemText,
-  TextField,
+  ListItemButton,
+  Collapse,
+  Divider,
 } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import { AddCircle, RemoveCircle } from "@mui/icons-material";
-import GameDropdown from "../GameDropDown";
-import { gamesId } from "../../../config";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import FormItem from "../FormItem";
 
 const ItemSelection = ({
   items,
-  games,
   selectedItems,
   setSelectedItems,
   totalPrice,
   setTotalPrice,
 }) => {
-  const [selectedGames, setSelectedGames] = useState([]);
   const [amounts, setAmounts] = useState(() => {
     const initialState = {};
     items.forEach((item) => {
-      initialState[item.id] = selectedItems.find((selectedItem) => selectedItem.id === item.id)?.amount || 0;
+      initialState[item.id] =
+        selectedItems.find((selectedItem) => selectedItem.id === item.id)
+          ?.amount || 0;
     });
     return initialState;
   });
+  const [openCategories, setOpenCategories] = useState({});
+
+  // Step 1: Sort the items by category
+  const sortedItems = useMemo(
+    () => items.sort((a, b) => a.category.localeCompare(b.category)),
+    [items]
+  );
+
+  // Step 2: Group items by category
+  const groupedItems = useMemo(() => {
+    return sortedItems.reduce((groups, item) => {
+      const category = item.category;
+
+      if (!groups[category]) {
+        groups[category] = [];
+      }
+
+      groups[category].push(item);
+
+      return groups;
+    }, {});
+  }, [sortedItems]);
 
   const calculateTotal = useCallback((selectedItems) => {
     let total = { usd: 0, nis: 0 };
 
-    // Calculate the total for the main items and selected games
+    // Calculate the total for the main items
     selectedItems.forEach((item) => {
       total.usd += item.price.usd * item.amount;
       total.nis += item.price.nis * item.amount;
@@ -42,9 +62,7 @@ const ItemSelection = ({
   }, []);
 
   useEffect(() => {
-    const selectedItems = items
-      .filter((item) => amounts[item.id] > 0)
-      .concat(selectedGames);
+    const selectedItems = items.filter((item) => amounts[item.id] > 0);
     const itemsList = selectedItems.map((item) => {
       return {
         ...item,
@@ -57,7 +75,7 @@ const ItemSelection = ({
     // Calculate total whenever selectedItems changes
     const newTotal = calculateTotal(itemsList);
     setTotalPrice(newTotal);
-  }, [amounts, items, selectedGames, setSelectedItems, setTotalPrice, calculateTotal]);
+  }, [amounts, items, setSelectedItems, setTotalPrice, calculateTotal]);
 
   const handleRemove = (id) => {
     setAmounts((prevAmounts) => ({
@@ -73,48 +91,64 @@ const ItemSelection = ({
     }));
   };
 
+  const handleOpenCategory = (category) => {
+    setOpenCategories((prevOpenCategories) => ({
+      ...prevOpenCategories,
+      [category]: !prevOpenCategories[category],
+    }));
+  };
+
   return (
     <Paper elevation={2} sx={{ padding: 2, marginBottom: 2 }}>
       <Typography variant="h6" component="legend">
         Select the Items to Order:
       </Typography>
-      <List>
-        {items.map((item) => (
-          <ListItem key={item.id}>
-            <ListItemText
-              primary={item.name}
-              secondary={item.id === gamesId ? "Price: per game" : `Price: $${item.price.usd} / ₪${item.price.nis}`}
-            />
 
-            {item.id === gamesId ? (
-              <GameDropdown
-                games={games}
-                selectedGames={selectedGames}
-                setSelectedGames={setSelectedGames}
-              />
-            ) : (
-              <div>
-                <IconButton onClick={() => handleRemove(item.id)}>
-                  <RemoveCircle color="primary" />
-                </IconButton>
-                <TextField
-                  sx={{ maxWidth: 50 }}
-                  type="number"
-                  size="small"
-                  value={amounts[item.id] ?? 0}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                />
-                <IconButton onClick={() => handleAdd(item.id)}>
-                  <AddCircle color="primary" />
-                </IconButton>
-              </div>
-            )}
-          </ListItem>
+      <List>
+        {Object.entries(groupedItems).map(([category, itemsInCategory]) => (
+          <React.Fragment key={category}>
+            <ListItemButton
+              onClick={() => handleOpenCategory(category)}
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: openCategories[category] ? 0 : 1,
+                backgroundColor: "#e2e2e2",
+                "&:hover": {
+                  backgroundColor: "lightgrey",
+                },
+              }}
+            >
+              <Typography variant="body1" component="div">
+                {category}
+              </Typography>
+              {openCategories[category] ? <ExpandLess /> : <ExpandMore />}
+            </ListItemButton>
+            <Collapse
+              in={openCategories[category]}
+              timeout="auto"
+              unmountOnExit
+            >
+              <List>
+                {itemsInCategory.map((item) => (
+                  <>
+                    <FormItem
+                      key={item.id}
+                      item={item}
+                      handleAdd={handleAdd}
+                      handleRemove={handleRemove}
+                      quantity={amounts[item.id]}
+                    />
+                    <Divider />
+                  </>
+                ))}
+              </List>
+            </Collapse>
+          </React.Fragment>
         ))}
       </List>
-      <Typography variant="h6" align="left" paragraph padding={1}>
+      <Typography variant="body1" align="left" paragraph padding={1}>
         <b>Total:</b> ${totalPrice.usd} / ₪{totalPrice.nis}
       </Typography>
     </Paper>

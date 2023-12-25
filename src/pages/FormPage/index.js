@@ -21,7 +21,6 @@ dayjs.extend(isBefore);
 
 const FormPage = () => {
   const [items, setItems] = useState([]);
-  const [games, setGames] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState({ usd: 0, nis: 0 });
   const [formData, setFormData] = useState({
@@ -76,15 +75,6 @@ const FormPage = () => {
       })
       .finally(() => {
         setLoading(false);
-      });
-
-    fetch(`${apiBasrUrl}/api/form/game-items/getAll`)
-      .then((response) => response.json())
-      .then((res) => {
-        setGames(res.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
       });
   }, []);
 
@@ -157,7 +147,6 @@ const FormPage = () => {
 
             <ItemSelection
               items={items}
-              games={games}
               selectedItems={selectedItems}
               setSelectedItems={setSelectedItems}
               totalPrice={totalPrice}

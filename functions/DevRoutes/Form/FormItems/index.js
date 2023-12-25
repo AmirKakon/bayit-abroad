@@ -1,8 +1,7 @@
-const { dev, logger, db, functions } = require("../../../setup");
+const { dev, logger, db } = require("../../../setup");
 const { getExchangeRate } = require("../../ExchangeRates");
 
 const baseDB = "form-items_dev";
-const preferredId = functions.config().games.id;
 
 // create a form item
 dev.post("/api/form/form-items/create", (req, res) => {
@@ -12,6 +11,7 @@ dev.post("/api/form/form-items/create", (req, res) => {
       await db.collection(baseDB).doc().create({
         name: req.body.name,
         price: req.body.price,
+        category: req.body.category,
       });
 
       return res.status(200).send({ status: "Success", msg: "Item Saved" });
@@ -70,7 +70,7 @@ dev.get("/api/form/form-items/getAll", async (req, res) => {
       return res.status(404).send({ status: "Failed", msg: "No items found" });
     }
 
-    let items = snapshot.docs.map((doc) => ({
+    const items = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
     }));
@@ -84,12 +84,6 @@ dev.get("/api/form/form-items/getAll", async (req, res) => {
         };
       }
     });
-
-    const preferredItem = items.find((item) => item.id === preferredId);
-    if (preferredItem) {
-      items = items.filter((item) => item.id !== preferredId);
-      items.push(preferredItem);
-    }
 
     // Send the mutated items as a response
     return res.status(200).send({ status: "Success", data: items });
@@ -108,6 +102,7 @@ dev.put("/api/form/form-items/update/:id", (req, res) => {
       await reqDoc.update({
         name: req.body.name,
         price: req.body.price,
+        category: req.body.category,
       });
 
       return res.status(200).send({ status: "Success", msg: "Item Updated" });

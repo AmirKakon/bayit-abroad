@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import Loading from "../../components/Loading";
+import ThankYouSummary from "../../components/ThankYouSummary";
 
 const ThankYouPage = () => {
     const {id} = useParams();
@@ -37,8 +38,8 @@ const ThankYouPage = () => {
         padding: 2,
       }}
     >
-      <Typography variant='h4'>Thank you for your order!</Typography>
-      <Typography variant='body1'>Your order ID is: {id}</Typography>
+      <Typography variant='h4' align='center' sx={{marginBottom:2}}>Thank you for your order!</Typography>
+      <ThankYouSummary order={{...order, id}}/>
     </Box>
     );
 };

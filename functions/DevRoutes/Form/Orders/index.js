@@ -6,6 +6,7 @@ const baseDB = "orders_dev";
 
 const gmailEmail = "bayitabroad@gmail.com";
 const gmailPassword = functions.config().gmail.password;
+const bayitAbroadLogoUrl = "https://firebasestorage.googleapis.com/v0/b/bayitabroad-jkak.appspot.com/o/logo%2Fbayit-abroad-logo.png?alt=media&token=ca798017-62a0-4190-a1e9-eedaba78f18d";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -66,136 +67,139 @@ dev.post("/api/form/orders/create", async (req, res) => {
     const selectedItemsList = order.selectedItems
       .map((item) => {
         totalQuantity += item.quantity;
-        return `<li>
-          <b><u>${item.name}</u></b>
-          <b>Price:</b> $${item.price.usd} / ₪${item.price.nis}
-          <b>Quantity:</b> ${item.quantity}
-          </li>`;
+        return `<tr style="border: 1px solid #ddd;">
+          <td style="padding-left: 10px">${item.name}</td>
+          <td style="text-align: center">$${item.price.usd}</td>
+          <td style="text-align: center">₪${item.price.nis}</td>
+          <td style="text-align: center">${item.quantity}</td>
+          <td style="text-align: center">$${item.price.usd * item.quantity}</td>
+          <td style="text-align: center">₪${item.price.nis * item.quantity}</td>
+        </tr>`;
       })
       .join("");
 
     const orderHtml = `
-      <table width="100%" cellspacing="0" cellpadding="0">
-        <tr>
-          <td align="left" style="background-color: #2c3c30; padding: 10px">
-            <img
-              src="https://firebasestorage.googleapis.com/v0/b/bayitabroad-jkak.appspot.com/o/logo%2Fbayit-abroad-logo.png?alt=media&token=ca798017-62a0-4190-a1e9-eedaba78f18d"
-              alt="BayitAbroad Logo"
-              width="100"
-              height="100"
-              align="left"
-              style="vertical-align: middle"
-            />
-            <h1
-              height="100"
-              style="color: #c49f79; margin-left: 10px; padding-top: 15px"
-            >
-              BayitAbroad New Order
-            </h1>
-          </td>
-        </tr>
-      </table>
-
-      <table
-        width="100%"
-        cellspacing="0"
-        cellpadding="5"
-        style="border: 1px solid #ddd; border-collapse: collapse"
-      >
-        <tr>
-          <td colspan="2" style="background-color: #f2f2f2; padding: 10px">
-            <strong>Information</strong>
-          </td>
-        </tr>
-        <tr>
-          <td width="30%"><strong>Order Id:</strong></td>
-          <td>${orderRef.id}</td>
-        </tr>
-        <tr>
-          <td><strong>Name:</strong></td>
-          <td>${order.fullName}</td>
-        </tr>
-        <tr>
-          <td><strong>Email:</strong></td>
-          <td>${order.email}</td>
-        </tr>
-        <tr>
-          <td><strong>Phone in Israel:</strong></td>
-          <td>${order.phone}</td>
-        </tr>
-        <tr>
-          <td><strong>Delivery Address:</strong></td>
-          <td>${order.deliveryAddress}</td>
-        </tr>
-        <tr>
-          <td><strong>Delivery on:</strong></td>
-          <td>${setDateString(order.deliveryDate.toDate())}</td>
-        </tr>
-        <tr>
-          <td><strong>Return on:</strong></td>
-          <td>${setDateString(order.returnDate.toDate())}</td>
-        </tr>
-
-        <tr>
-          <td colspan="2" style="background-color: #f2f2f2; padding: 10px">
-            <strong>Selected Items</strong>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2">
-            <ul>
-              ${selectedItemsList}
-            </ul>
-          </td>
-        </tr>
-        <!-- Add more item-related rows as needed -->
-
-        <tr>
-          <td colspan="2" style="background-color: #f2f2f2; padding: 10px">
-            <strong>Additional Notes</strong>
-          </td>
-        </tr>
-        <tr>
-          <td colspan="2">${order.additionalNotes}</td>
-        </tr>
-      </table>
-
-      <table
-        width="100%"
-        cellspacing="0"
-        cellpadding="5"
-        style="border: 1px solid #ddd; border-collapse: collapse"
-      >
-        <tr>
-          <td colspan="3" style="background-color: #f2f2f2; padding: 10px">
-            <strong>Summary</strong>
-          </td>
-        </tr>
-        <tr>
-          <td width="30%"><strong>Total:</strong></td>
-          <td>$${order.totalPrice.usd} / ₪${order.totalPrice.nis}</td>
-        </tr>
-        <tr>
-          <td width="30%"><strong>Total Quantity of Items:</strong></td>
-          <td>${totalQuantity}</td>
-        </tr>
-        <tr>
-          <td 
-            colspan="1" style="background-color: #f2f2f2; padding: 10px"
-          >
-            <strong>Last Updated:</strong>
-          </td>
-          <td style="background-color: #f2f2f2">
-            ${order.lastUpdated.toDate()}
-          </td>
-        </tr>
-      </table>
-      <br />
-      <br />
-      <p>* Please note that delivery is only in Jerusalem.
-      Drop off is dependent on our availability and your preference.
-      <br />* Payment is at time of delivery via cash, bit or bank transfer.
-      </p>
+    <table width="100%" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="left" style="background-color: #2c3c30; padding: 10px">
+        <img src="${bayitAbroadLogoUrl}"
+        alt="BayitAbroad Logo"
+        width="100"
+        height="100"
+        align="left"
+        style="vertical-align: middle">
+        <h1 style="color: #c49f79; margin-left: 10px; padding-top: 15px"
+        >BayitAbroad New Order</h1>
+      </td>
+    </tr>
+  </table>
+  
+  <!-- Information Table -->
+  <table
+  width="100%"
+  cellspacing="0"
+  cellpadding="5"
+  style="border: 1px solid #ddd; border-collapse: collapse">
+    <tr>
+      <td colspan="2" style="background-color: #f2f2f2; padding: 10px">
+        <strong>Information</strong>
+      </td>
+    </tr>
+    <tr>
+      <td width="30%"><strong>Order Id:</strong></td>
+      <td>${orderRef.id}</td>
+    </tr>
+    <tr>
+      <td><strong>Name:</strong></td>
+      <td>${order.fullName}</td>
+    </tr>
+    <tr>
+      <td><strong>Email:</strong></td>
+      <td>${order.email}</td>
+    </tr>
+    <tr>
+      <td><strong>Phone:</strong></td>
+      <td>${order.phone}</td>
+    </tr>
+    <tr>
+      <td><strong>Delivery Address:</strong></td>
+      <td>${order.deliveryAddress}</td>
+    </tr>
+    <tr>
+      <td><strong>Delivery on:</strong></td>
+      <td>${setDateString(order.deliveryDate.toDate())}</td>
+    </tr>
+    <tr>
+      <td><strong>Return on:</strong></td>
+      <td>${setDateString(order.returnDate.toDate())}</td>
+    </tr>
+  </table>
+  
+  <!-- Items Table -->
+  <table
+  width="100%"
+  cellspacing="0"
+  cellpadding="5"
+  style="border: 1px solid #ddd; border-collapse: collapse">
+    <tr>
+      <td style="background-color: #f2f2f2; padding: 10px">
+        <strong>Items</strong>
+      </td>
+      <td colspan="2" style="background-color: #f2f2f2; text-align: center">
+        <strong>Price per Item</strong>
+      </td>
+      <td style="background-color: #f2f2f2; text-align: center">
+        <strong>Quantity</strong>
+      </td>
+      <td colspan="2" style="background-color: #f2f2f2; text-align: center">
+        <strong>Total Price</strong>
+      </td>
+    </tr>
+    ${selectedItemsList}
+    <tr>
+      <td colspan="6" style="background-color: #f2f2f2; padding: 10px">
+        <strong>Additional Notes</strong>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="6">${order.additionalNotes}</td>
+    </tr>
+  </table>
+  
+  <!-- Summary Table -->
+  <table
+  width="100%"
+  cellspacing="0"
+  cellpadding="5"
+  style="border: 1px solid #ddd; border-collapse: collapse">
+    <tr>
+      <td colspan="3" style="background-color: #f2f2f2; padding: 10px">
+        <strong>Summary</strong>
+      </td>
+    </tr>
+    <tr>
+      <td width="30%"><strong>Total:</strong></td>
+      <td>$${order.totalPrice.usd} / ₪${order.totalPrice.nis}</td>
+    </tr>
+    <tr>
+      <td width="30%"><strong>Total Quantity of Items:</strong></td>
+      <td>${totalQuantity}</td>
+    </tr>
+    <tr>
+      <td colspan="1" style="background-color: #f2f2f2; padding: 10px">
+        <strong>Last Updated:</strong>
+      </td>
+      <td style="background-color: #f2f2f2">${order.lastUpdated.toDate()}</td>
+    </tr>
+  </table>
+  
+  <!-- Additional Notes -->
+  <br />
+  <br />
+  <p>* Please note that delivery is only in Jerusalem.
+  Drop off is dependent on our availability and your preference.
+  <br />* Payment is at the time of delivery via cash, bit, or bank transfer.
+  </p>
     `;
 
     const mailOptions = {

@@ -9,7 +9,7 @@ dayjs.extend(isSameOrBefore);
 const ContactInformation = ({ formData, setFormData }) => {
   const [dateError, setDateError] = useState(null);
   const [deliveryDate, setDeliveryDate] = useState(null);
-  const [pickupDate, setPickupDate] = useState(null);
+  const [returnDate, setReturnDate] = useState(null);
 
   const validatePhoneNumber = (number) => {
     // This is a basic regex for validating phone numbers, consider using a library like libphonenumber-js for a comprehensive solution
@@ -27,7 +27,7 @@ const ContactInformation = ({ formData, setFormData }) => {
     switch (dateError) {
       case "maxDate":
       case "minDate": {
-        return "Pickup date must be after Delivery date.";
+        return "Return date must be after Delivery date.";
       }
 
       case "invalidDate": {
@@ -43,7 +43,7 @@ const ContactInformation = ({ formData, setFormData }) => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
-    if (name === "phoneNumber" && !validatePhoneNumber(value)) {
+    if (name === "phone" && !validatePhoneNumber(value)) {
       return; // Do not update state if the phone number is invalid
     }
 
@@ -55,15 +55,15 @@ const ContactInformation = ({ formData, setFormData }) => {
 
   const handleDateChange = (newDate, type) => {
     let updatedDeliveryDate = deliveryDate;
-    let updatedPickupDate = pickupDate;
+    let updatedReturnDate = returnDate;
 
     if (type === 0) {
       updatedDeliveryDate = newDate;
     } else {
-      updatedPickupDate = newDate;
+      updatedReturnDate = newDate;
       if (
         updatedDeliveryDate &&
-        dayjs(updatedPickupDate).isSameOrBefore(dayjs(updatedDeliveryDate))
+        dayjs(updatedReturnDate).isSameOrBefore(dayjs(updatedDeliveryDate))
       ) {
         setDateError("minDate"); // Set the error type
       } else {
@@ -74,12 +74,12 @@ const ContactInformation = ({ formData, setFormData }) => {
     if (type === 0) {
       setDeliveryDate(updatedDeliveryDate);
     } else {
-      setPickupDate(updatedPickupDate);
+      setReturnDate(updatedReturnDate);
     }
 
     let range = {
       delivery: updatedDeliveryDate ? setDateString(updatedDeliveryDate.$d) : null,
-      pickup: updatedPickupDate ? setDateString(updatedPickupDate.$d) : null,
+      return: updatedReturnDate ? setDateString(updatedReturnDate.$d) : null,
     };
 
     setFormData((prevData) => ({
@@ -121,13 +121,13 @@ const ContactInformation = ({ formData, setFormData }) => {
         fullWidth
         variant="outlined"
         margin="normal"
-        label="Phone Number"
-        name="phoneNumber"
-        error={!validatePhoneNumber(formData.phoneNumber)}
+        label="Phone Number in Israel"
+        name="phone"
+        error={!validatePhoneNumber(formData.phone)}
         helperText={
-          !validatePhoneNumber(formData.phoneNumber) && "Invalid phone number"
+          !validatePhoneNumber(formData.phone) && "Invalid phone number"
         }
-        value={formData.phoneNumber}
+        value={formData.phone}
         onChange={handleInputChange}
         required
       />
@@ -157,7 +157,7 @@ const ContactInformation = ({ formData, setFormData }) => {
         </Grid>
         <Grid item xs={6}>
           <DatePicker
-            label="Pickup Date *"
+            label="Return Date *"
             onError={(error) => setDateError(error)}
             slotProps={{
               textField: {
@@ -172,7 +172,7 @@ const ContactInformation = ({ formData, setFormData }) => {
                 ? dayjs(deliveryDate).add(1, "day")
                 : dayjs().add(1, "day")
             }
-            defaultValue={formData.dateRange.pickup !==null ? dayjs(formData.dateRange.pickup) : undefined}
+            defaultValue={formData.dateRange.return !==null ? dayjs(formData.dateRange.return) : undefined}
             sx={{width: "100%"}}
           />
         </Grid>

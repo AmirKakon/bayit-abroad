@@ -42,7 +42,7 @@ const HowItWorksSection = () => {
             component="span"
             fontStyle="italic"
           >
-            *Delivery and pickup are limited to the city of Jerusalem. For
+            *Delivery and returns are limited to the city of Jerusalem. For
             requests outside of Jerusalem please contact us by email or Whatsapp
           </Typography>
         </Typography>

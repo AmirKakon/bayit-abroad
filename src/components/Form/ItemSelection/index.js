@@ -17,12 +17,12 @@ const ItemSelection = ({
   totalPrice,
   setTotalPrice,
 }) => {
-  const [amounts, setAmounts] = useState(() => {
+  const [quantities, setQuantities] = useState(() => {
     const initialState = {};
     items.forEach((item) => {
       initialState[item.id] =
         selectedItems.find((selectedItem) => selectedItem.id === item.id)
-          ?.amount || 0;
+          ?.quantity || 0;
     });
     return initialState;
   });
@@ -54,19 +54,19 @@ const ItemSelection = ({
 
     // Calculate the total for the main items
     selectedItems.forEach((item) => {
-      total.usd += item.price.usd * item.amount;
-      total.nis += item.price.nis * item.amount;
+      total.usd += item.price.usd * item.quantity;
+      total.nis += item.price.nis * item.quantity;
     });
 
     return total;
   }, []);
 
   useEffect(() => {
-    const selectedItems = items.filter((item) => amounts[item.id] > 0);
+    const selectedItems = items.filter((item) => quantities[item.id] > 0);
     const itemsList = selectedItems.map((item) => {
       return {
         ...item,
-        amount: amounts[item.id] ?? 1,
+        quantity: quantities[item.id] ?? 1,
       };
     });
 
@@ -75,19 +75,19 @@ const ItemSelection = ({
     // Calculate total whenever selectedItems changes
     const newTotal = calculateTotal(itemsList);
     setTotalPrice(newTotal);
-  }, [amounts, items, setSelectedItems, setTotalPrice, calculateTotal]);
+  }, [quantities, items, setSelectedItems, setTotalPrice, calculateTotal]);
 
   const handleRemove = (id) => {
-    setAmounts((prevAmounts) => ({
-      ...prevAmounts,
-      [id]: Math.max(0, prevAmounts[id] - 1),
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [id]: Math.max(0, prevQuantities[id] - 1),
     }));
   };
 
   const handleAdd = (id) => {
-    setAmounts((prevAmounts) => ({
-      ...prevAmounts,
-      [id]: Math.min(5, prevAmounts[id] + 1),
+    setQuantities((prevQuantities) => ({
+      ...prevQuantities,
+      [id]: Math.min(5, prevQuantities[id] + 1),
     }));
   };
 
@@ -138,7 +138,7 @@ const ItemSelection = ({
                       item={item}
                       handleAdd={handleAdd}
                       handleRemove={handleRemove}
-                      quantity={amounts[item.id]}
+                      quantity={quantities[item.id]}
                     />
                     <Divider />
                   </>

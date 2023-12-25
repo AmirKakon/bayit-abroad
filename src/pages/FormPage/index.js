@@ -26,10 +26,10 @@ const FormPage = () => {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    phoneNumber: "",
+    phone: "",
     deliveryAddress: "",
     additionalNotes: "",
-    dateRange: { delivery: null, pickup: null },
+    dateRange: { delivery: null, return: null },
   });
   const [loading, setLoading] = useState(true);
   const [loadingPopup, setLoadingPopup] = useState(false);
@@ -43,11 +43,11 @@ const FormPage = () => {
     return (
       formData.fullName &&
       formData.email &&
-      formData.phoneNumber &&
+      formData.phone &&
       formData.deliveryAddress &&
       formData.dateRange.delivery &&
-      formData.dateRange.pickup &&
-      dayjs(formData.dateRange.delivery).isBefore(formData.dateRange.pickup)
+      formData.dateRange.return &&
+      dayjs(formData.dateRange.delivery).isBefore(formData.dateRange.return)
     );
   };
 
@@ -112,9 +112,11 @@ const FormPage = () => {
 
   const handleOkButtonClick = () => {
     setResponseStatus(null);
-    const url = `/form/orders/${orderId}/thankyou`;
+    if(responseStatus === "Success") {
 
+    const url = `/form/orders/${orderId}/thankyou`;
     navigate(url);
+  }
   };
 
   const renderStep = (step) => {
@@ -224,7 +226,7 @@ const FormPage = () => {
               {responseStatus === "Success" ? (
                 <p>Order processed successfully!</p>
               ) : (
-                <p>Failed to process the order. Please try again.</p>
+                <p>Failed to process the order. Please try submitting the order again or refresh the page.</p>
               )}
               <Button
                 onClick={handleOkButtonClick}

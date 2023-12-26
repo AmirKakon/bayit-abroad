@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Paper, Typography } from "@mui/material";
+import StripePayment from "../../components/Form/StripePayment";
 
 const AboutPage = () => {
   return (
@@ -13,6 +14,7 @@ const AboutPage = () => {
     >
       <Paper>
         <Typography>About BayitAbroad</Typography>
+        <StripePayment amount={500} currency={"usd"}/>
       </Paper>
     </Box>
   );

@@ -8,13 +8,20 @@ import Footer from './layout/Footer';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { lightThemeOptions } from './theme';
 import { Box } from '@mui/system';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePublicKey = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
+const stripePromise = loadStripe(stripePublicKey);
 
 const theme = createTheme(lightThemeOptions);
 
 const App = () => {
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
     <ThemeProvider theme={theme}>
+    <Elements stripe={stripePromise}>
       <Router>
         <Header />
         <Box display="flex" flexDirection="column" minHeight="100vh">
@@ -28,6 +35,7 @@ const App = () => {
           <Footer />
         </Box>
       </Router>
+      </Elements>
     </ThemeProvider>
     </LocalizationProvider>
   );

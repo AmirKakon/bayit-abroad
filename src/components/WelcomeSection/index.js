@@ -3,7 +3,7 @@ import RegistrationLink from "../RegistrationLink";
 import CircleIcon from "../../media/CircleIcon";
 import { Grid, Typography } from "@mui/material";
 
-const circleSize = "200";
+const circleSize = "170";
 
 const WelcomeSection = () => {
   return (
@@ -27,19 +27,19 @@ const WelcomeSection = () => {
         <Grid item sx={{ padding: "20px" }}>
           <CircleIcon
             size={circleSize}
-            text={["Enjoy traveling all", "days of the year"]}
+            text={"Travel Lightly".split(" ")}
           />
         </Grid>
         <Grid item sx={{ padding: "20px" }}>
           <CircleIcon
             size={circleSize}
-            text={["Feel more at", "home, abroad"]}
+            text={"Stay Anywhere".split(" ")}
           />
         </Grid>
         <Grid item sx={{ padding: "20px" }}>
           <CircleIcon
             size={circleSize}
-            text={["Save money and", "travel flexibly"]}
+            text={"Yiddishkit First".split(" ")}
           />
         </Grid>
       </Grid>

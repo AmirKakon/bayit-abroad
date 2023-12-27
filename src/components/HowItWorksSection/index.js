@@ -22,16 +22,13 @@ const HowItWorksSection = () => {
           align="center"
           color="black"
         >
-          Start by choosing the items you need from the order form below,
-          whether it be platas, hot water urns or Shabbat candles.
+          Start by choosing from the dozens of available items &#45; don&apos;t see what you&apos;re looking for? Message us!
           <br />
           <br />
-          Once you place your order and delivery dates we’ll take care of the
-          rest.
+          Once you submit your order we&apos;ll take care of the rest &#45; it&apos;s that easy!
           <br />
           <br />
-          Our experienced delivery team will deliver and pick up the items
-          straight to your door*
+          Our team will deliver and pick up the items straight to your door &#45; hassle free!
           <br />
           <br />
           <Typography
@@ -42,8 +39,8 @@ const HowItWorksSection = () => {
             component="span"
             fontStyle="italic"
           >
-            *Delivery and returns are limited to the city of Jerusalem. For
-            requests outside of Jerusalem please contact us by email or Whatsapp
+            *At the moment, delivery and returns are limited to the city of Jerusalem. For requests outside of Jerusalem please contact us by email or Whatsapp
+
           </Typography>
         </Typography>
         <br />

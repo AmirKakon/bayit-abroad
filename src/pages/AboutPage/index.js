@@ -2,6 +2,8 @@ import React from "react";
 import { Box, Paper, Typography } from "@mui/material";
 
 const AboutPage = () => {
+  window.scrollTo({ top: 0, behavior: "auto" });
+  
   return (
     <Box
       sx={{

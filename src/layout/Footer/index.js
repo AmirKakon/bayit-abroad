@@ -40,7 +40,7 @@ const Footer = () => {
                     style={{ textDecoration: "none" }}
                     target="_blank"
                   >
-                    +972-54-7321-928
+                    +972&#45;54&#45;7321&#45;928
                   </Link>
                 </Typography>
               </Box>
@@ -52,7 +52,7 @@ const Footer = () => {
                     color="textPrimary"
                     style={{ textDecoration: "none" }}
                   >
-                    bayitabroad@gmail.com
+                    bayitabroad&#64;gmail.com
                   </Link>
                 </Typography>
               </Box>

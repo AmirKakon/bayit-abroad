@@ -34,7 +34,7 @@ const WhyChooseUsSection = () => {
           understand that. Leave behind the burden of carrying heavy appliances.
           <br />
           <br />
-          <b>Flexible:</b> We know the the challenges of being away from home - and we know how to help!
+          <b>Flexible:</b> We know the the challenges of being away from home &#45; and we know how to help!
           <br />
           <br />
           <b>Enhancing:</b> Prepare warm meals, have hot water (and

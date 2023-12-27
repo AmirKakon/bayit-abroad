@@ -22,13 +22,13 @@ const HowItWorksSection = () => {
           align="center"
           color="black"
         >
-          Start by choosing from the dozens of available items – don&apos;t see what you&apos;re looking for? Message us!
+          Start by choosing from the dozens of available items &#45; don&apos;t see what you&apos;re looking for? Message us!
           <br />
           <br />
-          Once you submit your order we&apos;ll take care of the rest – it&apos;s that easy!
+          Once you submit your order we&apos;ll take care of the rest &#45; it&apos;s that easy!
           <br />
           <br />
-          Our team will deliver and pick up the items straight to your door - hassle free!
+          Our team will deliver and pick up the items straight to your door &#45; hassle free!
           <br />
           <br />
           <Typography

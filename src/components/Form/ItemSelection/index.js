@@ -132,16 +132,15 @@ const ItemSelection = ({
             >
               <List>
                 {itemsInCategory.map((item) => (
-                  <>
-                    <FormItem
-                      key={item.id}
-                      item={item}
-                      handleAdd={handleAdd}
-                      handleRemove={handleRemove}
-                      quantity={quantities[item.id]}
-                    />
-                    <Divider />
-                  </>
+                  <React.Fragment key={item.id}>
+                  <FormItem
+                    item={item}
+                    handleAdd={handleAdd}
+                    handleRemove={handleRemove}
+                    quantity={quantities[item.id]}
+                  />
+                  <Divider key={`divider-${item.id}`} />
+                </React.Fragment>
                 ))}
               </List>
             </Collapse>

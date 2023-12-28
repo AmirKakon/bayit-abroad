@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import RegistrationLink from "../RegistrationLink";
 import CircleIcon from "../../media/CircleIcon";
-import { Grid, TextField, Typography, Button, Paper, } from "@mui/material";
+import { Grid, TextField, Typography, Button, Paper } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
 const circleSize = "170";
@@ -15,15 +15,10 @@ const WelcomeSection = () => {
     const trackingNumber = document.getElementById("tracking-number").value;
     const url = `/form/orders/${trackingNumber}/thankyou`;
     navigate(url);
-  }
+  };
 
   return (
-    <Grid
-      container
-      direction="column"
-      alignItems="center"
-      marginTop={2}
-    >
+    <Grid container direction="column" alignItems="center" marginTop={2}>
       <Grid item>
         <Typography
           variant="h2"
@@ -52,14 +47,28 @@ const WelcomeSection = () => {
       </Grid>
 
       <Grid item xs={12} md={8}>
-        <Paper sx={{ backgroundColor: "#e2e2e2", padding: 2, display: 'flex', alignItems: 'center', width: "100%" }}>
+        <Paper
+          sx={{
+            backgroundColor: "#e2e2e2",
+            padding: 2,
+            display: "flex",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
           <TextField
-          id="tracking-number"
+            id="tracking-number"
             label="Tracking Number"
             variant="outlined"
             fullWidth
           />
-          <Button variant="contained" color="primary" startIcon={<SearchIcon />} sx={{ marginLeft: 1 }} onClick={handleSearchOrder}>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<SearchIcon />}
+            sx={{ marginLeft: 1, px: 3, py: 1 }}
+            onClick={handleSearchOrder}
+          >
             Search
           </Button>
         </Paper>

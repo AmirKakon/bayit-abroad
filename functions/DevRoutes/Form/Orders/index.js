@@ -40,6 +40,7 @@ const getTimestamps = (dateRange) => {
 // create an order
 dev.post("/api/form/orders/create", async (req, res) => {
   try {
+    let url = "";
     const timestamps = getTimestamps(req.body.dateRange);
 
     const order = {
@@ -60,7 +61,9 @@ dev.post("/api/form/orders/create", async (req, res) => {
     const orderRef = db.collection(baseDB).doc();
 
     // Set the data of the document using the obtained reference
-    await orderRef.set(order);
+    await orderRef.set(order).then(() => {
+      url = `${req.body.currentURL}/orders/${orderRef.id}/thankyou`;
+    });
 
     let totalQuantity = 0;
 
@@ -84,8 +87,8 @@ dev.post("/api/form/orders/create", async (req, res) => {
       <td align="left" style="background-color: #2c3c30; padding: 10px">
         <img src="${bayitAbroadLogoUrl}"
         alt="BayitAbroad Logo"
-        width="100"
-        height="100"
+        width="80"
+        height="80"
         align="left"
         style="vertical-align: middle">
         <h1 style="color: #c49f79; margin-left: 10px; padding-top: 15px"
@@ -106,7 +109,7 @@ dev.post("/api/form/orders/create", async (req, res) => {
       </td>
     </tr>
     <tr>
-      <td width="30%"><strong>Order Id:</strong></td>
+      <td width="30%"><strong>Tracking Number:</strong></td>
       <td>${orderRef.id}</td>
     </tr>
     <tr>
@@ -200,17 +203,37 @@ dev.post("/api/form/orders/create", async (req, res) => {
   Drop off is dependent on our availability and your preference.
   <br />* Payment is at the time of delivery via cash, bit, or bank transfer.
   </p>
+  <br />
+  <a href="${url}" style="
+  display: block;
+  padding: 10px;
+  background-color: #2c3c30;
+  color: #ffffff;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+  margin: 10px auto;
+  width: 100%;
+  max-width: 300px;">View Order</a>
     `;
 
-    const mailOptions = {
+    const internalMailOptions = {
       from: "orders@bayitabroad.com",
       to: gmailEmail,
-      subject: `New Order Placed! Order Id: ${orderRef.id}`,
+      subject: `New Order Placed! Tracking Number: ${orderRef.id}`,
+      html: `${orderHtml}`,
+    };
+
+    const externalMailOptions = {
+      from: gmailEmail,
+      to: order.email,
+      subject: `New Order Placed! Tracking Number: ${orderRef.id}`,
       html: `${orderHtml}`,
     };
 
     try {
-      await transporter.sendMail(mailOptions);
+      await transporter.sendMail(internalMailOptions);
+      await transporter.sendMail(externalMailOptions);
       logger.log("Email notification sent successfully.");
     } catch (error) {
       logger.error("Error sending email:", error);

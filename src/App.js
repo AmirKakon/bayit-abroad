@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import Header from "./layout/Header";
-import {HomePage, FormPage, ThankYouPage, AboutPage} from './pages';
+import {HomePage, FormPage, ThankYouPage, SearchOrderPage, AboutPage} from './pages';
 import Footer from './layout/Footer';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { lightThemeOptions } from './theme';
@@ -22,6 +22,7 @@ const App = () => {
             <Route path="/home" element={<HomePage />} />
             <Route path="/form" element={<FormPage />} />
             <Route path="/form/orders/:id/thankyou" element={<ThankYouPage />} />
+            <Route path="/form/orders/search" element={<SearchOrderPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>

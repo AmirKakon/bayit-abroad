@@ -6,7 +6,6 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import InfoIcon from "@mui/icons-material/Info";
 import FeedIcon from '@mui/icons-material/Feed';
 import logo from "../../media/bayit-abroad-logo.png";
-import { useNavigate } from "react-router-dom";
 
 const HeaderIcon = ({title, link, icon}) => {
   return (
@@ -24,14 +23,6 @@ const HeaderIcon = ({title, link, icon}) => {
 };
 
 const Header = () => {
-  const navigate = useNavigate();
-
-  const handleSearchOrder = () => {
-    // Get the input value from the TextField
-    const trackingNumber = document.getElementById("tracking-number").value;
-    const url = `/form/orders/${trackingNumber}/thankyou`;
-    navigate(url);
-  };
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -62,9 +53,9 @@ const Header = () => {
 
           <HeaderIcon title={"Place Order"} link={"/form"} icon={<ShoppingCartIcon />}/>
 
-          <HeaderIcon title={"Review Order"} link={"/form/orders/search"} icon={<FeedIcon />}/>
+          <HeaderIcon title={"Find Order"} link={"/form/orders/search"} icon={<FeedIcon />}/>
 
-          <HeaderIcon title={"About Us"} link={"/about"} icon={<InfoIcon />}/>
+          {/* <HeaderIcon title={"About Us"} link={"/about"} icon={<InfoIcon />}/> */}
 
         </Toolbar>
       </AppBar>

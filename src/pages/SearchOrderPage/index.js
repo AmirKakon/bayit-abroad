@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
+import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -24,7 +24,6 @@ const SearchOrderPage = () => {
     >
       <Paper
         sx={{
-          backgroundColor: "#e2e2e2",
           padding: 2,
           display: "flex",
           flexDirection: "column",

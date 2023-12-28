@@ -121,7 +121,7 @@ const ItemsSection = ({ items, totalPrice }) => {
         {itemList}
         <TableRow style={{backgroundColor: "#d5d5d5"}}>
           <TableCell colSpan={3}>
-            <strong>Total:</strong>
+            <strong>Subtotal:</strong>
           </TableCell>
           <TableCell><strong>{totalQuantityOfItems}</strong></TableCell>
           <TableCell><strong>${totalPrice.usd}</strong></TableCell>

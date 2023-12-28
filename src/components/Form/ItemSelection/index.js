@@ -132,16 +132,15 @@ const ItemSelection = ({
             >
               <List>
                 {itemsInCategory.map((item) => (
-                  <>
-                    <FormItem
-                      key={item.id}
-                      item={item}
-                      handleAdd={handleAdd}
-                      handleRemove={handleRemove}
-                      quantity={quantities[item.id]}
-                    />
-                    <Divider />
-                  </>
+                  <React.Fragment key={item.id}>
+                  <FormItem
+                    item={item}
+                    handleAdd={handleAdd}
+                    handleRemove={handleRemove}
+                    quantity={quantities[item.id]}
+                  />
+                  <Divider key={`divider-${item.id}`} />
+                </React.Fragment>
                 ))}
               </List>
             </Collapse>
@@ -149,7 +148,7 @@ const ItemSelection = ({
         ))}
       </List>
       <Typography variant="body1" align="left" paragraph padding={1}>
-        <b>Total:</b> ${totalPrice.usd} / ₪{totalPrice.nis}
+        <b>Subtotal:</b> ${totalPrice.usd} / ₪{totalPrice.nis}
       </Typography>
     </Paper>
   );

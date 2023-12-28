@@ -9,6 +9,7 @@ const ThankYouPage = () => {
 
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -16,7 +17,17 @@ const ThankYouPage = () => {
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
     fetch(`${apiBaseUrl}/api/form/orders/get/${id}`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          if (response.status === 404) {
+            // Order not found
+            setNotFound(true);
+          } else {
+            throw new Error(`Error: ${response.status}`);
+          }
+        }
+        return response.json();
+      })
       .then((res) => {
         setOrder(res.data);
       })
@@ -30,6 +41,29 @@ const ThankYouPage = () => {
 
   return loading ? (
     <Loading />
+  ) : notFound ? (
+    <Box
+      flex={1}
+      sx={{
+        backgroundColor: "#e2e2e2",
+        minHeight: "200",
+        padding: 2,
+      }}
+    >
+      <Typography variant='h4' align='center' sx={{ marginBottom: 2 }}>
+        Order Not Found
+      </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        component={Link}
+        to="/home"
+        sx={{ marginTop: 2 }}
+        fullWidth
+      >
+        Back to Home
+      </Button>
+    </Box>
   ) : (
     <Box
       flex={1}

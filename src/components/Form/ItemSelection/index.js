@@ -149,7 +149,7 @@ const ItemSelection = ({
         ))}
       </List>
       <Typography variant="body1" align="left" paragraph padding={1}>
-        <b>Total:</b> ${totalPrice.usd} / ₪{totalPrice.nis}
+        <b>Subtotal:</b> ${totalPrice.usd} / ₪{totalPrice.nis}
       </Typography>
     </Paper>
   );

@@ -11,7 +11,21 @@ import {
 } from "@mui/material";
 import dayjs from "dayjs";
 
-const InformationSection = ({ order }) => {
+const InformationSection = ({ order, thankyou }) => {
+  const rows = [
+    thankyou ? ["Tracking Number:", order.id] : null,
+    ["Name:", order.fullName],
+    ["Email:", order.email],
+    ["Phone in Israel:", order.phone],
+    ["Delivery Address:", order.deliveryAddress],
+    [
+      "Delivery Date:",
+      dayjs(order.dateRange.delivery).format("ddd MMM D YYYY"),
+    ],
+    ["Return Date:", dayjs(order.dateRange.return).format("ddd MMM D YYYY")],
+    ["Additional Notes:", order.additionalNotes],
+  ].filter(Boolean);
+
   return (
     <>
       <TableHead>
@@ -30,21 +44,7 @@ const InformationSection = ({ order }) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {[
-          ["Name:", order.fullName],
-          ["Email:", order.email],
-          ["Phone in Israel:", order.phone],
-          ["Delivery Address:", order.deliveryAddress],
-          [
-            "Delivery Date:",
-            dayjs(order.dateRange.delivery).format("ddd MMM D YYYY"),
-          ],
-          [
-            "Return Date:",
-            dayjs(order.dateRange.return).format("ddd MMM D YYYY"),
-          ],
-          ["Additional Notes:", order.additionalNotes],
-        ].map((row) => (
+        {rows.map((row) => (
           <TableRow key={row[0]}>
             <TableCell width="20%">{row[0]}</TableCell>
             <TableCell>{row[1]}</TableCell>
@@ -64,11 +64,19 @@ const ItemsSection = ({ items, totalPrice, weeks }) => {
     return (
       <TableRow key={item.name}>
         <TableCell width="40%">{item.name}</TableCell>
-        <TableCell width="10%" style={{textAlign: "center"}}>&#36;{item.price.usd}</TableCell>
-        <TableCell style={{textAlign: "center"}}> &#8362;{item.price.nis}</TableCell>
-        <TableCell style={{textAlign: "center"}}>{item.quantity}</TableCell>
-        <TableCell width="10%" style={{textAlign: "center"}}>&#36;{item.quantity * item.price.usd}</TableCell>
-        <TableCell style={{textAlign: "center"}}> &#8362;{item.quantity * item.price.nis}</TableCell>
+        <TableCell width="10%" style={{ textAlign: "center" }}>
+          &#36;{item.price.usd}
+        </TableCell>
+        <TableCell style={{ textAlign: "center" }}>
+          &#8362;{item.price.nis}
+        </TableCell>
+        <TableCell style={{ textAlign: "center" }}>{item.quantity}</TableCell>
+        <TableCell width="10%" style={{ textAlign: "center" }}>
+          &#36;{item.quantity * item.price.usd}
+        </TableCell>
+        <TableCell style={{ textAlign: "center" }}>
+          &#8362;{item.quantity * item.price.nis}
+        </TableCell>
       </TableRow>
     );
   });
@@ -98,10 +106,7 @@ const ItemsSection = ({ items, totalPrice, weeks }) => {
               textAlign: "center",
             }}
           >
-            <Typography
-              variant="body1"
-              sx={{ fontWeight: "bold" }}
-            >
+            <Typography variant="body1" sx={{ fontWeight: "bold" }}>
               Price Per Item
             </Typography>
           </TableCell>
@@ -112,10 +117,7 @@ const ItemsSection = ({ items, totalPrice, weeks }) => {
               textAlign: "center",
             }}
           >
-            <Typography
-              variant="body1"
-              sx={{ fontWeight: "bold" }}
-            >
+            <Typography variant="body1" sx={{ fontWeight: "bold" }}>
               Quantity
             </Typography>
           </TableCell>
@@ -127,10 +129,7 @@ const ItemsSection = ({ items, totalPrice, weeks }) => {
               textAlign: "center",
             }}
           >
-            <Typography
-              variant="body1"
-              sx={{fontWeight: "bold" }}
-            >
+            <Typography variant="body1" sx={{ fontWeight: "bold" }}>
               Total
             </Typography>
           </TableCell>
@@ -140,11 +139,8 @@ const ItemsSection = ({ items, totalPrice, weeks }) => {
         {itemList}
 
         <TableRow>
-          <TableCell colSpan={3}>
+          <TableCell colSpan={4}>
             <strong>Total per Week:</strong>
-          </TableCell>
-          <TableCell style={{ textAlign: "center" }}>
-            <strong>{totalQuantityOfItems}</strong>
           </TableCell>
           <TableCell style={{ textAlign: "center" }}>
             <strong>&#36;{totalPrice.usd}</strong>
@@ -155,11 +151,9 @@ const ItemsSection = ({ items, totalPrice, weeks }) => {
         </TableRow>
 
         <TableRow>
+          <TableCell colSpan={3}></TableCell>
           <TableCell colSpan={3}>
-            <strong>Weeks:</strong>
-          </TableCell>
-          <TableCell style={{ textAlign: "center" }}>
-            <strong>x{weeks}</strong>
+            <strong>x{weeks} Weeks</strong>
           </TableCell>
         </TableRow>
 
@@ -182,7 +176,7 @@ const ItemsSection = ({ items, totalPrice, weeks }) => {
   );
 };
 
-const OrderSummary = ({ order }) => {
+const OrderSummary = ({ order, thankyou }) => {
   return (
     <div>
       <TableContainer component={Paper}>
@@ -197,14 +191,14 @@ const OrderSummary = ({ order }) => {
                   textAlign: "center",
                 }}
               >
-                <Typography variant="h5" color="#e6deca" sx={{ marginLeft: 1 }}>
+                <Typography variant="h5" color="#e6deca">
                   Order Summary
                 </Typography>
               </TableCell>
             </TableRow>
           </TableHead>
 
-          <InformationSection order={order} />
+          <InformationSection order={order} thankyou={thankyou} />
         </Table>
       </TableContainer>
 
@@ -219,9 +213,9 @@ const OrderSummary = ({ order }) => {
       </TableContainer>
 
       <Paper elevation={2} sx={{ padding: 2, marginTop: 2 }}>
-        <Typography variant="subtitle1" align="center" paragraph>
+        {thankyou ? (<Typography variant="subtitle1" align="center" paragraph>
           Thanks for choosing to order from us!
-        </Typography>
+        </Typography>) : null}
         <Typography variant="body1" align="left" paragraph>
           * Please note that delivery is only in Jerusalem. Drop off is
           dependent on our availability and your preference.

@@ -82,9 +82,12 @@ const ContactInformation = ({ formData, setFormData }) => {
       return: updatedReturnDate ? setDateString(updatedReturnDate.$d) : null,
     };
 
+    const diff = dayjs(range.return).diff(dayjs(range.delivery), "weeks");
+
     setFormData((prevData) => ({
       ...prevData,
       dateRange: range,
+      weeks: !diff || diff > 1 ? 1 : diff,
     }));
   };
 

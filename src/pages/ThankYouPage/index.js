@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Box, Typography, Button } from '@mui/material';
 import Loading from "../../components/Loading";
-import ThankYouSummary from "../../components/ThankYouSummary";
+import { OrderSummary } from '../../components/Form';
+import dayjs from "dayjs";
 
 const ThankYouPage = () => {
   const { id } = useParams();
@@ -29,7 +30,17 @@ const ThankYouPage = () => {
         return response.json();
       })
       .then((res) => {
-        setOrder(res.data);
+        const data = {
+          ...res.data,
+          dateRange: {
+            delivery: dayjs.unix(res.data.deliveryDate._seconds).format("ddd MMM D YYYY"),
+            return: dayjs.unix(res.data.returnDate._seconds).format("ddd MMM D YYYY"),
+          }
+        };
+
+        delete data.deliveryDate;
+        delete data.returnDate
+        setOrder(data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -76,7 +87,7 @@ const ThankYouPage = () => {
       <Typography variant='h4' align='center' sx={{ marginBottom: 2 }}>
         Thank you for your order!
       </Typography>
-      <ThankYouSummary order={{ ...order, id }} />
+      <OrderSummary order={{ ...order, id }} thankyou={true}/>
       <Button
         variant="contained"
         color="primary"

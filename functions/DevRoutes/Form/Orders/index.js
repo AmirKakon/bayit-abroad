@@ -6,7 +6,8 @@ const baseDB = "orders_dev";
 
 const gmailEmail = "bayitabroad@gmail.com";
 const gmailPassword = functions.config().gmail.password;
-const bayitAbroadLogoUrl = "https://firebasestorage.googleapis.com/v0/b/bayitabroad-jkak.appspot.com/o/logo%2Fbayit-abroad-logo.png?alt=media&token=ca798017-62a0-4190-a1e9-eedaba78f18d";
+const bayitAbroadLogoUrl =
+  "https://firebasestorage.googleapis.com/v0/b/bayitabroad-jkak.appspot.com/o/logo%2Fbayit-abroad-logo.png?alt=media&token=ca798017-62a0-4190-a1e9-eedaba78f18d";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -24,12 +25,14 @@ const setDateString = (date) => {
 
 const getTimestamps = (dateRange) => {
   // Convert the Date object to a Firebase Timestamp
-  const fbDeliveryDate =
-    admin.firestore.Timestamp.fromDate(new Date(dateRange.delivery));
+  const fbDeliveryDate = admin.firestore.Timestamp.fromDate(
+    new Date(dateRange.delivery),
+  );
 
   // Convert the Date object to a Firebase Timestamp
-  const fbReturnDate = admin.firestore.Timestamp
-    .fromDate(new Date(dateRange.return));
+  const fbReturnDate = admin.firestore.Timestamp.fromDate(
+    new Date(dateRange.return),
+  );
 
   // Convert the Date object to a Firebase Timestamp
   const fbUpdated = admin.firestore.Timestamp.now();
@@ -55,6 +58,7 @@ dev.post("/api/form/orders/create", async (req, res) => {
       totalPrice: req.body.totalPrice,
       lastUpdated: timestamps.updated,
       created: timestamps.updated,
+      weeks: req.body.weeks,
     };
 
     // Get a reference to a new document with an auto-generated ID
@@ -66,6 +70,10 @@ dev.post("/api/form/orders/create", async (req, res) => {
     });
 
     let totalQuantity = 0;
+    const subtotal = {
+      usd: order.totalPrice.usd * order.weeks,
+      nis: order.totalPrice.nis * order.weeks,
+    };
 
     const selectedItemsList = order.selectedItems
       .map((item) => {
@@ -159,11 +167,32 @@ dev.post("/api/form/orders/create", async (req, res) => {
         <strong>Quantity</strong>
       </td>
       <td colspan="2" style="background-color: #f2f2f2; text-align: center">
-        <strong>Total Price</strong>
+        <strong>Total</strong>
       </td>
     </tr>
     ${selectedItemsList}
-    <tr>
+    <tr style"border: 1px solid #ddd;">
+      <td colspan="4"><strong>Total per Week:</strong></td>
+      <td style="text-align: center">
+      <strong>&#36;${order.totalPrice.usd}</strong>
+      </td>
+      <td style="text-align: center">
+      <strong>&#8362;${order.totalPrice.nis}</strong>
+      </td>
+    </tr>
+    <tr style"border: 1px solid #ddd;">
+      <td colspan="3"></td>
+      <td colspan="3"><strong>x${order.weeks} Weeks</strong></td>
+    </tr>
+    <tr style"border: 1px solid #ddd;">
+      <td colspan="3"><strong>Subtotal:</strong></td>
+      <td style="text-align: center"><strong>${totalQuantity}</strong></td>
+      <td style="text-align: center"><strong>&#36;${subtotal.usd}</strong></td>
+      <td style="text-align: center">
+      <strong>&#8362;${subtotal.nis}</strong>
+      </td>
+    </tr>
+    <tr style"border: 1px solid #ddd;">
       <td colspan="6" style="background-color: #f2f2f2; padding: 10px">
         <strong>Additional Notes</strong>
       </td>
@@ -171,32 +200,13 @@ dev.post("/api/form/orders/create", async (req, res) => {
     <tr>
       <td colspan="6">${order.additionalNotes}</td>
     </tr>
-  </table>
-  
-  <!-- Summary Table -->
-  <table
-  width="100%"
-  cellspacing="0"
-  cellpadding="5"
-  style="border: 1px solid #ddd; border-collapse: collapse">
     <tr>
-      <td colspan="3" style="background-color: #f2f2f2; padding: 10px">
-        <strong>Summary</strong>
-      </td>
-    </tr>
-    <tr>
-      <td width="30%"><strong>Total:</strong></td>
-      <td>&#36;${order.totalPrice.usd} / &#8362;${order.totalPrice.nis}</td>
-    </tr>
-    <tr>
-      <td width="30%"><strong>Total Quantity of Items:</strong></td>
-      <td>${totalQuantity}</td>
-    </tr>
-    <tr>
-      <td colspan="1" style="background-color: #f2f2f2; padding: 10px">
+      <td style="background-color: #f2f2f2; padding: 10px">
         <strong>Last Updated:</strong>
       </td>
-      <td style="background-color: #f2f2f2">${order.lastUpdated.toDate()}</td>
+      <td colspan="5" style="background-color: #f2f2f2">
+      ${order.lastUpdated.toDate()}
+      </td>
     </tr>
   </table>
   
@@ -331,6 +341,7 @@ dev.put("/api/form/orders/update/:id", (req, res) => {
         phone: req.body.phone,
         selectedItems: req.body.selectedItems,
         lastUpdated: timestamps.updated,
+        weeks: req.body.weeks,
       });
 
       return res.status(200).send({ status: "Success", msg: "Order Updated" });

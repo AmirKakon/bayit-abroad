@@ -164,7 +164,7 @@ const FormPage = () => {
         );
       case 2:
         return (
-          <OrderSummary order={{...formData, selectedItems, totalPrice, weeks: 2}}/> 
+          <OrderSummary order={{...formData, selectedItems, totalPrice,}}/> 
         );
       default:
         return <Typography>ERROR</Typography>;

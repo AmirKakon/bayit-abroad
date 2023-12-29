@@ -31,14 +31,13 @@ const SearchOrderPage = () => {
         }}
       >
         <div>
-          <Typography variant="h4">Search for Order</Typography>
+          <Typography variant="h4" gutterBottom>Search for Order</Typography>
         </div>
         <div
           style={{
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
-            marginTop: "8px",
             width: "100%"
           }}
         >

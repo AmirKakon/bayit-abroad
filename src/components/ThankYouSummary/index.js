@@ -66,15 +66,15 @@ const ItemsSection = ({ items, totalPrice }) => {
       <TableRow key={item.name}>
         <TableCell width="40%">{item.name}</TableCell>
         <TableCell width="10%" sx={{ textAlign: "center" }}>
-          ${item.price.usd}
+        &#36;{item.price.usd}
         </TableCell>
-        <TableCell sx={{ textAlign: "center" }}>₪{item.price.nis}</TableCell>
+        <TableCell sx={{ textAlign: "center" }}>&#8362;{item.price.nis}</TableCell>
         <TableCell sx={{ textAlign: "center" }}>{item.quantity}</TableCell>
         <TableCell width="10%" sx={{ textAlign: "center" }}>
-          ${item.quantity * item.price.usd}
+        &#36;{item.quantity * item.price.usd}
         </TableCell>
         <TableCell sx={{ textAlign: "center" }}>
-          ₪{item.quantity * item.price.nis}
+        &#8362;{item.quantity * item.price.nis}
         </TableCell>
       </TableRow>
     );
@@ -139,10 +139,10 @@ const ItemsSection = ({ items, totalPrice }) => {
             <strong>{totalQuantityOfItems}</strong>
           </TableCell>
           <TableCell sx={{ textAlign: "center" }}>
-            <strong>${totalPrice.usd}</strong>
+            <strong>&#36;{totalPrice.usd}</strong>
           </TableCell>
           <TableCell sx={{ textAlign: "center" }}>
-            <strong>₪{totalPrice.nis}</strong>
+            <strong>&#8362;{totalPrice.nis}</strong>
           </TableCell>
         </TableRow>
       </TableBody>

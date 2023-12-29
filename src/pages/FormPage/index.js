@@ -139,8 +139,7 @@ const FormPage = () => {
                 <br />
                 <br />* Please note that delivery is only in Jerusalem. Drop off
                 is dependent on our availability and your preference.
-                <br />* Payment is at time of delivery via cash, bit or bank
-                transfer.
+                <br />* Payment is at time of delivery via cash, bit or Paypal.
                 <br />
                 <br />
                 Looking for an item that isn't listed? Add more items in the
@@ -165,10 +164,10 @@ const FormPage = () => {
         );
       case 2:
         return (
-          <OrderSummary order={{...formData, selectedItems, totalPrice}}/> 
+          <OrderSummary order={{...formData, selectedItems, totalPrice, weeks: 2}}/> 
         );
       default:
-        return <Typography>DEFAULT</Typography>;
+        return <Typography>ERROR</Typography>;
     }
   };
 

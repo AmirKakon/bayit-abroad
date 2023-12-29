@@ -3,7 +3,7 @@ import { Box, Typography, AppBar, Toolbar, IconButton, Tooltip, } from "@mui/mat
 import { Link } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import InfoIcon from "@mui/icons-material/Info";
+// import InfoIcon from "@mui/icons-material/Info";
 import FeedIcon from '@mui/icons-material/Feed';
 import logo from "../../media/bayit-abroad-logo.png";
 

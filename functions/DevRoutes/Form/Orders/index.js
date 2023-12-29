@@ -72,11 +72,15 @@ dev.post("/api/form/orders/create", async (req, res) => {
         totalQuantity += item.quantity;
         return `<tr style="border: 1px solid #ddd;">
           <td style="padding-left: 10px">${item.name}</td>
-          <td style="text-align: center">$${item.price.usd}</td>
-          <td style="text-align: center">₪${item.price.nis}</td>
+          <td style="text-align: center">&#36;${item.price.usd}</td>
+          <td style="text-align: center">&#8362;${item.price.nis}</td>
           <td style="text-align: center">${item.quantity}</td>
-          <td style="text-align: center">$${item.price.usd * item.quantity}</td>
-          <td style="text-align: center">₪${item.price.nis * item.quantity}</td>
+          <td style="text-align: center">
+          &#36;${item.price.usd * item.quantity}
+          </td>
+          <td style="text-align: center">
+          &#8362;${item.price.nis * item.quantity}
+          </td>
         </tr>`;
       })
       .join("");
@@ -182,7 +186,7 @@ dev.post("/api/form/orders/create", async (req, res) => {
     </tr>
     <tr>
       <td width="30%"><strong>Total:</strong></td>
-      <td>$${order.totalPrice.usd} / ₪${order.totalPrice.nis}</td>
+      <td>&#36;${order.totalPrice.usd} / &#8362;${order.totalPrice.nis}</td>
     </tr>
     <tr>
       <td width="30%"><strong>Total Quantity of Items:</strong></td>

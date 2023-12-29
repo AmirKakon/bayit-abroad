@@ -7,7 +7,7 @@ const FormItem = ({ item, handleAdd, handleRemove, quantity }) => {
     <ListItem key={item.id}>
       <ListItemText
         primary={item.name}
-        secondary={`Price: $${item.price.usd} / ₪${item.price.nis}`}
+        secondary={`Price: &#36;${item.price.usd} / &#8362;${item.price.nis}`}
       />
       <div>
         <IconButton onClick={() => handleRemove(item.id)}>

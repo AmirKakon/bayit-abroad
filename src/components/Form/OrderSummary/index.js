@@ -55,7 +55,7 @@ const InformationSection = ({ order }) => {
   );
 };
 
-const ItemsSection = ({ items, totalPrice }) => {
+const ItemsSection = ({ items, totalPrice, weeks }) => {
   let totalQuantityOfItems = 0;
 
   const itemList = items.map((item) => {
@@ -64,11 +64,11 @@ const ItemsSection = ({ items, totalPrice }) => {
     return (
       <TableRow key={item.name}>
         <TableCell width="40%">{item.name}</TableCell>
-        <TableCell width="10%">${item.price.usd}</TableCell>
-        <TableCell>₪{item.price.nis}</TableCell>
-        <TableCell>{item.quantity}</TableCell>
-        <TableCell width="10%">${item.quantity * item.price.usd}</TableCell>
-        <TableCell>₪{item.quantity * item.price.nis}</TableCell>
+        <TableCell width="10%" style={{textAlign: "center"}}>&#36;{item.price.usd}</TableCell>
+        <TableCell style={{textAlign: "center"}}> &#8362;{item.price.nis}</TableCell>
+        <TableCell style={{textAlign: "center"}}>{item.quantity}</TableCell>
+        <TableCell width="10%" style={{textAlign: "center"}}>&#36;{item.quantity * item.price.usd}</TableCell>
+        <TableCell style={{textAlign: "center"}}> &#8362;{item.quantity * item.price.nis}</TableCell>
       </TableRow>
     );
   });
@@ -77,7 +77,12 @@ const ItemsSection = ({ items, totalPrice }) => {
     <>
       <TableHead>
         <TableRow>
-          <TableCell style={{ backgroundColor: "#d5d5d5", padding: "5px" }}>
+          <TableCell
+            style={{
+              backgroundColor: "#d5d5d5",
+              padding: "5px",
+            }}
+          >
             <Typography
               variant="body1"
               sx={{ marginLeft: 1, fontWeight: "bold" }}
@@ -87,45 +92,90 @@ const ItemsSection = ({ items, totalPrice }) => {
           </TableCell>
           <TableCell
             colSpan={2}
-            style={{ backgroundColor: "#d5d5d5", padding: "5px" }}
+            style={{
+              backgroundColor: "#d5d5d5",
+              padding: "5px",
+              textAlign: "center",
+            }}
           >
             <Typography
               variant="body1"
-              sx={{ marginLeft: 2, fontWeight: "bold" }}
+              sx={{ fontWeight: "bold" }}
             >
               Price Per Item
             </Typography>
           </TableCell>
-          <TableCell style={{ backgroundColor: "#d5d5d5", padding: "5px" }}>
+          <TableCell
+            style={{
+              backgroundColor: "#d5d5d5",
+              padding: "5px",
+              textAlign: "center",
+            }}
+          >
             <Typography
               variant="body1"
-              sx={{ paddingRight: 3, fontWeight: "bold" }}
+              sx={{ fontWeight: "bold" }}
             >
               Quantity
             </Typography>
           </TableCell>
           <TableCell
             colSpan={2}
-            style={{ backgroundColor: "#d5d5d5", padding: "5px" }}
+            style={{
+              backgroundColor: "#d5d5d5",
+              padding: "5px",
+              textAlign: "center",
+            }}
           >
             <Typography
               variant="body1"
-              sx={{ marginLeft: 3, fontWeight: "bold" }}
+              sx={{fontWeight: "bold" }}
             >
-              Total Price
+              Total
             </Typography>
           </TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {itemList}
-        <TableRow style={{backgroundColor: "#d5d5d5"}}>
+
+        <TableRow>
+          <TableCell colSpan={3}>
+            <strong>Total per Week:</strong>
+          </TableCell>
+          <TableCell style={{ textAlign: "center" }}>
+            <strong>{totalQuantityOfItems}</strong>
+          </TableCell>
+          <TableCell style={{ textAlign: "center" }}>
+            <strong>&#36;{totalPrice.usd}</strong>
+          </TableCell>
+          <TableCell style={{ textAlign: "center" }}>
+            <strong> &#8362;{totalPrice.nis}</strong>
+          </TableCell>
+        </TableRow>
+
+        <TableRow>
+          <TableCell colSpan={3}>
+            <strong>Weeks:</strong>
+          </TableCell>
+          <TableCell style={{ textAlign: "center" }}>
+            <strong>x{weeks}</strong>
+          </TableCell>
+        </TableRow>
+
+        <TableRow style={{ backgroundColor: "#d5d5d5" }}>
           <TableCell colSpan={3}>
             <strong>Subtotal:</strong>
           </TableCell>
-          <TableCell><strong>{totalQuantityOfItems}</strong></TableCell>
-          <TableCell><strong>${totalPrice.usd}</strong></TableCell>
-          <TableCell><strong>₪{totalPrice.nis}</strong></TableCell>
+          <TableCell style={{ textAlign: "center" }}>
+            <strong>{totalQuantityOfItems}</strong>
+          </TableCell>
+          <TableCell style={{ textAlign: "center" }}>
+            <strong>&#36;{totalPrice.usd * weeks}</strong>
+          </TableCell>
+          <TableCell style={{ textAlign: "center" }}>
+            <strong> &#8362;{totalPrice.nis * weeks}</strong>
+          </TableCell>
         </TableRow>
       </TableBody>
     </>
@@ -141,7 +191,11 @@ const OrderSummary = ({ order }) => {
             <TableRow>
               <TableCell
                 colSpan={2}
-                style={{ backgroundColor: "#2c3c30", padding: "10px", textAlign: "center" }}
+                style={{
+                  backgroundColor: "#2c3c30",
+                  padding: "10px",
+                  textAlign: "center",
+                }}
               >
                 <Typography variant="h5" color="#e6deca" sx={{ marginLeft: 1 }}>
                   Order Summary
@@ -159,6 +213,7 @@ const OrderSummary = ({ order }) => {
           <ItemsSection
             items={order.selectedItems}
             totalPrice={order.totalPrice}
+            weeks={order.weeks}
           />
         </Table>
       </TableContainer>

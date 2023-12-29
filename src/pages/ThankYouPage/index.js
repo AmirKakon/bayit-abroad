@@ -84,7 +84,7 @@ const ThankYouPage = () => {
         padding: 2,
       }}
     >
-      <Typography variant='h4' align='center' sx={{ marginBottom: 2 }}>
+      <Typography variant='h4' align='center' gutterBottom>
         Thank you for your order!
       </Typography>
       <OrderSummary order={{ ...order, id }} thankyou={true}/>

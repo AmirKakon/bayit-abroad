@@ -99,8 +99,8 @@ dev.post("/api/form/orders/create", async (req, res) => {
       <td align="left" style="background-color: #2c3c30; padding: 10px">
         <img src="${bayitAbroadLogoUrl}"
         alt="BayitAbroad Logo"
-        width="80"
-        height="80"
+        width="100"
+        height="100"
         align="left"
         style="vertical-align: middle">
         <h1 style="color: #c49f79; margin-left: 10px; padding-top: 15px"
@@ -213,9 +213,11 @@ dev.post("/api/form/orders/create", async (req, res) => {
   <!-- Additional Notes -->
   <br />
   <br />
-  <p>* Please note that delivery is only in Jerusalem.
-  Drop off is dependent on our availability and your preference.
-  <br />* Payment is at the time of delivery via cash, bit, or bank transfer.
+  <p>&#42; Please note that delivery is only in Jerusalem. Drop off
+  is dependent on our availability and your preference.
+  <br />
+  &#42; Payment will be available after confirmation of the order
+  by our team. Payment options include cash, bit, or PayPal.
   </p>
   <br />
   <a href="${url}" style="

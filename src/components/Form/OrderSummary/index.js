@@ -213,13 +213,17 @@ const OrderSummary = ({ order, thankyou }) => {
       </TableContainer>
 
       <Paper elevation={2} sx={{ padding: 2, marginTop: 2 }}>
-        {thankyou ? (<Typography variant="subtitle1" align="center" paragraph>
-          Thanks for choosing to order from us!
-        </Typography>) : null}
+        {thankyou ? (
+          <Typography variant="subtitle1" align="center" paragraph>
+            Thanks for choosing to order from us! An email has been sent to you with the order summary.
+          </Typography>
+        ) : null}
         <Typography variant="body1" align="left" paragraph>
-          * Please note that delivery is only in Jerusalem. Drop off is
+          &#42; Please note that delivery is only in Jerusalem. Drop off is
           dependent on our availability and your preference.
-          <br />* Payment is at time of delivery via cash, bit or bank transfer.
+          <br />
+          &#42; Payment will be available after confirmation of the order by our
+          team. Payment options include cash, bit, or PayPal.
         </Typography>
       </Paper>
     </div>

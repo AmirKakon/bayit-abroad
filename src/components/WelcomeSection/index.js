@@ -6,8 +6,21 @@ import { Grid, Typography } from "@mui/material";
 const circleSize = "170";
 
 const WelcomeSection = () => {
+  const backgroundImageUrl = "https://firebasestorage.googleapis.com/v0/b/bayitabroad-jkak.appspot.com/o/website%2Fhomepage%2Fhomepage-backgroundImage-noBackground.png?alt=media&token=7f05676b-70a0-4c2d-ac66-2c59ac3947f6";
+
   return (
-    <Grid container direction="column" alignItems="center" marginTop={2}>
+    <Grid
+      container
+      direction="column"
+      alignItems="center"
+      marginTop={2}
+      paddingBottom={5}
+      style={{
+        backgroundImage: `url(${backgroundImageUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: "center"
+      }}
+    >
       <Grid item>
         <Typography
           variant="h2"

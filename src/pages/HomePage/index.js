@@ -8,13 +8,14 @@ import Divider from "@mui/material/Divider";
 
 const HomePage = () => {
   window.scrollTo({ top: 0, behavior: "auto" });
-  
+
   return (
     <Box
       sx={{
-        color: "white",
+        backgroundImage: "linear-gradient(to bottom, #cbdfde, #9af3ff)",
+        color: 'white',
         minHeight: "200",
-        padding: 2, // Consistent padding
+        padding: 2,
       }}
       flex={1}
     >

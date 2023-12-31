@@ -12,10 +12,10 @@ const HomePage = () => {
   return (
     <Box
       sx={{
-        backgroundImage: "linear-gradient(to bottom, #cbdfde, #9af3ff)",
+        // backgroundImage: "linear-gradient(to bottom, #cbdfde, #9af3ff)",
         color: 'white',
         minHeight: "200",
-        padding: 2,
+        padding: 0,
       }}
       flex={1}
     >
@@ -30,17 +30,17 @@ const HomePage = () => {
         <WelcomeSection />
         <Divider
           variant="middle"
-          sx={{ marginTop: 3, marginBottom: 3, width: "100%" }}
+          sx={{ marginBottom: 3, width: "100%" }}
         />
         <HowItWorksSection />
         <Divider
           variant="middle"
-          sx={{ marginTop: 3, marginBottom: 3, width: "100%" }}
+          sx={{ marginTop: 3, marginBottom: 3, width: "90%" }}
         />
         <WhyChooseUsSection />
         <Divider
           variant="middle"
-          sx={{ marginTop: 3, marginBottom: 3, width: "100%" }}
+          sx={{ marginTop: 3, marginBottom: 3, width: "90%" }}
         />
         <ContactUsSection />
       </Grid>

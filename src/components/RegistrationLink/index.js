@@ -8,20 +8,21 @@ const RegistrationLink = () => {
       to="/form"
       style={{
         display: "inline-block",
-        backgroundColor: "#98aaa8",
-        padding: "10px 30px",
-        borderRadius: "25px",
+        backgroundColor: "#e6deca",
+        padding: "7px 30px",
+        border: "2px solid #000",
         textDecoration: "none",
         cursor: "pointer",
       }}
     >
       <Typography
-        variant="subtitle1"
+        variant="h6"
         fontFamily="serif"
         align="center"
         color="black"
+        fontWeight="bold"
       >
-        Click To Reserve Your Order Now!
+        Explore Our Rental Items
       </Typography>
     </Link>
   );

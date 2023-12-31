@@ -91,9 +91,9 @@ const ThankYouPage = () => {
         padding: 2,
       }}
     >
-      <Typography variant="h4" align="center" gutterBottom>
+      {isFirstVisit ? (<Typography variant="h4" align="center" gutterBottom>
         Thank you for your order!
-      </Typography>
+      </Typography>) : null}
       <OrderSummary order={{ ...order, id }} thankyou={isFirstVisit} />
       <Button
         variant="contained"

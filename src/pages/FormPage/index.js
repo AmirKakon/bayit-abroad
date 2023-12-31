@@ -84,12 +84,13 @@ const FormPage = () => {
 
   const handleSubmit = () => {
     const currentURL = window.location.href;
+    const baseUrl = currentURL.split('/form')[0];
 
     const submissionData = {
       ...formData,
       selectedItems,
       totalPrice,
-      currentURL,
+      baseUrl,
     };
 
     setLoadingPopup(true);

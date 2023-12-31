@@ -66,7 +66,7 @@ dev.post("/api/orders/create", async (req, res) => {
 
     // Set the data of the document using the obtained reference
     await orderRef.set(order).then(() => {
-      url = `${req.body.currentURL}/orders/${orderRef.id}/thankyou`;
+      url = `${req.body.baseUrl}/orders/${orderRef.id}/thankyou?first=false`;
     });
 
     let totalQuantity = 0;

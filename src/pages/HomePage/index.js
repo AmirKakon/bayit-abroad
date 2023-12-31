@@ -6,13 +6,13 @@ import ContactUsSection from "../../components/ContactUsSection";
 import { Box, Grid } from "@mui/material";
 import Divider from "@mui/material/Divider";
 
-const HomePage = () => {
+const HomePage = ({isSmallScreen}) => {
   window.scrollTo({ top: 0, behavior: "auto" });
 
   return (
     <Box
       sx={{
-        // backgroundImage: "linear-gradient(to bottom, #cbdfde, #9af3ff)",
+        // backgroundImage: "linear-gradient(to bottom, #ffffff, #3d9ca0)",
         color: 'white',
         minHeight: "200",
         padding: 0,
@@ -27,7 +27,7 @@ const HomePage = () => {
         justifyContent="center"
         style={{ width: "100%" }}
       >
-        <WelcomeSection />
+        <WelcomeSection isSmallScreen={isSmallScreen}/>
         <Divider
           variant="middle"
           sx={{ marginBottom: 3, width: "100%" }}

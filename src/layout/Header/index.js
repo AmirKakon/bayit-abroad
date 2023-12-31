@@ -22,7 +22,7 @@ const HeaderIcon = ({title, link, icon}) => {
   );
 };
 
-const Header = () => {
+const Header = ({isSmallScreen}) => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -49,7 +49,7 @@ const Header = () => {
             BayitAbroad
           </Typography>
           
-          <HeaderIcon title={"Home"} link={"/home"} icon={<HomeIcon />}/>
+          <HeaderIcon title={"Home"} link={"/home"} icon={<HomeIcon fontSize="large" />}/>
 
           <HeaderIcon title={"Place Order"} link={"/form"} icon={<ShoppingCartIcon />}/>
 

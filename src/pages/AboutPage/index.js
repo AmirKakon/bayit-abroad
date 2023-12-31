@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Paper, Typography } from "@mui/material";
 
-const AboutPage = () => {
+const AboutPage = ({isSmallScreen}) => {
   window.scrollTo({ top: 0, behavior: "auto" });
   
   return (

@@ -96,7 +96,7 @@ const FormPage = () => {
 
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
-    fetch(`${apiBaseUrl}/api/form/orders/create`, {
+    fetch(`${apiBaseUrl}/api/orders/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -120,7 +120,7 @@ const FormPage = () => {
   const handleOkButtonClick = () => {
     setResponseStatus(null);
     if (responseStatus === "Success") {
-      const url = `/form/orders/${orderId}/thankyou`;
+      const url = `/orders/${orderId}/thankyou?first=true`;
       navigate(url);
     }
   };

@@ -53,7 +53,7 @@ const Header = () => {
 
           <HeaderIcon title={"Place Order"} link={"/form"} icon={<ShoppingCartIcon />}/>
 
-          <HeaderIcon title={"Find Order"} link={"/form/orders/search"} icon={<FeedIcon />}/>
+          <HeaderIcon title={"Find Order"} link={"/orders/search"} icon={<FeedIcon />}/>
 
           {/* <HeaderIcon title={"About Us"} link={"/about"} icon={<InfoIcon />}/> */}
 

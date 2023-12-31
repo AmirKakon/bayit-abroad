@@ -1,5 +1,5 @@
 const dayjs = require("dayjs");
-const { dev, logger, db, admin, functions } = require("../../../setup");
+const { dev, logger, db, admin, functions } = require("../../setup");
 const nodemailer = require("nodemailer");
 
 const baseDB = "orders_dev";
@@ -41,7 +41,7 @@ const getTimestamps = (dateRange) => {
 };
 
 // create an order
-dev.post("/api/form/orders/create", async (req, res) => {
+dev.post("/api/orders/create", async (req, res) => {
   try {
     let url = "";
     const timestamps = getTimestamps(req.body.dateRange);
@@ -266,7 +266,7 @@ dev.post("/api/form/orders/create", async (req, res) => {
 });
 
 // get a single order using specific id
-dev.get("/api/form/orders/get/:id", (req, res) => {
+dev.get("/api/orders/get/:id", (req, res) => {
   (async () => {
     try {
       const orderRef = db.collection(baseDB).doc(req.params.id);
@@ -290,7 +290,7 @@ dev.get("/api/form/orders/get/:id", (req, res) => {
 });
 
 // get all orders
-dev.get("/api/form/orders/getAll", (req, res) => {
+dev.get("/api/orders/getAll", (req, res) => {
   (async () => {
     try {
       const ordersRef = db.collection(baseDB);
@@ -317,7 +317,7 @@ dev.get("/api/form/orders/getAll", (req, res) => {
 });
 
 // update order
-dev.put("/api/form/orders/update/:id", (req, res) => {
+dev.put("/api/orders/update/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {
@@ -355,7 +355,7 @@ dev.put("/api/form/orders/update/:id", (req, res) => {
 });
 
 // delete order
-dev.delete("/api/form/orders/delete/:id", (req, res) => {
+dev.delete("/api/orders/delete/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {

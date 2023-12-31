@@ -9,7 +9,7 @@ const SearchOrderPage = () => {
   const handleSearchOrder = () => {
     // Get the input value from the TextField
     const trackingNumber = document.getElementById("tracking-number").value;
-    const url = `/form/orders/${trackingNumber}/thankyou`;
+    const url = `/orders/${trackingNumber}/thankyou?first=false`;
     navigate(url);
   };
 

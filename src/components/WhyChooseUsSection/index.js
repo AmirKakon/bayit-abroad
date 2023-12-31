@@ -24,17 +24,15 @@ const WhyChooseUsSection = () => {
         >
           <b>Planning a family trip to Jerusalem?</b>
           <br />
-          Traveling as a religious Jew should be easy and comfortable
-          <br />
-          That&apos;s what we do!
+          Traveling as a religious Jew should be easy and comfortable. That&apos;s what we do!
 
           <br />
           <br />
           <b>Pack Light:</b> Traveling with children can be demanding, and we
-          understand that. Leave behind the burden of carrying heavy appliances.
+          understand that. Leave behind the burden of carrying heavy necessities.
           <br />
           <br />
-          <b>Flexible:</b> We know the the challenges of being away from home &#45; and we know how to help!
+          <b>Flexible:</b> We deliver the package right to your door and offer flexible pickup hours.
           <br />
           <br />
           <b>Enhancing:</b> Prepare warm meals, have hot water (and

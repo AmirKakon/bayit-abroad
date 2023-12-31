@@ -1,10 +1,26 @@
 import React from "react";
-import { Box, Typography, AppBar, Toolbar, IconButton } from "@mui/material";
+import { Box, Typography, AppBar, Toolbar, IconButton, Tooltip, } from "@mui/material";
 import { Link } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import InfoIcon from "@mui/icons-material/Info";
+// import InfoIcon from "@mui/icons-material/Info";
+import FeedIcon from '@mui/icons-material/Feed';
 import logo from "../../media/bayit-abroad-logo.png";
+
+const HeaderIcon = ({title, link, icon}) => {
+  return (
+    <Tooltip title={title}>
+          <Link
+            to={link}
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
+            <IconButton color="inherit">
+              {icon}
+            </IconButton>
+          </Link>
+          </Tooltip>
+  );
+};
 
 const Header = () => {
   return (
@@ -32,27 +48,15 @@ const Header = () => {
           <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
             BayitAbroad
           </Typography>
+          
+          <HeaderIcon title={"Home"} link={"/home"} icon={<HomeIcon />}/>
 
-          <Link to="/home" style={{ textDecoration: "none", color: "inherit" }}>
-            <IconButton color="inherit">
-              <HomeIcon />
-            </IconButton>
-          </Link>
+          <HeaderIcon title={"Place Order"} link={"/form"} icon={<ShoppingCartIcon />}/>
 
-          <Link to="/form" style={{ textDecoration: "none", color: "inherit" }}>
-            <IconButton color="inherit">
-              <ShoppingCartIcon />
-            </IconButton>
-          </Link>
+          <HeaderIcon title={"Find Order"} link={"/orders/search"} icon={<FeedIcon />}/>
 
-          <Link
-            to="/about"
-            style={{ textDecoration: "none", color: "inherit" }}
-          >
-            <IconButton color="inherit">
-              <InfoIcon />
-            </IconButton>
-          </Link>
+          {/* <HeaderIcon title={"About Us"} link={"/about"} icon={<InfoIcon />}/> */}
+
         </Toolbar>
       </AppBar>
     </Box>

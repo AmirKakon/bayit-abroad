@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { Box, Typography, Button } from '@mui/material';
+import React, { useEffect, useState } from "react";
+import { useParams, Link, useLocation } from "react-router-dom";
+import { Box, Typography, Button } from "@mui/material";
 import Loading from "../../components/Loading";
-import ThankYouSummary from "../../components/ThankYouSummary";
+import { OrderSummary } from "../../components/Form";
+import dayjs from "dayjs";
 
 const ThankYouPage = () => {
   const { id } = useParams();
+  const location = useLocation();
+  const isFirstVisit =
+    new URLSearchParams(location.search).get("first") === "true";
 
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,7 +20,7 @@ const ThankYouPage = () => {
 
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
-    fetch(`${apiBaseUrl}/api/form/orders/get/${id}`)
+    fetch(`${apiBaseUrl}/api/orders/get/${id}`)
       .then((response) => {
         if (!response.ok) {
           if (response.status === 404) {
@@ -29,7 +33,21 @@ const ThankYouPage = () => {
         return response.json();
       })
       .then((res) => {
-        setOrder(res.data);
+        const data = {
+          ...res.data,
+          dateRange: {
+            delivery: dayjs
+              .unix(res.data.deliveryDate._seconds)
+              .format("ddd MMM D YYYY"),
+            return: dayjs
+              .unix(res.data.returnDate._seconds)
+              .format("ddd MMM D YYYY"),
+          },
+        };
+
+        delete data.deliveryDate;
+        delete data.returnDate;
+        setOrder(data);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -50,7 +68,7 @@ const ThankYouPage = () => {
         padding: 2,
       }}
     >
-      <Typography variant='h4' align='center' sx={{ marginBottom: 2 }}>
+      <Typography variant="h4" align="center" sx={{ marginBottom: 2 }}>
         Order Not Found
       </Typography>
       <Button
@@ -73,10 +91,10 @@ const ThankYouPage = () => {
         padding: 2,
       }}
     >
-      <Typography variant='h4' align='center' sx={{ marginBottom: 2 }}>
+      {isFirstVisit ? (<Typography variant="h4" align="center" gutterBottom>
         Thank you for your order!
-      </Typography>
-      <ThankYouSummary order={{ ...order, id }} />
+      </Typography>) : null}
+      <OrderSummary order={{ ...order, id }} thankyou={isFirstVisit} />
       <Button
         variant="contained"
         color="primary"

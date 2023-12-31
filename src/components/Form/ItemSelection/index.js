@@ -103,6 +103,7 @@ const ItemSelection = ({
       <Typography variant="h6" component="legend">
         Select the Items to Order:
       </Typography>
+      <Typography variant="body1" fontStyle="italic">&#42;Prices are based on a one-week rental period.</Typography>
 
       <List>
         {Object.entries(groupedItems).map(([category, itemsInCategory]) => (
@@ -148,7 +149,7 @@ const ItemSelection = ({
         ))}
       </List>
       <Typography variant="body1" align="left" paragraph padding={1}>
-        <b>Subtotal:</b> ${totalPrice.usd} / ₪{totalPrice.nis}
+        <b>Subtotal per Week:</b> ${totalPrice.usd} / &#8362;{totalPrice.nis}
       </Typography>
     </Paper>
   );

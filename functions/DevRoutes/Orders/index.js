@@ -1,12 +1,13 @@
 const dayjs = require("dayjs");
-const { dev, logger, db, admin, functions } = require("../../../setup");
+const { dev, logger, db, admin, functions } = require("../../setup");
 const nodemailer = require("nodemailer");
 
 const baseDB = "orders_dev";
 
 const gmailEmail = "bayitabroad@gmail.com";
 const gmailPassword = functions.config().gmail.password;
-const bayitAbroadLogoUrl = "https://firebasestorage.googleapis.com/v0/b/bayitabroad-jkak.appspot.com/o/logo%2Fbayit-abroad-logo.png?alt=media&token=ca798017-62a0-4190-a1e9-eedaba78f18d";
+const bayitAbroadLogoUrl =
+  "https://firebasestorage.googleapis.com/v0/b/bayitabroad-jkak.appspot.com/o/logo%2Fbayit-abroad-logo.png?alt=media&token=ca798017-62a0-4190-a1e9-eedaba78f18d";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -24,12 +25,14 @@ const setDateString = (date) => {
 
 const getTimestamps = (dateRange) => {
   // Convert the Date object to a Firebase Timestamp
-  const fbDeliveryDate =
-    admin.firestore.Timestamp.fromDate(new Date(dateRange.delivery));
+  const fbDeliveryDate = admin.firestore.Timestamp.fromDate(
+    new Date(dateRange.delivery),
+  );
 
   // Convert the Date object to a Firebase Timestamp
-  const fbReturnDate = admin.firestore.Timestamp
-    .fromDate(new Date(dateRange.return));
+  const fbReturnDate = admin.firestore.Timestamp.fromDate(
+    new Date(dateRange.return),
+  );
 
   // Convert the Date object to a Firebase Timestamp
   const fbUpdated = admin.firestore.Timestamp.now();
@@ -38,7 +41,7 @@ const getTimestamps = (dateRange) => {
 };
 
 // create an order
-dev.post("/api/form/orders/create", async (req, res) => {
+dev.post("/api/orders/create", async (req, res) => {
   try {
     let url = "";
     const timestamps = getTimestamps(req.body.dateRange);
@@ -55,6 +58,7 @@ dev.post("/api/form/orders/create", async (req, res) => {
       totalPrice: req.body.totalPrice,
       lastUpdated: timestamps.updated,
       created: timestamps.updated,
+      weeks: req.body.weeks,
     };
 
     // Get a reference to a new document with an auto-generated ID
@@ -62,21 +66,29 @@ dev.post("/api/form/orders/create", async (req, res) => {
 
     // Set the data of the document using the obtained reference
     await orderRef.set(order).then(() => {
-      url = `${req.body.currentURL}/orders/${orderRef.id}/thankyou`;
+      url = `${req.body.baseUrl}/orders/${orderRef.id}/thankyou?first=false`;
     });
 
     let totalQuantity = 0;
+    const subtotal = {
+      usd: order.totalPrice.usd * order.weeks,
+      nis: order.totalPrice.nis * order.weeks,
+    };
 
     const selectedItemsList = order.selectedItems
       .map((item) => {
         totalQuantity += item.quantity;
         return `<tr style="border: 1px solid #ddd;">
           <td style="padding-left: 10px">${item.name}</td>
-          <td style="text-align: center">$${item.price.usd}</td>
-          <td style="text-align: center">₪${item.price.nis}</td>
+          <td style="text-align: center">&#36;${item.price.usd}</td>
+          <td style="text-align: center">&#8362;${item.price.nis}</td>
           <td style="text-align: center">${item.quantity}</td>
-          <td style="text-align: center">$${item.price.usd * item.quantity}</td>
-          <td style="text-align: center">₪${item.price.nis * item.quantity}</td>
+          <td style="text-align: center">
+          &#36;${item.price.usd * item.quantity}
+          </td>
+          <td style="text-align: center">
+          &#8362;${item.price.nis * item.quantity}
+          </td>
         </tr>`;
       })
       .join("");
@@ -87,8 +99,8 @@ dev.post("/api/form/orders/create", async (req, res) => {
       <td align="left" style="background-color: #2c3c30; padding: 10px">
         <img src="${bayitAbroadLogoUrl}"
         alt="BayitAbroad Logo"
-        width="80"
-        height="80"
+        width="100"
+        height="100"
         align="left"
         style="vertical-align: middle">
         <h1 style="color: #c49f79; margin-left: 10px; padding-top: 15px"
@@ -155,11 +167,32 @@ dev.post("/api/form/orders/create", async (req, res) => {
         <strong>Quantity</strong>
       </td>
       <td colspan="2" style="background-color: #f2f2f2; text-align: center">
-        <strong>Total Price</strong>
+        <strong>Total</strong>
       </td>
     </tr>
     ${selectedItemsList}
-    <tr>
+    <tr style"border: 1px solid #ddd;">
+      <td colspan="4"><strong>Total per Week:</strong></td>
+      <td style="text-align: center">
+      <strong>&#36;${order.totalPrice.usd}</strong>
+      </td>
+      <td style="text-align: center">
+      <strong>&#8362;${order.totalPrice.nis}</strong>
+      </td>
+    </tr>
+    <tr style"border: 1px solid #ddd;">
+      <td colspan="3"></td>
+      <td colspan="3"><strong>x${order.weeks} Weeks</strong></td>
+    </tr>
+    <tr style"border: 1px solid #ddd;">
+      <td colspan="3"><strong>Subtotal:</strong></td>
+      <td style="text-align: center"><strong>${totalQuantity}</strong></td>
+      <td style="text-align: center"><strong>&#36;${subtotal.usd}</strong></td>
+      <td style="text-align: center">
+      <strong>&#8362;${subtotal.nis}</strong>
+      </td>
+    </tr>
+    <tr style"border: 1px solid #ddd;">
       <td colspan="6" style="background-color: #f2f2f2; padding: 10px">
         <strong>Additional Notes</strong>
       </td>
@@ -167,41 +200,24 @@ dev.post("/api/form/orders/create", async (req, res) => {
     <tr>
       <td colspan="6">${order.additionalNotes}</td>
     </tr>
-  </table>
-  
-  <!-- Summary Table -->
-  <table
-  width="100%"
-  cellspacing="0"
-  cellpadding="5"
-  style="border: 1px solid #ddd; border-collapse: collapse">
     <tr>
-      <td colspan="3" style="background-color: #f2f2f2; padding: 10px">
-        <strong>Summary</strong>
-      </td>
-    </tr>
-    <tr>
-      <td width="30%"><strong>Total:</strong></td>
-      <td>$${order.totalPrice.usd} / ₪${order.totalPrice.nis}</td>
-    </tr>
-    <tr>
-      <td width="30%"><strong>Total Quantity of Items:</strong></td>
-      <td>${totalQuantity}</td>
-    </tr>
-    <tr>
-      <td colspan="1" style="background-color: #f2f2f2; padding: 10px">
+      <td style="background-color: #f2f2f2; padding: 10px">
         <strong>Last Updated:</strong>
       </td>
-      <td style="background-color: #f2f2f2">${order.lastUpdated.toDate()}</td>
+      <td colspan="5" style="background-color: #f2f2f2">
+      ${order.lastUpdated.toDate()}
+      </td>
     </tr>
   </table>
   
   <!-- Additional Notes -->
   <br />
   <br />
-  <p>* Please note that delivery is only in Jerusalem.
-  Drop off is dependent on our availability and your preference.
-  <br />* Payment is at the time of delivery via cash, bit, or bank transfer.
+  <p>&#42; Please note that delivery is only in Jerusalem. Drop off
+  is dependent on our availability and your preference.
+  <br />
+  &#42; Payment will be available after confirmation of the order
+  by our team. Payment options include cash, bit, or PayPal.
   </p>
   <br />
   <a href="${url}" style="
@@ -250,7 +266,7 @@ dev.post("/api/form/orders/create", async (req, res) => {
 });
 
 // get a single order using specific id
-dev.get("/api/form/orders/get/:id", (req, res) => {
+dev.get("/api/orders/get/:id", (req, res) => {
   (async () => {
     try {
       const orderRef = db.collection(baseDB).doc(req.params.id);
@@ -274,7 +290,7 @@ dev.get("/api/form/orders/get/:id", (req, res) => {
 });
 
 // get all orders
-dev.get("/api/form/orders/getAll", (req, res) => {
+dev.get("/api/orders/getAll", (req, res) => {
   (async () => {
     try {
       const ordersRef = db.collection(baseDB);
@@ -301,7 +317,7 @@ dev.get("/api/form/orders/getAll", (req, res) => {
 });
 
 // update order
-dev.put("/api/form/orders/update/:id", (req, res) => {
+dev.put("/api/orders/update/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {
@@ -327,6 +343,7 @@ dev.put("/api/form/orders/update/:id", (req, res) => {
         phone: req.body.phone,
         selectedItems: req.body.selectedItems,
         lastUpdated: timestamps.updated,
+        weeks: req.body.weeks,
       });
 
       return res.status(200).send({ status: "Success", msg: "Order Updated" });
@@ -338,7 +355,7 @@ dev.put("/api/form/orders/update/:id", (req, res) => {
 });
 
 // delete order
-dev.delete("/api/form/orders/delete/:id", (req, res) => {
+dev.delete("/api/orders/delete/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {

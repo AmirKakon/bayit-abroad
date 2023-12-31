@@ -12,7 +12,11 @@ import {
 } from "@mui/material";
 import Loading from "../../components/Loading";
 import StepsContainer from "../../components/StepsContainer";
-import { ItemSelection, ContactInformation, OrderSummary } from "../../components/Form";
+import {
+  ItemSelection,
+  ContactInformation,
+  OrderSummary,
+} from "../../components/Form";
 import dayjs from "dayjs";
 import isBefore from "dayjs/plugin/isSameOrBefore";
 import { useNavigate } from "react-router-dom";
@@ -57,7 +61,7 @@ const FormPage = () => {
       label: "Provide Information and Choose Delivery Dates",
       limitations: isFormComplete(),
     },
-    { label: "Review and Pay", limitations: true },
+    { label: "Review and Place Order", limitations: true },
   ];
 
   useEffect(() => {
@@ -80,19 +84,20 @@ const FormPage = () => {
 
   const handleSubmit = () => {
     const currentURL = window.location.href;
+    const baseUrl = currentURL.split('/form')[0];
 
     const submissionData = {
       ...formData,
       selectedItems,
       totalPrice,
-      currentURL,
+      baseUrl,
     };
 
     setLoadingPopup(true);
 
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
-    fetch(`${apiBaseUrl}/api/form/orders/create`, {
+    fetch(`${apiBaseUrl}/api/orders/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -115,11 +120,10 @@ const FormPage = () => {
 
   const handleOkButtonClick = () => {
     setResponseStatus(null);
-    if(responseStatus === "Success") {
-
-    const url = `/form/orders/${orderId}/thankyou`;
-    navigate(url);
-  }
+    if (responseStatus === "Success") {
+      const url = `/orders/${orderId}/thankyou?first=true`;
+      navigate(url);
+    }
   };
 
   const renderStep = (step) => {
@@ -132,21 +136,23 @@ const FormPage = () => {
                 Thanks for choosing to order from us!
               </Typography>
               <Typography variant="body1" align="left" paragraph>
-                Please fill out the equipment you'd like to rent, the dates of
-                the rental and the location.
+                Please fill out the form including the items you&apos;d like to
+                rent, the dates of the rental and the location.
                 <br /> Feel free to reach out to us for any questions or
                 requests.
                 <br />
-                <br />* Please note that delivery is only in Jerusalem. Drop off
+                <br />
+                &#42; Please note that delivery is only in Jerusalem. Drop off
                 is dependent on our availability and your preference.
-                <br />* Payment is at time of delivery via cash, bit or bank
-                transfer.
+                <br />
+                &#42; Payment will be available after confirmation of the order
+                by our team. Payment options include cash, bit, or PayPal.
                 <br />
                 <br />
                 Looking for an item that isn't listed? Add more items in the
-                "Additional Notes" section on the next page and our team will
-                review the request and get back to you if we can supply it for
-                you.
+                &quot;Additional Notes&quot; section on the next page and our
+                team will review the request and get back to you if we can
+                supply it for you.
               </Typography>
             </Paper>
 
@@ -165,10 +171,10 @@ const FormPage = () => {
         );
       case 2:
         return (
-          <OrderSummary order={{...formData, selectedItems, totalPrice}}/> 
+          <OrderSummary order={{ ...formData, selectedItems, totalPrice }} />
         );
       default:
-        return <Typography>DEFAULT</Typography>;
+        return <Typography>ERROR</Typography>;
     }
   };
 
@@ -200,7 +206,7 @@ const FormPage = () => {
           sx={{ alignItems: "center", justifyContent: "center" }}
         >
           <DialogTitle sx={{ backgroundColor: "primary.main", color: "white" }}>
-            Loading...
+            Placing Order...
           </DialogTitle>
           <DialogContent
             sx={{
@@ -227,9 +233,16 @@ const FormPage = () => {
             </DialogTitle>
             <DialogContent sx={{ padding: 2 }}>
               {responseStatus === "Success" ? (
-                <p>Order processed successfully!</p>
+                <p>Order processed successfully!
+                  <br/>We have recieved your order and will reach out once it is confirmed by our team.
+                </p>
               ) : (
-                <p>Failed to process the order. Please try submitting the order again or refresh the page.</p>
+                <p>
+                  Failed to process the order. Please try submitting the order
+                  again or refresh the page.
+                  <br />
+                  If the issue persists, please contact us!
+                </p>
               )}
               <Button
                 onClick={handleOkButtonClick}

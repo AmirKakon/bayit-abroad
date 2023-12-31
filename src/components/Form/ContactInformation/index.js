@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { TextField, Typography, Grid, Paper } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
@@ -8,8 +8,8 @@ dayjs.extend(isSameOrBefore);
 
 const ContactInformation = ({ formData, setFormData }) => {
   const [dateError, setDateError] = useState(null);
-  const [deliveryDate, setDeliveryDate] = useState(null);
-  const [returnDate, setReturnDate] = useState(null);
+  const [deliveryDate, setDeliveryDate] = useState(formData.dateRange.delivery);
+  const [returnDate, setReturnDate] = useState(formData.dateRange.return);
 
   const validatePhoneNumber = (number) => {
     // This is a basic regex for validating phone numbers, consider using a library like libphonenumber-js for a comprehensive solution
@@ -22,6 +22,16 @@ const ContactInformation = ({ formData, setFormData }) => {
     const formatedD = d.format("YYYY-MM-DD").concat("T00:00:00+00:00");
     return formatedD;
   };
+
+  useEffect(() => {
+    // Set default values for DatePicker once formData.dateRange is available
+    if (formData.dateRange.delivery !== null) {
+      setDeliveryDate(dayjs(formData.dateRange.delivery));
+    }
+    if (formData.dateRange.return !== null) {
+      setReturnDate(dayjs(formData.dateRange.return));
+    }
+  }, [formData.dateRange]);
 
   const errorMessage = useMemo(() => {
     switch (dateError) {
@@ -78,13 +88,17 @@ const ContactInformation = ({ formData, setFormData }) => {
     }
 
     let range = {
-      delivery: updatedDeliveryDate ? setDateString(updatedDeliveryDate.$d) : null,
-      return: updatedReturnDate ? setDateString(updatedReturnDate.$d) : null,
+      delivery: updatedDeliveryDate ? setDateString(updatedDeliveryDate.$d) : deliveryDate,
+      return: updatedReturnDate ? setDateString(updatedReturnDate.$d) : returnDate,
     };
+
+    const diffDays = dayjs(updatedReturnDate).diff(dayjs(updatedDeliveryDate), "days");
+    const diffWeeks = Math.ceil(diffDays/7);
 
     setFormData((prevData) => ({
       ...prevData,
       dateRange: range,
+      weeks:diffWeeks ?? 1,
     }));
   };
 

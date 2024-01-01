@@ -3,7 +3,7 @@ import { Box, Typography, Grid, Link } from "@mui/material";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import EmailIcon from "@mui/icons-material/Email";
 
-const Footer = () => {
+const Footer = ({isSmallScreen}) => {
   const [version, setVersion] = useState("Loading...");
 
   useEffect(() => {
@@ -20,17 +20,18 @@ const Footer = () => {
 
   return (
     <footer>
-      <Box sx={{ bgcolor: "#f8f8f8", padding: "20px 0" }}>
+      <Box sx={{ bgcolor: "#eeeeee", padding: "20px 0" }}>
         <Grid
           container
+          direction={isSmallScreen ? "column" : "row"}
           justifyContent="space-between"
           alignItems="center"
           spacing={2}
-          px={5}
+          px={2}
         >
           {/* Left side: Contact Information */}
           <Grid item>
-            <Box display="flex" alignItems="center" spacing={2}>
+            <Box display="flex" alignItems="center">
               <Box display="flex" alignItems="center" marginRight={2}>
                 <WhatsAppIcon color="action" style={{ marginRight: "5px" }} />
                 <Typography fontFamily="serif">
@@ -40,7 +41,7 @@ const Footer = () => {
                     style={{ textDecoration: "none" }}
                     target="_blank"
                   >
-                    +972&#45;54&#45;7321&#45;928
+                    +972&#45;58&#45;771&#45;4120
                   </Link>
                 </Typography>
               </Box>
@@ -61,12 +62,14 @@ const Footer = () => {
 
           {/* Right side: Copyright */}
           <Grid item>
-            <Typography color="textPrimary" fontFamily="serif">
+          <Box display="flex" alignItems="center">
+            <Typography color="textPrimary" fontFamily="serif" sx={{marginRight:2}}>
               &copy; 2023 All Rights Reserved, Bayit Abroad
             </Typography>
             <Typography color="textPrimary" fontFamily="serif">
               Version {version}
             </Typography>
+            </Box>
           </Grid>
         </Grid>
       </Box>

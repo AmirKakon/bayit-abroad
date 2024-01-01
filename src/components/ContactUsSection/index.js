@@ -1,22 +1,10 @@
 import React from "react";
 import RegistrationLink from "../RegistrationLink";
-import {
-  Box,
-  Typography,
-  Grid,
-  Divider,
-  Link,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
+import { Box, Typography, Grid, Divider, Link } from "@mui/material";
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import EmailIcon from "@mui/icons-material/Email";
 
-const ContactUsSection = () => {
-  const theme = useTheme();
-  // Check if the screen size is below the 'md' breakpoint (960px by default)
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
-
+const ContactUsSection = ({ isSmallScreen }) => {
   return (
     <Grid container alignItems="center" justifyContent="center">
       {/* Left side: Place an Order */}
@@ -40,7 +28,7 @@ const ContactUsSection = () => {
       )}
 
       {/* Right side: Contact Information */}
-      <Grid item xs={12} md={5} sx={{ padding: "10px", textAlign: "center" }}>
+      <Grid item xs={12} md={5} sx={{ padding: "10px", textAlign: "center"}}>
         <Typography variant="h5" gutterBottom color="black" fontFamily="serif">
           Contact Us
         </Typography>

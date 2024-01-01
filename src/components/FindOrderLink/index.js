@@ -2,13 +2,13 @@ import React from "react";
 import { Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
-const RegistrationLink = () => {
+const FindOrderLink = () => {
   return (
     <Link
-      to="/form"
+      to="/orders/search"
       style={{
         display: "inline-block",
-        backgroundColor: "#e6deca",
+        backgroundColor: "#47a1a7",
         padding: "7px 30px",
         border: "2px solid #000",
         textDecoration: "none",
@@ -21,12 +21,11 @@ const RegistrationLink = () => {
         fontFamily="serif"
         align="center"
         color="black"
-        fontWeight="bold"
       >
-        Explore Our Rental Items
+       Find Your Order
       </Typography>
     </Link>
   );
 };
 
-export default RegistrationLink;
+export default FindOrderLink;

@@ -29,7 +29,7 @@ const App = () => {
             <Route path="/about" element={<AboutPage isSmallScreen={isSmallScreen}/>} />
             <Route path="*" element={<Navigate to="/home" replace />} />
           </Routes>
-          <Footer />
+          <Footer isSmallScreen={isSmallScreen} />
         </Box>
       </Router>
     </ThemeProvider>

@@ -7,14 +7,18 @@ const FormItem = ({ item, handleAdd, handleRemove, quantity }) => {
     <ListItem key={item.id}>
       <ListItemText
         primary={item.name}
-        secondary={<Typography variant="body2" component="div">Price: &#36;{item.price.usd} / &#8362;{item.price.nis}</Typography>}
+        secondary={
+          <Typography variant="body2" component="div">
+            Price: &#36;{item.price.usd} / &#8362;{item.price.nis}
+          </Typography>
+        }
       />
-      <div>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <IconButton onClick={() => handleRemove(item.id)}>
           <RemoveCircle color="primary" />
         </IconButton>
         <TextField
-          sx={{ maxWidth: 50 }}
+          sx={{ width: 50 }}
           type="number"
           size="small"
           value={quantity ?? 0}

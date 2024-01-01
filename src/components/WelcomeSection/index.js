@@ -2,7 +2,6 @@ import React from "react";
 import RegistrationLink from "../RegistrationLink";
 import CircleIcon from "../../media/CircleIcon";
 import { Grid, Typography } from "@mui/material";
-import useMediaQuery from '@mui/material/useMediaQuery';
 
 const circleSize = "170";
 
@@ -25,14 +24,14 @@ const WelcomeSection = ({isSmallScreen}) => {
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundAttachment: "fixed",
-          minHeight: "95vh",
+          minHeight: "100vh",
           position: "relative",
         }}
       >
         <Grid
           container
           item
-          marginTop={isSmallScreen ? -35: -25}
+          marginTop={-25}
           paddingX={10}
           direction="column"
           alignItems="left"

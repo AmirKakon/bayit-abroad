@@ -15,7 +15,6 @@ const HomePage = ({isSmallScreen}) => {
         // backgroundImage: "linear-gradient(to bottom, #ffffff, #3d9ca0)",
         color: 'white',
         minHeight: "200",
-        padding: 0,
       }}
       flex={1}
     >

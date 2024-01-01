@@ -62,7 +62,7 @@ const Footer = ({isSmallScreen}) => {
 
           {/* Right side: Copyright */}
           <Grid item>
-          <Box display="flex" alignItems="center">
+          <Box display="flex" alignItems="center" >
             <Typography color="textPrimary" fontFamily="serif" sx={{marginRight:2}}>
               &copy; 2023 All Rights Reserved, Bayit Abroad
             </Typography>

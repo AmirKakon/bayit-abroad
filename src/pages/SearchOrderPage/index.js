@@ -1,9 +1,9 @@
 import React from "react";
-import { Box, Button, Paper, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 
-const SearchOrderPage = ({isSmallScreen}) => {
+const SearchOrderPage = ({ isSmallScreen }) => {
   const navigate = useNavigate();
 
   const handleSearchOrder = () => {
@@ -22,42 +22,51 @@ const SearchOrderPage = ({isSmallScreen}) => {
         padding: 2,
       }}
     >
-      <Paper
+      <Grid
+        container
+        alignItems="center"
+        justifyContent="center"
         sx={{
-          padding: 2,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
+          backgroundColor: "white",
         }}
       >
-        <div>
-          <Typography variant="h4" gutterBottom>Search for Order</Typography>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            width: "100%"
-          }}
+        <Grid item sx={{marginTop: 2}}>
+          <Typography variant="h4" gutterBottom>
+            Search for Order
+          </Typography>
+        </Grid>
+        <Grid
+          container
+          item
+          spacing={1}
+          direction="row"
+          alignItems="center"
+          justifyContent="center"
+          width="100%"
+          padding={2}
         >
-          <TextField
-            id="tracking-number"
-            label="Tracking Number"
-            variant="outlined"
-            fullWidth
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<SearchIcon />}
-            sx={{ marginLeft: 1, px: 3, py: 1 }}
-            onClick={handleSearchOrder}
-          >
-            Search
-          </Button>
-        </div>
-      </Paper>
+          <Grid item xs={isSmallScreen ? 12 : 9}>
+            <TextField
+              id="tracking-number"
+              label="Tracking Number"
+              variant="outlined"
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={isSmallScreen ? 12 : "auto"}>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<SearchIcon />}
+              sx={{ px: 3, py: 1 }}
+              onClick={handleSearchOrder}
+              fullWidth
+            >
+              Search
+            </Button>
+          </Grid>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

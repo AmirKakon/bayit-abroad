@@ -186,7 +186,7 @@ const FormPage = ({isSmallScreen}) => {
       sx={{
         backgroundColor: "#e2e2e2",
         minHeight: "200",
-        padding: 2,
+        padding: isSmallScreen ? 1 : 2,
       }}
     >
       <Container component="main" maxWidth="md">

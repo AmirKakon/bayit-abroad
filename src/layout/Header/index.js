@@ -68,7 +68,7 @@ const Header = ({ isSmallScreen }) => {
           </Link>
 
           <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
-            BayitAbroad
+            Bayit Abroad
           </Typography>
 
           {!isSmallScreen && (

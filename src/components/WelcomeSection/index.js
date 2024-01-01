@@ -17,7 +17,7 @@ const WelcomeSection = ({isSmallScreen}) => {
         direction="column"
         alignItems="center"
         justifyContent="center"
-        marginTop={2}
+        marginTop={-2}
         paddingBottom={5}
         style={{
           backgroundImage: `url(${backgroundImageUrl})`,

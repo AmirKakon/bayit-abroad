@@ -40,7 +40,7 @@ const Header = ({ isSmallScreen }) => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, marginBottom: 7}}>
       <AppBar position="fixed">
         <Toolbar>
           {isSmallScreen && (

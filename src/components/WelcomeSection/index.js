@@ -1,5 +1,6 @@
 import React from "react";
 import RegistrationLink from "../RegistrationLink";
+import FindOrderLink from "../FindOrderLink";
 import CircleIcon from "../../media/CircleIcon";
 import { Grid, Typography } from "@mui/material";
 
@@ -61,8 +62,9 @@ const WelcomeSection = ({isSmallScreen}) => {
 
         
 
-        <Grid item sx={{ position: "absolute", bottom: "150px" }}>
-          <RegistrationLink />
+        <Grid container item spacing={1} alignItems="center" justifyContent="center" sx={{ position: "absolute", bottom: "150px" }}>
+          <Grid item><RegistrationLink /></Grid>
+          <Grid item><FindOrderLink /></Grid>
         </Grid>
       </Grid>
       <Grid container item justifyContent="center">

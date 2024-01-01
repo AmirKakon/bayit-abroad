@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
 
 dayjs.extend(isBefore);
 
-const FormPage = () => {
+const FormPage = ({isSmallScreen}) => {
   const [items, setItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState({ usd: 0, nis: 0 });

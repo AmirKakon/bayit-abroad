@@ -1,5 +1,5 @@
 import React from "react";
-import { ListItem, ListItemText, TextField, IconButton } from "@mui/material";
+import { ListItem, ListItemText, TextField, IconButton, Typography } from "@mui/material";
 import { AddCircle, RemoveCircle } from "@mui/icons-material";
 
 const FormItem = ({ item, handleAdd, handleRemove, quantity }) => {
@@ -7,7 +7,7 @@ const FormItem = ({ item, handleAdd, handleRemove, quantity }) => {
     <ListItem key={item.id}>
       <ListItemText
         primary={item.name}
-        secondary={`Price: &#36;${item.price.usd} / &#8362;${item.price.nis}`}
+        secondary={<Typography variant="body2" component="div">Price: &#36;{item.price.usd} / &#8362;{item.price.nis}</Typography>}
       />
       <div>
         <IconButton onClick={() => handleRemove(item.id)}>

@@ -3,7 +3,7 @@ import { Grid, Typography } from "@mui/material";
 
 const HowItWorksSection = () => {
   return (
-    <Grid container direction="column" spacing={2} alignItems="center">
+    <Grid container direction="column" spacing={2} alignItems="center" paddingX={2}>
       <Grid item>
         <Typography
           variant="h4"

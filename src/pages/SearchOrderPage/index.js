@@ -3,7 +3,7 @@ import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 
-const SearchOrderPage = () => {
+const SearchOrderPage = ({isSmallScreen}) => {
   const navigate = useNavigate();
 
   const handleSearchOrder = () => {

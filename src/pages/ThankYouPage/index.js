@@ -5,7 +5,7 @@ import Loading from "../../components/Loading";
 import { OrderSummary } from "../../components/Form";
 import dayjs from "dayjs";
 
-const ThankYouPage = () => {
+const ThankYouPage = ({isSmallScreen}) => {
   const { id } = useParams();
   const location = useLocation();
   const isFirstVisit =

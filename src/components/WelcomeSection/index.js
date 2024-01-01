@@ -5,34 +5,69 @@ import { Grid, Typography } from "@mui/material";
 
 const circleSize = "170";
 
-const WelcomeSection = () => {
-  return (
-    <Grid container direction="column" alignItems="center" marginTop={2}>
-      <Grid item>
-        <Typography
-          variant="h2"
-          fontFamily="serif"
-          align="center"
-          color="black"
-        >
-          Welcome to Bayit Abroad
-        </Typography>
-        <Typography
-          variant="h5"
-          fontFamily="serif"
-          align="center"
-          color="black"
-        >
-          Feel at home, abroad!
-        </Typography>
-        <br />
-      </Grid>
-      <Grid item>
-        <RegistrationLink />
-      </Grid>
+const WelcomeSection = ({isSmallScreen}) => {
 
+  const backgroundImageUrl =
+    "https://firebasestorage.googleapis.com/v0/b/bayitabroad-jkak.appspot.com/o/website%2Fhomepage%2Fhomepage-backgroundImage.jpg?alt=media&token=547ef1d9-52a4-4f36-9434-83d62bbb7298";
+
+  return (
+    <>
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        marginTop={2}
+        paddingBottom={5}
+        style={{
+          backgroundImage: `url(${backgroundImageUrl})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+          minHeight: "100vh",
+          position: "relative",
+        }}
+      >
+        <Grid
+          container
+          item
+          marginTop={-25}
+          paddingX={10}
+          direction="column"
+          alignItems="left"
+        >
+          <Typography
+            variant={isSmallScreen ? 'h3' : 'h2'}
+            fontFamily="serif"
+            align="left"
+            color="black"
+            gutterBottom
+          >
+            Feel at Home
+            <br />
+            While Traveling Abroad
+          </Typography>
+          <Typography
+            variant={isSmallScreen ? 'h5' : 'h4'}
+            fontFamily="serif"
+            align="left"
+            color="black"
+          >
+            Everything You Need for a Shabbat-Friendly Trip
+            <br />
+            Without the <i>Shlepping!</i>
+          </Typography>
+        </Grid>
+
+        
+
+        <Grid item sx={{ position: "absolute", bottom: "150px" }}>
+          <RegistrationLink />
+        </Grid>
+      </Grid>
       <Grid container item justifyContent="center">
         <Grid item sx={{ padding: "20px" }}>
+          {/* <InformationCard icon={<AccessTimeIcon fontSize="large" />} text={"Hello to me"}/> */}
           <CircleIcon size={circleSize} text={"Travel Lightly".split(" ")} />
         </Grid>
         <Grid item sx={{ padding: "20px" }}>
@@ -45,7 +80,7 @@ const WelcomeSection = () => {
           />
         </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };
 

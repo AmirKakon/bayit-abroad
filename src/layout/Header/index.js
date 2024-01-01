@@ -1,64 +1,124 @@
-import React from "react";
-import { Box, Typography, AppBar, Toolbar, IconButton, Tooltip, } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Box,
+  Typography,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Tooltip,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+} from "@mui/material";
 import { Link } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-// import InfoIcon from "@mui/icons-material/Info";
 import FeedIcon from '@mui/icons-material/Feed';
+import MenuIcon from '@mui/icons-material/Menu';
 import logo from "../../media/bayit-abroad-logo.png";
 
-const HeaderIcon = ({title, link, icon}) => {
+const HeaderIcon = ({ title, link, icon }) => {
   return (
     <Tooltip title={title}>
-          <Link
-            to={link}
-            style={{ textDecoration: "none", color: "inherit" }}
-          >
-            <IconButton color="inherit">
-              {icon}
-            </IconButton>
-          </Link>
-          </Tooltip>
+      <Link to={link} style={{ textDecoration: "none", color: "inherit" }}>
+        <IconButton color="inherit">{icon}</IconButton>
+      </Link>
+    </Tooltip>
   );
 };
 
-const Header = () => {
+const Header = ({ isSmallScreen }) => {
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+
+  const handleDrawerOpen = () => {
+    setDrawerOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setDrawerOpen(false);
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
-          <IconButton
-            size="small"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-          >
-            <Link
-              to="/home"
-              style={{
-                textDecoration: "none",
-                display: "flex",
-                alignItems: "center",
-                color: "inherit",
-              }}
+          {isSmallScreen && (
+            <IconButton
+              size="small"
+              // edge="start"
+              color="inherit"
+              aria-label="menu"
+              onClick={handleDrawerOpen}
             >
-              <img src={logo} alt="Bayit Abroad Logo" height={60} />
-            </Link>
-          </IconButton>
+              <MenuIcon />
+            </IconButton>
+          )}
+
+          <Link
+            to="/home"
+            style={{
+              textDecoration: "none",
+              display: "flex",
+              alignItems: "center",
+              color: "inherit",
+            }}
+          >
+            <img src={logo} alt="Bayit Abroad Logo" height={60} />
+          </Link>
+
           <Typography variant="h5" component="div" sx={{ flexGrow: 1 }}>
             BayitAbroad
           </Typography>
-          
-          <HeaderIcon title={"Home"} link={"/home"} icon={<HomeIcon />}/>
 
-          <HeaderIcon title={"Place Order"} link={"/form"} icon={<ShoppingCartIcon />}/>
-
-          <HeaderIcon title={"Find Order"} link={"/orders/search"} icon={<FeedIcon />}/>
-
-          {/* <HeaderIcon title={"About Us"} link={"/about"} icon={<InfoIcon />}/> */}
-
+          {!isSmallScreen && (
+            <>
+              <HeaderIcon title={"Home"} link={"/home"} icon={<HomeIcon />} />
+              <HeaderIcon
+                title={"Place Order"}
+                link={"/form"}
+                icon={<ShoppingCartIcon />}
+              />
+              <HeaderIcon
+                title={"Find Order"}
+                link={"/orders/search"}
+                icon={<FeedIcon />}
+              />
+            </>
+          )}
         </Toolbar>
       </AppBar>
+
+      {isSmallScreen && (
+        <Drawer anchor="left" open={isDrawerOpen} onClose={handleDrawerClose}>
+          <List>
+            {[
+              { title: "Home", link: "/home", icon: <HomeIcon /> },
+              {
+                title: "Place Order",
+                link: "/form",
+                icon: <ShoppingCartIcon />,
+              },
+              {
+                title: "Find Order",
+                link: "/orders/search",
+                icon: <FeedIcon />,
+              },
+            ].map((item, index) => (
+              <Link
+                to={item.link}
+                key={index}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <ListItem button onClick={handleDrawerClose}>
+                  {item.icon && <IconButton color="inherit">{item.icon}</IconButton>}
+                  <ListItemText primary={item.title} />
+                </ListItem>
+              </Link>
+            ))}
+          </List>
+        </Drawer>
+      )}
     </Box>
   );
 };

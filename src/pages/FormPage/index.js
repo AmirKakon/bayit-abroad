@@ -190,7 +190,7 @@ const FormPage = ({isSmallScreen}) => {
       }}
     >
       <Container component="main" maxWidth="md">
-        <Typography variant="h4" align="center" gutterBottom>
+        <Typography variant={isSmallScreen ? "h5" : "h4"} align="center" gutterBottom>
           Bayit Abroad Order Form
         </Typography>
         <StepsContainer

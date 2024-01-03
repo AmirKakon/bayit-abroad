@@ -93,7 +93,6 @@ const ContactInformation = ({ formData, setFormData }) => {
     };
 
     const diffDays = dayjs(updatedReturnDate).diff(dayjs(updatedDeliveryDate), "days") + 1;
-    console.log(diffDays);
     const diffWeeks = Math.ceil(diffDays/7);
 
     setFormData((prevData) => ({

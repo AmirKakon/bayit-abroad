@@ -88,17 +88,25 @@ const ContactInformation = ({ formData, setFormData }) => {
     }
 
     let range = {
-      delivery: updatedDeliveryDate ? setDateString(updatedDeliveryDate.$d) : deliveryDate,
-      return: updatedReturnDate ? setDateString(updatedReturnDate.$d) : returnDate,
+      delivery: updatedDeliveryDate
+        ? setDateString(updatedDeliveryDate.$d)
+        : deliveryDate,
+      return: updatedReturnDate
+        ? setDateString(updatedReturnDate.$d)
+        : returnDate,
     };
 
-    const diffDays = dayjs(updatedReturnDate).diff(dayjs(updatedDeliveryDate), "days");
-    const diffWeeks = Math.ceil(diffDays/7);
+    let diffDays =
+      dayjs(setDateString(range.return)).diff(dayjs(setDateString(range.delivery)), "days") + 1;
+
+    const diffWeeks = Math.ceil(diffDays / 7);
+    console.log(dayjs(updatedReturnDate), dayjs(updatedDeliveryDate));
+    console.log(diffDays, diffWeeks);
 
     setFormData((prevData) => ({
       ...prevData,
       dateRange: range,
-      weeks:diffWeeks ?? 1,
+      weeks: diffWeeks,
     }));
   };
 
@@ -157,7 +165,7 @@ const ContactInformation = ({ formData, setFormData }) => {
         required
       />
 
-<Grid container spacing={2}>
+      <Grid container spacing={2}>
         <Grid item xs={6}>
           <DatePicker
             label="Delivery Date *"
@@ -165,8 +173,12 @@ const ContactInformation = ({ formData, setFormData }) => {
               handleDateChange(newDate, 0);
             }}
             disablePast
-            sx={{width: "100%"}}
-            defaultValue={formData.dateRange.delivery !==null ? dayjs(formData.dateRange.delivery) : undefined}
+            sx={{ width: "100%" }}
+            defaultValue={
+              formData.dateRange.delivery !== null
+                ? dayjs(formData.dateRange.delivery)
+                : undefined
+            }
           />
         </Grid>
         <Grid item xs={6}>
@@ -186,8 +198,12 @@ const ContactInformation = ({ formData, setFormData }) => {
                 ? dayjs(deliveryDate).add(1, "day")
                 : dayjs().add(1, "day")
             }
-            defaultValue={formData.dateRange.return !==null ? dayjs(formData.dateRange.return) : undefined}
-            sx={{width: "100%"}}
+            defaultValue={
+              formData.dateRange.return !== null
+                ? dayjs(formData.dateRange.return)
+                : undefined
+            }
+            sx={{ width: "100%" }}
           />
         </Grid>
       </Grid>

@@ -23,7 +23,7 @@ const WelcomeSection = ({isSmallScreen}) => {
         style={{
           backgroundImage: `url(${backgroundImageUrl})`,
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPositionY: 60,
           backgroundAttachment: "fixed",
           minHeight: "100vh",
           position: "relative",
@@ -38,7 +38,7 @@ const WelcomeSection = ({isSmallScreen}) => {
           alignItems="left"
         >
           <Typography
-            variant={isSmallScreen ? 'h3' : 'h2'}
+            variant={isSmallScreen ? 'h4' : 'h2'}
             fontFamily="serif"
             align="left"
             color="black"
@@ -49,7 +49,7 @@ const WelcomeSection = ({isSmallScreen}) => {
             While Traveling Abroad
           </Typography>
           <Typography
-            variant={isSmallScreen ? 'h5' : 'h4'}
+            variant={isSmallScreen ? 'h6' : 'h4'}
             fontFamily="serif"
             align="left"
             color="black"
@@ -62,11 +62,12 @@ const WelcomeSection = ({isSmallScreen}) => {
 
         
 
-        <Grid container item spacing={1} alignItems="center" justifyContent="center" sx={{ position: "absolute", bottom: "150px" }}>
+        <Grid container item spacing={1} alignItems="center" justifyContent="center" sx={{ position: "absolute", bottom: isSmallScreen ? "70px" : "150px" }}>
           <Grid item><RegistrationLink /></Grid>
           <Grid item><FindOrderLink /></Grid>
         </Grid>
       </Grid>
+
       <Grid container item justifyContent="center">
         <Grid item sx={{ padding: "20px" }}>
           {/* <InformationCard icon={<AccessTimeIcon fontSize="large" />} text={"Hello to me"}/> */}

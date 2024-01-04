@@ -59,6 +59,7 @@ dev.post("/api/orders/create", async (req, res) => {
       lastUpdated: timestamps.updated,
       created: timestamps.updated,
       weeks: req.body.weeks,
+      status: req.body.status,
     };
 
     // Get a reference to a new document with an auto-generated ID
@@ -344,6 +345,7 @@ dev.put("/api/orders/update/:id", (req, res) => {
         selectedItems: req.body.selectedItems,
         lastUpdated: timestamps.updated,
         weeks: req.body.weeks,
+        status: req.body.status,
       });
 
       return res.status(200).send({ status: "Success", msg: "Order Updated" });

@@ -20,10 +20,11 @@ import {
 import dayjs from "dayjs";
 import isBefore from "dayjs/plugin/isSameOrBefore";
 import { useNavigate } from "react-router-dom";
+import { orderStatus } from "../../config";
 
 dayjs.extend(isBefore);
 
-const FormPage = ({isSmallScreen}) => {
+const FormPage = ({ isSmallScreen }) => {
   const [items, setItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState({ usd: 0, nis: 0 });
@@ -84,13 +85,14 @@ const FormPage = ({isSmallScreen}) => {
 
   const handleSubmit = () => {
     const currentURL = window.location.href;
-    const baseUrl = currentURL.split('/form')[0];
+    const baseUrl = currentURL.split("/form")[0];
 
     const submissionData = {
       ...formData,
       selectedItems,
       totalPrice,
       baseUrl,
+      status: orderStatus[0],
     };
 
     setLoadingPopup(true);
@@ -190,7 +192,11 @@ const FormPage = ({isSmallScreen}) => {
       }}
     >
       <Container component="main" maxWidth="md">
-        <Typography variant="h4" align="center" gutterBottom>
+        <Typography
+          variant={isSmallScreen ? "h5" : "h4"}
+          align="center"
+          gutterBottom
+        >
           Bayit Abroad Order Form
         </Typography>
         <StepsContainer
@@ -233,8 +239,11 @@ const FormPage = ({isSmallScreen}) => {
             </DialogTitle>
             <DialogContent sx={{ padding: 2 }}>
               {responseStatus === "Success" ? (
-                <p>Order processed successfully!
-                  <br/>We have recieved your order and will reach out once it is confirmed by our team.
+                <p>
+                  Order processed successfully!
+                  <br />
+                  We have recieved your order and will reach out once it is
+                  confirmed by our team.
                 </p>
               ) : (
                 <p>

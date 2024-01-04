@@ -14,6 +14,7 @@ import dayjs from "dayjs";
 const InformationSection = ({ order, thankyou }) => {
   const rows = [
     thankyou ? ["Tracking Number:", order.id] : null,
+    ["Status:", order.status],
     ["Name:", order.fullName],
     ["Email:", order.email],
     ["Phone in Israel:", order.phone],

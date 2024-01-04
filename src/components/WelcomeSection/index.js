@@ -23,7 +23,7 @@ const WelcomeSection = ({isSmallScreen}) => {
         style={{
           backgroundImage: `url(${backgroundImageUrl})`,
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPositionY: 60,
           backgroundAttachment: "fixed",
           minHeight: "100vh",
           position: "relative",
@@ -67,6 +67,7 @@ const WelcomeSection = ({isSmallScreen}) => {
           <Grid item><FindOrderLink /></Grid>
         </Grid>
       </Grid>
+
       <Grid container item justifyContent="center">
         <Grid item sx={{ padding: "20px" }}>
           {/* <InformationCard icon={<AccessTimeIcon fontSize="large" />} text={"Hello to me"}/> */}

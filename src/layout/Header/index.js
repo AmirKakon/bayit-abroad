@@ -14,7 +14,7 @@ import {
 import { Link } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import FeedIcon from '@mui/icons-material/Feed';
+import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from '@mui/icons-material/Menu';
 import logo from "../../media/bayit-abroad-logo.png";
 
@@ -80,9 +80,9 @@ const Header = ({ isSmallScreen }) => {
                 icon={<ShoppingCartIcon />}
               />
               <HeaderIcon
-                title={"Find Order"}
+                title={"Search for Order"}
                 link={"/orders/search"}
-                icon={<FeedIcon />}
+                icon={<SearchIcon />}
               />
             </>
           )}
@@ -102,7 +102,7 @@ const Header = ({ isSmallScreen }) => {
               {
                 title: "Find Order",
                 link: "/orders/search",
-                icon: <FeedIcon />,
+                icon: <SearchIcon />,
               },
             ].map((item, index) => (
               <Link

@@ -11,9 +11,9 @@ import {
 } from "@mui/material";
 import dayjs from "dayjs";
 
-const InformationSection = ({ order, thankyou }) => {
+const InformationSection = ({ order }) => {
   const rows = [
-    thankyou ? ["Tracking Number:", order.id] : null,
+    order.id ? ["Tracking Number:", order.id] : null,
     order.status ? ["Status:", order.status] : null,
     ["Name:", order.fullName],
     ["Email:", order.email],
@@ -48,7 +48,7 @@ const InformationSection = ({ order, thankyou }) => {
         {rows.map((row) => (
           <TableRow key={row[0]}>
             <TableCell width="20%">{row[0]}</TableCell>
-            <TableCell>{row[1]}</TableCell>
+            <TableCell sx={{fontWeight: row[0] === "Status:" ? "bold" : "normal"}}>{row[1]}</TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -199,7 +199,7 @@ const OrderSummary = ({ order, thankyou }) => {
             </TableRow>
           </TableHead>
 
-          <InformationSection order={order} thankyou={thankyou} />
+          <InformationSection order={order} />
         </Table>
       </TableContainer>
 

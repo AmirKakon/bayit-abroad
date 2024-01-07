@@ -22,7 +22,7 @@ const SearchOrderPage = ({ isSmallScreen }) => {
         }}
       >
         <Grid item sx={{marginTop: 2}}>
-          <Typography variant="h4" gutterBottom>
+          <Typography textAlign="center" variant={isSmallScreen ? "h5" : "h4"} gutterBottom>
             Search for Existing Order
           </Typography>
         </Grid>

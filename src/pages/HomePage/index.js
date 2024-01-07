@@ -29,7 +29,7 @@ const HomePage = ({isSmallScreen}) => {
         <WelcomeSection isSmallScreen={isSmallScreen}/>
         <Divider
           variant="middle"
-          sx={{ marginBottom: 3, width: "100%" }}
+          sx={{ marginBottom: 1, width: "100%", border: "1px solid #fff" }}
         />
         <HowItWorksSection />
         <Divider

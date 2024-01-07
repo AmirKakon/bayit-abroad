@@ -44,7 +44,7 @@ const WelcomeSection = ({isSmallScreen}) => {
             color="black"
             gutterBottom
           >
-            Feel at Home
+            Feel At Home
             <br />
             While Traveling Abroad
           </Typography>
@@ -54,9 +54,9 @@ const WelcomeSection = ({isSmallScreen}) => {
             align="left"
             color="black"
           >
-            Everything You Need for a Shabbat-Friendly Trip
+            Everything You Need For A Shabbat-Friendly Trip
             <br />
-            Without the <i>Shlepping!</i>
+            Without The <i>Shlepping!</i>
           </Typography>
         </Grid>
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  Link,
   Button,
   Container,
   Box,
@@ -141,7 +142,21 @@ const FormPage = ({ isSmallScreen }) => {
                 Please fill out the form including the items you&apos;d like to
                 rent, the dates of the rental and the location.
                 <br /> Feel free to reach out to us for any questions or
-                requests.
+                requests at <Link
+                    href="mailto:bayitabroad@gmail.com"
+                    color="#0563c4"
+                    style={{ textDecoration: "underline" }}
+                  >
+                    bayitabroad&#64;gmail.com
+                  </Link>
+                  &nbsp;or via WhatsApp at <Link
+                    href="https://wa.me/972587714120"
+                    color="#0563c4"
+                    style={{ textDecoration: "underline" }}
+                    target="_blank"
+                  >
+                    +972&#45;58&#45;771&#45;4120
+                  </Link>.
                 <br />
                 <br />
                 &#42; Please note that delivery is only in Jerusalem. Drop off

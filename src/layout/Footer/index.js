@@ -36,7 +36,7 @@ const Footer = ({isSmallScreen}) => {
                 <WhatsAppIcon color="action" style={{ marginRight: "5px" }} />
                 <Typography fontFamily="serif">
                   <Link
-                    href="https://wa.me/972547321928"
+                    href="https://wa.me/972587714120"
                     color="textPrimary"
                     style={{ textDecoration: "none" }}
                     target="_blank"

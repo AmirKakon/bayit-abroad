@@ -14,14 +14,18 @@ const getAllItemsFromSource = async (sourceCollection) => {
 
 // Function to create an item in the destination collection
 const createItemInDestination = async (destinationCollection, item) => {
+  const id = item.id;
+
   try {
+    delete item.id;
+
     // Use set with specified document ID
-    await db.collection(destinationCollection).doc(item.id).set(item);
-    console.log(`Item created successfully with ID: ${item.id}`);
+    await db.collection(destinationCollection).doc(id).set(item);
+    console.log(`Item created successfully with ID: ${id}`);
     return null; // Return null for success
   } catch (error) {
     console.error(`Failed to create item. Error: ${error}`);
-    return item.id || "Unknown"; // Return the item ID for failure
+    return id || "Unknown"; // Return the item ID for failure
   }
 };
 

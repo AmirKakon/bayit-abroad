@@ -85,8 +85,23 @@ dev.get("/api/form/form-items/getAll", async (req, res) => {
       }
     });
 
+    // Group items by category
+    const groupedItems = items.reduce((acc, item) => {
+      const category = item.category;
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(item);
+      return acc;
+    }, {});
+
+    // Sort items within each category by name
+    Object.keys(groupedItems).forEach((category) => {
+      groupedItems[category].sort((a, b) => a.name.localeCompare(b.name));
+    });
+
     // Send the mutated items as a response
-    return res.status(200).send({ status: "Success", data: items });
+    return res.status(200).send({ status: "Success", data: groupedItems });
   } catch (error) {
     console.error("Function error:", error);
     return res.status(500).send({ status: "Failed", msg: error.message });

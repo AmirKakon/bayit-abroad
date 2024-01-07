@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Paper,
   Typography,
@@ -19,35 +19,16 @@ const ItemSelection = ({
 }) => {
   const [quantities, setQuantities] = useState(() => {
     const initialState = {};
-    items.forEach((item) => {
-      initialState[item.id] =
-        selectedItems.find((selectedItem) => selectedItem.id === item.id)
-          ?.quantity || 0;
+    Object.values(items).forEach((categoryItems) => {
+      categoryItems.forEach((item) => {
+        initialState[item.id] =
+          selectedItems.find((selectedItem) => selectedItem.id === item.id)
+            ?.quantity || 0;
+      });
     });
     return initialState;
   });
   const [openCategories, setOpenCategories] = useState({});
-
-  // Step 1: Sort the items by category
-  const sortedItems = useMemo(
-    () => items.sort((a, b) => a.category.localeCompare(b.category)),
-    [items]
-  );
-
-  // Step 2: Group items by category
-  const groupedItems = useMemo(() => {
-    return sortedItems.reduce((groups, item) => {
-      const category = item.category;
-
-      if (!groups[category]) {
-        groups[category] = [];
-      }
-
-      groups[category].push(item);
-
-      return groups;
-    }, {});
-  }, [sortedItems]);
 
   const calculateTotal = useCallback((selectedItems) => {
     let total = { usd: 0, nis: 0 };
@@ -62,18 +43,24 @@ const ItemSelection = ({
   }, []);
 
   useEffect(() => {
-    const selectedItems = items.filter((item) => quantities[item.id] > 0);
-    const itemsList = selectedItems.map((item) => {
-      return {
-        ...item,
-        quantity: quantities[item.id] ?? 1,
-      };
-    });
+    const selectedItems = Object.entries(items).reduce(
+      (acc, [category, categoryItems]) => {
+        const selectedCategoryItems = categoryItems
+          .filter((item) => quantities[item.id] > 0)
+          .map((item) => ({
+            ...item,
+            quantity: quantities[item.id] ?? 1,
+          }));
 
-    setSelectedItems(itemsList);
+        return acc.concat(selectedCategoryItems);
+      },
+      []
+    );
+
+    setSelectedItems(selectedItems);
 
     // Calculate total whenever selectedItems changes
-    const newTotal = calculateTotal(itemsList);
+    const newTotal = calculateTotal(selectedItems);
     setTotalPrice(newTotal);
   }, [quantities, items, setSelectedItems, setTotalPrice, calculateTotal]);
 
@@ -103,10 +90,13 @@ const ItemSelection = ({
       <Typography variant="h6" component="legend">
         Select the Items to Order:
       </Typography>
-      <Typography variant="body1" fontStyle="italic">&#42;Prices are based on a one-week rental period.</Typography>
+      <Typography variant="body1" fontStyle="italic">
+        &#42;Prices are based on a one-week rental period. Orders of less than a
+        week will be charged the same as a full week.
+      </Typography>
 
       <List>
-        {Object.entries(groupedItems).map(([category, itemsInCategory]) => (
+        {Object.entries(items).map(([category, categoryItems]) => (
           <React.Fragment key={category}>
             <ListItemButton
               onClick={() => handleOpenCategory(category)}
@@ -132,16 +122,16 @@ const ItemSelection = ({
               unmountOnExit
             >
               <List>
-                {itemsInCategory.map((item) => (
+                {categoryItems.map((item) => (
                   <React.Fragment key={item.id}>
-                  <FormItem
-                    item={item}
-                    handleAdd={handleAdd}
-                    handleRemove={handleRemove}
-                    quantity={quantities[item.id]}
-                  />
-                  <Divider key={`divider-${item.id}`} />
-                </React.Fragment>
+                    <FormItem
+                      item={item}
+                      handleAdd={handleAdd}
+                      handleRemove={handleRemove}
+                      quantity={quantities[item.id]}
+                    />
+                    <Divider key={`divider-${item.id}`} />
+                  </React.Fragment>
                 ))}
               </List>
             </Collapse>
@@ -149,7 +139,7 @@ const ItemSelection = ({
         ))}
       </List>
       <Typography variant="body1" align="left" paragraph padding={1}>
-        <b>Subtotal per Week:</b> ${totalPrice.usd} / &#8362;{totalPrice.nis}
+        <b>Subtotal Per Week:</b> ${totalPrice.usd} / &#8362;{totalPrice.nis}
       </Typography>
     </Paper>
   );

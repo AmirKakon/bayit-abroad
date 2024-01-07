@@ -12,7 +12,7 @@ const HomePage = ({isSmallScreen}) => {
   return (
     <Box
       sx={{
-        // backgroundImage: "linear-gradient(to bottom, #ffffff, #3d9ca0)",
+        backgroundImage: "linear-gradient(to bottom, #ffffff, #3d9ca0)",
         color: 'white',
         minHeight: "200",
       }}
@@ -29,7 +29,7 @@ const HomePage = ({isSmallScreen}) => {
         <WelcomeSection isSmallScreen={isSmallScreen}/>
         <Divider
           variant="middle"
-          sx={{ marginBottom: 1, width: "100%", border: "1px solid #fff" }}
+          sx={{ marginBottom: 1, width: "100%", border: "0px solid #000" }}
         />
         <HowItWorksSection />
         <Divider

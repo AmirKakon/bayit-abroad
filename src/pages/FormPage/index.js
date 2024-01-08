@@ -71,9 +71,7 @@ const FormPage = ({ isSmallScreen }) => {
     window.scrollTo({ top: 0, behavior: "auto" });
 
     const fetchData = async () => {
-      try {
-        window.scrollTo({ top: 0, behavior: "auto" });
-        
+      try {        
         const itemData = await fetchFormItems();
         setItems(itemData);
       } catch (error) {

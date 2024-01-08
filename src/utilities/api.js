@@ -24,3 +24,13 @@ export const createOrder = async (submissionData) => {
 
   return await response.json();
 };
+
+export const getCities = async () => {
+  const response = await fetch(`${apiBaseUrl}/api/cities/getAll`);
+
+  if (!response.ok) {
+    throw new Error(`Error: ${response.status}`);
+  }
+  const res = await response.json();
+  return res;
+};

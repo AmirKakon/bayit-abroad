@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Typography, Grid } from "@mui/material";
 import SearchOrderBox from "../../components/SearchOrderBox";
 
 const SearchOrderPage = ({ isSmallScreen }) => {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, []);
 
   return (
     <Box
@@ -21,12 +24,16 @@ const SearchOrderPage = ({ isSmallScreen }) => {
           backgroundColor: "white",
         }}
       >
-        <Grid item sx={{marginTop: 2}}>
-          <Typography textAlign="center" variant={isSmallScreen ? "h5" : "h4"} gutterBottom>
+        <Grid item sx={{ marginTop: 2 }}>
+          <Typography
+            textAlign="center"
+            variant={isSmallScreen ? "h5" : "h4"}
+            gutterBottom
+          >
             Search for Existing Order
           </Typography>
         </Grid>
-        <SearchOrderBox isSmallScreen={isSmallScreen}/>
+        <SearchOrderBox isSmallScreen={isSmallScreen} />
       </Grid>
     </Box>
   );

@@ -3,9 +3,8 @@ import { useParams, Link, useLocation } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
 import Loading from "../../components/Loading";
 import { OrderSummary } from "../../components/Form";
-import dayjs from "dayjs";
 
-const ThankYouPage = ({isSmallScreen}) => {
+const ThankYouPage = ({ isSmallScreen }) => {
   const { id } = useParams();
   const location = useLocation();
   const isFirstVisit =
@@ -20,8 +19,10 @@ const ThankYouPage = ({isSmallScreen}) => {
 
     const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
-    fetch(`${apiBaseUrl}/api/orders/get/${id}`)
-      .then((response) => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${apiBaseUrl}/api/orders/get/${id}`);
+
         if (!response.ok) {
           if (response.status === 404) {
             // Order not found
@@ -30,31 +31,19 @@ const ThankYouPage = ({isSmallScreen}) => {
             throw new Error(`Error: ${response.status}`);
           }
         }
-        return response.json();
-      })
-      .then((res) => {
-        const data = {
-          ...res.data,
-          dateRange: {
-            delivery: dayjs
-              .unix(res.data.deliveryDate._seconds)
-              .format("ddd MMM D YYYY"),
-            return: dayjs
-              .unix(res.data.returnDate._seconds)
-              .format("ddd MMM D YYYY"),
-          },
-        };
 
-        delete data.deliveryDate;
-        delete data.returnDate;
-        setOrder(data);
-      })
-      .catch((error) => {
+        const res = await response.json();
+
+        // Assuming the backend now returns formatted dateRange
+        setOrder(res.data);
+      } catch (error) {
         console.error("Error fetching data:", error);
-      })
-      .finally(() => {
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchData();
   }, [id]);
 
   return loading ? (
@@ -91,10 +80,12 @@ const ThankYouPage = ({isSmallScreen}) => {
         padding: 2,
       }}
     >
-      {isFirstVisit ? (<Typography variant="h4" align="center" gutterBottom>
-        Thank you for your order!
-      </Typography>) : null}
-      <OrderSummary order={{ ...order, id }} thankyou={isFirstVisit} />
+      {isFirstVisit ? (
+        <Typography variant="h4" align="center" gutterBottom>
+          Thank you for your order!
+        </Typography>
+      ) : null}
+      <OrderSummary order={order } thankyou={isFirstVisit} />
       <Button
         variant="contained"
         color="primary"

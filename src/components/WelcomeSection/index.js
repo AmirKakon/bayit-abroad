@@ -2,14 +2,21 @@ import React from "react";
 import RegistrationLink from "../RegistrationLink";
 import FindOrderLink from "../FindOrderLink";
 import CircleIcon from "../../media/CircleIcon";
+import { backgroundImageUrl } from "../../utilities/config";
 import { Grid, Typography } from "@mui/material";
 
 const circleSize = "170";
 
-const WelcomeSection = ({isSmallScreen}) => {
-
-  const backgroundImageUrl =
-    "https://firebasestorage.googleapis.com/v0/b/bayitabroad-jkak.appspot.com/o/website%2Fhomepage%2Fhomepage-backgroundImage.jpg?alt=media&token=547ef1d9-52a4-4f36-9434-83d62bbb7298";
+const WelcomeSection = ({ isSmallScreen }) => {
+  const circles = [
+    { title: "Travel Lightly" },
+    { title: "Travel Flexibly" },
+    { title: "Trael Religiously" },
+  ].map((circle, index) => (
+    <Grid item key={index} sx={{ padding: "20px" }}>
+      <CircleIcon size={circleSize} text={circle.title.split(" ")} />
+    </Grid>
+  ));
 
   return (
     <>
@@ -38,7 +45,7 @@ const WelcomeSection = ({isSmallScreen}) => {
           alignItems="left"
         >
           <Typography
-            variant={isSmallScreen ? 'h4' : 'h2'}
+            variant={isSmallScreen ? "h4" : "h2"}
             fontFamily="serif"
             align="left"
             color="black"
@@ -49,7 +56,7 @@ const WelcomeSection = ({isSmallScreen}) => {
             While Traveling Abroad
           </Typography>
           <Typography
-            variant={isSmallScreen ? 'h6' : 'h4'}
+            variant={isSmallScreen ? "h6" : "h4"}
             fontFamily="serif"
             align="left"
             color="black"
@@ -60,28 +67,28 @@ const WelcomeSection = ({isSmallScreen}) => {
           </Typography>
         </Grid>
 
-        
-
-        <Grid container item spacing={1} alignItems="center" justifyContent="center" sx={{ position: "absolute", bottom: isSmallScreen ? "70px" : "150px" }}>
-          <Grid item><RegistrationLink /></Grid>
-          <Grid item><FindOrderLink /></Grid>
+        <Grid
+          container
+          item
+          spacing={1}
+          alignItems="center"
+          justifyContent="center"
+          sx={{
+            position: "absolute",
+            bottom: isSmallScreen ? "70px" : "150px",
+          }}
+        >
+          <Grid item>
+            <RegistrationLink />
+          </Grid>
+          <Grid item>
+            <FindOrderLink />
+          </Grid>
         </Grid>
       </Grid>
 
       <Grid container item justifyContent="center">
-        <Grid item sx={{ padding: "20px" }}>
-          {/* <InformationCard icon={<AccessTimeIcon fontSize="large" />} text={"Hello to me"}/> */}
-          <CircleIcon size={circleSize} text={"Travel Lightly".split(" ")} />
-        </Grid>
-        <Grid item sx={{ padding: "20px" }}>
-          <CircleIcon size={circleSize} text={"Travel Flexibly".split(" ")} />
-        </Grid>
-        <Grid item sx={{ padding: "20px" }}>
-          <CircleIcon
-            size={circleSize}
-            text={"Travel Religiously".split(" ")}
-          />
-        </Grid>
+        {circles}
       </Grid>
     </>
   );

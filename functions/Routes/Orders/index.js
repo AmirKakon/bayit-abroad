@@ -1,9 +1,9 @@
 const dayjs = require("dayjs");
-const { dev, logger, db, admin, functions } = require("../../setup");
+const { app, logger, db, admin, functions } = require("../../setup");
 const nodemailer = require("nodemailer");
 const getOrderEmailTemplate = require("./orderEmailTemplate");
 
-const baseDB = "orders_dev";
+const baseDB = "orders";
 
 const gmailEmail = "bayitabroad@gmail.com";
 const gmailPassword = functions.config().gmail.password;
@@ -53,7 +53,7 @@ const setOrder = (doc) => {
 };
 
 // create an order
-dev.post("/api/orders/create", async (req, res) => {
+app.post("/api/orders/create", async (req, res) => {
   try {
     let url = "";
     const timestamps = getTimestamps(req.body.dateRange);
@@ -128,7 +128,7 @@ dev.post("/api/orders/create", async (req, res) => {
 });
 
 // get a single order using specific id
-dev.get("/api/orders/get/:id", async (req, res) => {
+app.get("/api/orders/get/:id", async (req, res) => {
   try {
     const orderRef = db.collection(baseDB).doc(req.params.id);
     const doc = await orderRef.get();
@@ -151,7 +151,7 @@ dev.get("/api/orders/get/:id", async (req, res) => {
 });
 
 // get all orders
-dev.get("/api/orders/getAll", async (req, res) => {
+app.get("/api/orders/getAll", async (req, res) => {
   try {
     const ordersRef = db.collection(baseDB);
     const snapshot = await ordersRef.get();
@@ -174,7 +174,7 @@ dev.get("/api/orders/getAll", async (req, res) => {
 });
 
 // update order
-dev.put("/api/orders/update/:id", (req, res) => {
+app.put("/api/orders/update/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {
@@ -213,7 +213,7 @@ dev.put("/api/orders/update/:id", (req, res) => {
 });
 
 // delete order
-dev.delete("/api/orders/delete/:id", (req, res) => {
+app.delete("/api/orders/delete/:id", (req, res) => {
   // async waits for a response
   (async () => {
     try {
@@ -228,4 +228,4 @@ dev.delete("/api/orders/delete/:id", (req, res) => {
   })();
 });
 
-module.exports = dev;
+module.exports = app;

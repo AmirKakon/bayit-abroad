@@ -21,7 +21,6 @@ const RegistrationLink = () => {
         fontFamily="serif"
         align="center"
         color="black"
-        fontWeight="bold"
       >
         Explore Our Rental Items
       </Typography>

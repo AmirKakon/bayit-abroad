@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  Link,
   Button,
   Container,
   Box,
@@ -20,7 +21,8 @@ import {
 import dayjs from "dayjs";
 import isBefore from "dayjs/plugin/isSameOrBefore";
 import { useNavigate } from "react-router-dom";
-import { orderStatus } from "../../config";
+import { orderStatus } from "../../utilities/config";
+import { fetchFormItems, createOrder } from "../../utilities/api";
 
 dayjs.extend(isBefore);
 
@@ -68,56 +70,46 @@ const FormPage = ({ isSmallScreen }) => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
 
-    const apiBasrUrl = process.env.REACT_APP_API_BASE_URL;
-
-    fetch(`${apiBasrUrl}/api/form/form-items/getAll`)
-      .then((response) => response.json())
-      .then((res) => {
-        setItems(res.data);
-      })
-      .catch((error) => {
+    const fetchData = async () => {
+      try {
+        window.scrollTo({ top: 0, behavior: "auto" });
+        
+        const itemData = await fetchFormItems();
+        setItems(itemData);
+      } catch (error) {
         console.error("Error fetching data:", error);
-      })
-      .finally(() => {
+      } finally {
         setLoading(false);
-      });
-  }, []);
-
-  const handleSubmit = () => {
-    const currentURL = window.location.href;
-    const baseUrl = currentURL.split("/form")[0];
-
-    const submissionData = {
-      ...formData,
-      selectedItems,
-      totalPrice,
-      baseUrl,
-      status: orderStatus[0],
+      }
     };
 
-    setLoadingPopup(true);
+    fetchData();
+  }, []);
 
-    const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+  const handleSubmit = async () => {
+    try {
+      const currentURL = window.location.href;
+      const baseUrl = currentURL.split("/form")[0];
 
-    fetch(`${apiBaseUrl}/api/orders/create`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(submissionData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setResponseStatus(data.status);
-        setOrderId(data.orderId);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-        setResponseStatus("Failed");
-      })
-      .finally(() => {
-        setLoadingPopup(false);
-      });
+      const submissionData = {
+        ...formData,
+        selectedItems,
+        totalPrice,
+        baseUrl,
+        status: orderStatus[0],
+      };
+
+      setLoadingPopup(true);
+
+      const data = await createOrder(submissionData);
+      setResponseStatus(data.status);
+      setOrderId(data.orderId);
+    } catch (error) {
+      console.error("Error:", error);
+      setResponseStatus("Failed");
+    } finally {
+      setLoadingPopup(false);
+    }
   };
 
   const handleOkButtonClick = () => {
@@ -141,11 +133,28 @@ const FormPage = ({ isSmallScreen }) => {
                 Please fill out the form including the items you&apos;d like to
                 rent, the dates of the rental and the location.
                 <br /> Feel free to reach out to us for any questions or
-                requests.
+                requests at{" "}
+                <Link
+                  href="mailto:bayitabroad@gmail.com"
+                  color="#0563c4"
+                  style={{ textDecoration: "underline" }}
+                >
+                  bayitabroad&#64;gmail.com
+                </Link>
+                &nbsp;or via WhatsApp at{" "}
+                <Link
+                  href="https://wa.me/972587714120"
+                  color="#0563c4"
+                  style={{ textDecoration: "underline" }}
+                  target="_blank"
+                >
+                  +972&#45;58&#45;771&#45;4120
+                </Link>
+                .
                 <br />
                 <br />
                 &#42; Please note that delivery is only in Jerusalem. Drop off
-                is dependent on our availability and your preference.
+                time is dependent on our availability and your preference.
                 <br />
                 &#42; Payment will be available after confirmation of the order
                 by our team. Payment options include cash, bit, or PayPal.

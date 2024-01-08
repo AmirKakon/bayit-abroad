@@ -1,23 +1,18 @@
 const { app, logger, db } = require("../../../setup");
+const { getExchangeRate } = require("../../ExchangeRates");
 
 const baseDB = "form-items";
-const preferredId = "XkfGiR95lXrZveSxToMl"; // 'entire package' id
 
 // create a form item
 app.post("/api/form/form-items/create", (req, res) => {
   // async waits for a response
   (async () => {
     try {
-      await db
-        .collection(baseDB)
-        .doc()
-        .create({
-          name: req.body.name,
-          price: {
-            nis: req.body.price.nis,
-            usd: req.body.price.usd,
-          },
-        });
+      await db.collection(baseDB).doc().create({
+        name: req.body.name,
+        price: req.body.price,
+        category: req.body.category,
+      });
 
       return res.status(200).send({ status: "Success", msg: "Item Saved" });
     } catch (error) {
@@ -31,6 +26,9 @@ app.post("/api/form/form-items/create", (req, res) => {
 app.get("/api/form/form-items/get/:id", (req, res) => {
   (async () => {
     try {
+      // Fetch the exchange rate
+      const exchangeRate = await getExchangeRate();
+
       const itemRef = db.collection(baseDB).doc(req.params.id);
       const doc = await itemRef.get(); // gets doc
       const item = doc.data(); // the actual data of the item
@@ -43,7 +41,14 @@ app.get("/api/form/form-items/get/:id", (req, res) => {
         });
       }
 
-      // logger.log("Item:", item);
+      // update price
+      if (item.price !== null && item.price !== undefined) {
+        item.price = {
+          usd: item.price,
+          nis: Math.ceil(item.price * exchangeRate),
+        };
+      }
+
       return res.status(200).send({ status: "Success", data: item });
     } catch (error) {
       logger.error(error);
@@ -52,38 +57,55 @@ app.get("/api/form/form-items/get/:id", (req, res) => {
   })();
 });
 
-// get all items
-app.get("/api/form/form-items/getAll", (req, res) => {
-  (async () => {
-    try {
-      const itemsRef = db.collection(baseDB);
-      const snapshot = await itemsRef.get();
+app.get("/api/form/form-items/getAll", async (req, res) => {
+  try {
+    // Fetch the exchange rate
+    const exchangeRate = await getExchangeRate();
 
-      if (snapshot.empty) {
-        logger.error("No items found");
-        return res
-          .status(404)
-          .send({ status: "Failed", msg: "No items found" });
-      }
+    const itemsRef = db.collection(baseDB);
+    const snapshot = await itemsRef.get();
 
-      let items = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-
-      const preferredItem = items.find((item) => item.id === preferredId);
-      if (preferredItem) {
-        items = items.filter((item) => item.id !== preferredId);
-        items.unshift(preferredItem);
-      }
-
-      // logger.log("Item List", items);
-      return res.status(200).send({ status: "Success", data: items });
-    } catch (error) {
-      logger.error(error);
-      return res.status(500).send({ status: "Failed", msg: error });
+    if (snapshot.empty) {
+      logger.error("No items found");
+      return res.status(404).send({ status: "Failed", msg: "No items found" });
     }
-  })();
+
+    const items = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    // Iterate through items and modify the price property
+    items.forEach((item) => {
+      if (item.price !== null && item.price !== undefined) {
+        item.price = {
+          usd: item.price,
+          nis: Math.ceil(item.price * exchangeRate),
+        };
+      }
+    });
+
+    // Group items by category
+    const groupedItems = items.reduce((acc, item) => {
+      const category = item.category;
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(item);
+      return acc;
+    }, {});
+
+    // Sort items within each category by name
+    Object.keys(groupedItems).forEach((category) => {
+      groupedItems[category].sort((a, b) => a.name.localeCompare(b.name));
+    });
+
+    // Send the mutated items as a response
+    return res.status(200).send({ status: "Success", data: groupedItems });
+  } catch (error) {
+    console.error("Function error:", error);
+    return res.status(500).send({ status: "Failed", msg: error.message });
+  }
 });
 
 // update item
@@ -94,10 +116,8 @@ app.put("/api/form/form-items/update/:id", (req, res) => {
       const reqDoc = db.collection(baseDB).doc(req.params.id);
       await reqDoc.update({
         name: req.body.name,
-        price: {
-          nis: req.body.price.nis,
-          usd: req.body.price.usd,
-        },
+        price: req.body.price,
+        category: req.body.category,
       });
 
       return res.status(200).send({ status: "Success", msg: "Item Updated" });

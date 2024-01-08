@@ -3,8 +3,8 @@ const { app, dev, functions } = require("./setup");
 // app routes
 require("./Routes/CopyFromDev");
 require("./Routes/Form/FormItems");
-require("./Routes/Form/GameItems");
-// require("./Routes/ExchangeRates");
+require("./Routes/Orders");
+require("./Routes/ExchangeRates");
 
 // // dev routes
 require("./DevRoutes/Form/FormItems");

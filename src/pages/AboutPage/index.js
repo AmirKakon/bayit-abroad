@@ -1,16 +1,46 @@
-import { Link } from "@mui/material";
-import { Box } from "@mui/system";
+import React from "react";
+import EllipsesIcon from "../../media/EllipsesIcon";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 
-const AboutPage = () => {
-    return (
-      <Box flex={1}>
-        <h5> Welcome to about page </h5>
-        <Link href="https://www.w3schools.com" target="_blank" rel="noopener noreferrer" underline="none">
-    <img border="0" alt="W3Schools" src="logo_w3s.gif" width="100" height="100" />
-  </Link>
-      </Box>
-    );
-  };
-  
-  export default AboutPage;
-  
+const AboutPage = ({ isSmallScreen }) => {
+  window.scrollTo({ top: 0, behavior: "auto" });
+
+  const elipses = [
+    { text: "Choose from the dozens of available items.", padding: 0 },
+    { text: "Select the delivery and pickup dates and we'll take care of the rest", padding: 3 },
+    { text: "Our team will deliver and pick up the items straight to your door", padding: 6 },
+  ].map((item, index) => (
+    <Grid container item spacing={1}>
+      <Grid item xs={item.padding}><Typography variant="subtitle1" fontWeight="bold" sx={{paddingTop: 0.75}}>Step {index+1}:</Typography></Grid>
+      <Grid item xs={6}>
+        <EllipsesIcon size={2} text={item.text} />
+      </Grid>
+    </Grid>
+  ));
+
+  return (
+    <Box
+      sx={{
+        backgroundColor: "#e2e2e2",
+        minHeight: "50vh",
+        padding: 2,
+        marginTop: 7,
+      }}
+      flex={1}
+    >
+      <Paper sx={{ padding: 2 }}>
+        <Grid
+          container
+          spacing={0}
+          direction="column"
+          alignItems="center"
+          style={{ width: "100%" }}
+        >
+          {elipses}
+        </Grid>
+      </Paper>
+    </Box>
+  );
+};
+
+export default AboutPage;

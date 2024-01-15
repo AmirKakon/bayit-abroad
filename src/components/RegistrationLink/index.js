@@ -1,29 +1,28 @@
 import React from "react";
-import { Typography, Link } from "@mui/material";
-// import { Link } from "react-router-dom";
+import { Typography } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const RegistrationLink = () => {
   return (
     <Link
-      href="https://forms.gle/Y3F9yxM9gL2iV6de6"
-      target="_blank"
-      rel="noopener noreferrer"
+      to="/form"
       style={{
         display: "inline-block",
-        backgroundColor: "#98aaa8",
-        padding: "10px 30px",
-        borderRadius: "25px",
+        backgroundColor: "#e6deca",
+        padding: "7px 30px",
+        border: "2px solid #000",
         textDecoration: "none",
         cursor: "pointer",
+        width: 240,
       }}
     >
       <Typography
-        variant="subtitle1"
+        variant="h6"
         fontFamily="serif"
         align="center"
         color="black"
       >
-        Click To Reserve Your Order Now!
+        Explore Our Rental Items
       </Typography>
     </Link>
   );

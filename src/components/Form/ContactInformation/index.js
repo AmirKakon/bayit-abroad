@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from "react";
-import { TextField, Typography, Paper } from "@mui/material";
+import React, { useEffect, useState, useMemo } from "react";
+import { TextField, Typography, Grid, Paper } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
@@ -8,8 +8,8 @@ dayjs.extend(isSameOrBefore);
 
 const ContactInformation = ({ formData, setFormData }) => {
   const [dateError, setDateError] = useState(null);
-  const [deliveryDate, setDeliveryDate] = useState(null);
-  const [pickupDate, setPickupDate] = useState(null);
+  const [deliveryDate, setDeliveryDate] = useState(formData.dateRange.delivery);
+  const [returnDate, setReturnDate] = useState(formData.dateRange.return);
 
   const validatePhoneNumber = (number) => {
     // This is a basic regex for validating phone numbers, consider using a library like libphonenumber-js for a comprehensive solution
@@ -17,11 +17,27 @@ const ContactInformation = ({ formData, setFormData }) => {
     return true; //pattern.test(number);
   };
 
+  const setDateString = (date) => {
+    const d = dayjs(date);
+    const formatedD = d.format("YYYY-MM-DD").concat("T00:00:00+00:00");
+    return formatedD;
+  };
+
+  useEffect(() => {
+    // Set default values for DatePicker once formData.dateRange is available
+    if (formData.dateRange.delivery !== null) {
+      setDeliveryDate(dayjs(formData.dateRange.delivery));
+    }
+    if (formData.dateRange.return !== null) {
+      setReturnDate(dayjs(formData.dateRange.return));
+    }
+  }, [formData.dateRange]);
+
   const errorMessage = useMemo(() => {
     switch (dateError) {
       case "maxDate":
       case "minDate": {
-        return "Pickup date must be after Delivery date.";
+        return "Return date must be after Delivery date.";
       }
 
       case "invalidDate": {
@@ -37,7 +53,7 @@ const ContactInformation = ({ formData, setFormData }) => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 
-    if (name === "phoneNumber" && !validatePhoneNumber(value)) {
+    if (name === "phone" && !validatePhoneNumber(value)) {
       return; // Do not update state if the phone number is invalid
     }
 
@@ -49,15 +65,15 @@ const ContactInformation = ({ formData, setFormData }) => {
 
   const handleDateChange = (newDate, type) => {
     let updatedDeliveryDate = deliveryDate;
-    let updatedPickupDate = pickupDate;
+    let updatedReturnDate = returnDate;
 
     if (type === 0) {
       updatedDeliveryDate = newDate;
     } else {
-      updatedPickupDate = newDate;
+      updatedReturnDate = newDate;
       if (
         updatedDeliveryDate &&
-        dayjs(updatedPickupDate).isSameOrBefore(dayjs(updatedDeliveryDate))
+        dayjs(updatedReturnDate).isSameOrBefore(dayjs(updatedDeliveryDate))
       ) {
         setDateError("minDate"); // Set the error type
       } else {
@@ -68,17 +84,27 @@ const ContactInformation = ({ formData, setFormData }) => {
     if (type === 0) {
       setDeliveryDate(updatedDeliveryDate);
     } else {
-      setPickupDate(updatedPickupDate);
+      setReturnDate(updatedReturnDate);
     }
 
     let range = {
-      delivery: updatedDeliveryDate ? updatedDeliveryDate.$d : null,
-      pickup: updatedPickupDate ? updatedPickupDate.$d : null,
+      delivery: updatedDeliveryDate
+        ? setDateString(updatedDeliveryDate.$d)
+        : deliveryDate,
+      return: updatedReturnDate
+        ? setDateString(updatedReturnDate.$d)
+        : returnDate,
     };
+
+    let diffDays =
+      dayjs(setDateString(range.return)).diff(dayjs(setDateString(range.delivery)), "days") + 1;
+
+    const diffWeeks = Math.ceil(diffDays / 7);
 
     setFormData((prevData) => ({
       ...prevData,
       dateRange: range,
+      weeks: diffWeeks,
     }));
   };
 
@@ -115,13 +141,13 @@ const ContactInformation = ({ formData, setFormData }) => {
         fullWidth
         variant="outlined"
         margin="normal"
-        label="Phone Number"
-        name="phoneNumber"
-        error={!validatePhoneNumber(formData.phoneNumber)}
+        label="Phone Number in Israel"
+        name="phone"
+        error={!validatePhoneNumber(formData.phone)}
         helperText={
-          !validatePhoneNumber(formData.phoneNumber) && "Invalid phone number"
+          !validatePhoneNumber(formData.phone) && "Invalid phone number"
         }
-        value={formData.phoneNumber}
+        value={formData.phone}
         onChange={handleInputChange}
         required
       />
@@ -137,34 +163,48 @@ const ContactInformation = ({ formData, setFormData }) => {
         required
       />
 
-      <DatePicker
-        label="Delivery Date"
-        onChange={(newDate) => {
-          handleDateChange(newDate, 0);
-        }}
-        disablePast
-        sx={{ marginRight: 2, marginTop: 2 }}
-      />
-
-      <DatePicker
-        label="Pickup Date"
-        onError={(error) => setDateError(error)}
-        slotProps={{
-          textField: {
-            helperText: errorMessage,
-          },
-        }}
-        onChange={(newDate) => {
-          handleDateChange(newDate, 1);
-        }}
-        minDate={
-          deliveryDate
-            ? dayjs(deliveryDate).add(1, "day")
-            : dayjs().add(1, "day")
-        }
-        sx={{ marginTop: 2 }}
-      />
-
+      <Grid container spacing={2}>
+        <Grid item xs={6}>
+          <DatePicker
+            label="Delivery Date *"
+            onChange={(newDate) => {
+              handleDateChange(newDate, 0);
+            }}
+            disablePast
+            sx={{ width: "100%" }}
+            defaultValue={
+              formData.dateRange.delivery !== null
+                ? dayjs(formData.dateRange.delivery)
+                : undefined
+            }
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <DatePicker
+            label="Return Date *"
+            onError={(error) => setDateError(error)}
+            slotProps={{
+              textField: {
+                helperText: errorMessage,
+              },
+            }}
+            onChange={(newDate) => {
+              handleDateChange(newDate, 1);
+            }}
+            minDate={
+              deliveryDate
+                ? dayjs(deliveryDate).add(1, "day")
+                : dayjs().add(1, "day")
+            }
+            defaultValue={
+              formData.dateRange.return !== null
+                ? dayjs(formData.dateRange.return)
+                : undefined
+            }
+            sx={{ width: "100%" }}
+          />
+        </Grid>
+      </Grid>
       <TextField
         fullWidth
         margin="normal"

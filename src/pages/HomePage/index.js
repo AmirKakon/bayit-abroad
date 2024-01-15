@@ -6,13 +6,15 @@ import ContactUsSection from "../../components/ContactUsSection";
 import { Box, Grid } from "@mui/material";
 import Divider from "@mui/material/Divider";
 
-const HomePage = () => {
+const HomePage = ({isSmallScreen}) => {
+  window.scrollTo({ top: 0, behavior: "auto" });
+
   return (
     <Box
       sx={{
-        color: "white",
+        backgroundImage: "linear-gradient(to bottom, #ffffff, #3d9ca0)",
+        color: 'white',
         minHeight: "200",
-        padding: 2, // Consistent padding
       }}
       flex={1}
     >
@@ -24,22 +26,22 @@ const HomePage = () => {
         justifyContent="center"
         style={{ width: "100%" }}
       >
-        <WelcomeSection />
+        <WelcomeSection isSmallScreen={isSmallScreen}/>
         <Divider
           variant="middle"
-          sx={{ marginTop: 3, marginBottom: 3, width: "100%" }}
-        />
-        <WhyChooseUsSection />
-        <Divider
-          variant="middle"
-          sx={{ marginTop: 3, marginBottom: 3, width: "100%" }}
+          sx={{ marginBottom: 1, width: "100%", border: "0px solid #000" }}
         />
         <HowItWorksSection />
         <Divider
           variant="middle"
-          sx={{ marginTop: 3, marginBottom: 3, width: "100%" }}
+          sx={{ marginTop: 3, marginBottom: 3, width: "90%" }}
         />
-        <ContactUsSection />
+        <WhyChooseUsSection />
+        <Divider
+          variant="middle"
+          sx={{ marginTop: 3, marginBottom: 3, width: "90%" }}
+        />
+        <ContactUsSection isSmallScreen={isSmallScreen} />
       </Grid>
     </Box>
   );

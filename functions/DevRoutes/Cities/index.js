@@ -5,7 +5,7 @@ const cacheDurationHours = 24 * 60;
 let lastFetchTime = 0;
 let cachedCities = null;
 
-const filterByCountry = ["USA", "GBR", "ESP", "FRA"];
+// const filterByCountry = ["USA", "GBR", "ESP", "FRA"];
 
 dev.get("/api/cities/getAll", async (req, res) => {
   const currentTime = Date.now();

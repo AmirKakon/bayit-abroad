@@ -10,6 +10,22 @@ let cachedCities = null;
 
 const pageSize = 100; // Number of cities to send at a time
 
+const fetchCities = async () => {
+  const response = await fetch("https://countriesnow.space/api/v0.1/countries");
+  const { data } = await response.json();
+
+  cachedCities = data.flatMap(({ cities, country }) =>
+    cities.map((city) => ({
+      value: `${city} (${country})`,
+      label: `${city} (${country})`,
+    })),
+  );
+
+  lastFetchTime = Date.now();
+
+  return cachedCities;
+};
+
 // get list of cities
 dev.get("/api/cities/getAll", async (req, res) => {
   const currentTime = Date.now();
@@ -22,26 +38,9 @@ dev.get("/api/cities/getAll", async (req, res) => {
     currentTime - lastFetchTime > cacheDurationHours * 60 * 1000
   ) {
     try {
-      const response = await fetch(
-        "https://countriesnow.space/api/v0.1/countries",
-      );
-      const { data } = await response.json();
-
-      cachedCities = data.flatMap(({ cities, country }) =>
-        cities.map((city) => ({
-          value: `${city} (${country})`,
-          label: `${city} (${country})`,
-        })),
-      );
-
-      lastFetchTime = currentTime;
+      await fetchCities();
     } catch (error) {
       logger.error("Error fetching cities:", error);
-    } finally {
-      res.status(200).send({
-        status: "Success",
-        cities: cachedCities ?? [],
-      });
     }
   }
 

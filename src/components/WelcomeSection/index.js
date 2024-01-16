@@ -5,7 +5,6 @@ import CitySearchBox from "../CitySearchBox";
 import CircleIcon from "../../media/CircleIcon";
 import { backgroundImageUrl } from "../../utilities/config";
 import { Grid, Typography } from "@mui/material";
-import { margin } from "@mui/system";
 
 const circleSize = "170";
 

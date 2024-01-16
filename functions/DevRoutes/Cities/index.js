@@ -10,6 +10,7 @@ let cachedCities = null;
 
 const pageSize = 100; // Number of cities to send at a time
 
+// get list of cities
 dev.get("/api/cities/getAll", async (req, res) => {
   const currentTime = Date.now();
   const { search = "", page = "1" } = req.query;
@@ -56,9 +57,12 @@ dev.get("/api/cities/getAll", async (req, res) => {
   const end = pageNumber * pageSize;
 
   logger.log("Successful cached cities", currentTime);
-  res.status(200).json(filteredCities.slice(start, end));
+  res
+    .status(200)
+    .send({ status: "Success", data: filteredCities.slice(start, end) });
 });
 
+// add city to db or update count of city
 dev.post("/api/cities/add/:city", async (req, res) => {
   const { city: cityName } = req.params;
   const cityRef = db.collection(baseDB).doc(cityName);
@@ -77,6 +81,24 @@ dev.post("/api/cities/add/:city", async (req, res) => {
     res.status(200).send({ status: "Success", msg: "City Added" });
   } catch (error) {
     logger.error("Error Adding City", error);
+    res.status(500).send({ status: "Failed", msg: error });
+  }
+});
+
+// get list of cities sorted by count
+dev.get("/api/cities/getAllSorted", async (req, res) => {
+  try {
+    const citiesRef = db.collection(baseDB);
+    const snapshot = await citiesRef.orderBy("count", "desc").get();
+
+    const cities = [];
+    snapshot.forEach((doc) => {
+      cities.push({ id: doc.id, ...doc.data() });
+    });
+
+    res.status(200).send({ status: "Success", data: cities });
+  } catch (error) {
+    logger.error("Error fetching sorted cities:", error);
     res.status(500).send({ status: "Failed", msg: error });
   }
 });

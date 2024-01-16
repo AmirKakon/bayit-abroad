@@ -32,7 +32,7 @@ export const getCities = async (searchTerm = '', page = 1) => {
     throw new Error(`Error: ${response.status}`);
   }
   const res = await response.json();
-  return res;
+  return res.data;
 };
 
 export const addCity = async (city) => {

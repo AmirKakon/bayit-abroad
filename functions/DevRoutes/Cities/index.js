@@ -23,13 +23,12 @@ dev.get("/api/cities/getAll", async (req, res) => {
       const data = await response.json();
 
       // Flatten the nested array structure
-      cachedCities = data.data
-        .flatMap((location) =>
-          location.cities.map((city) => ({
-            value: `${city} (${location.country})`,
-            label: `${city} (${location.country})`,
-          })),
-        );
+      cachedCities = data.data.flatMap((location) =>
+        location.cities.map((city) => ({
+          value: `${city} (${location.country})`,
+          label: `${city} (${location.country})`,
+        })),
+      );
 
       lastFetchTime = currentTime;
       return res.status(200).send({
@@ -46,7 +45,10 @@ dev.get("/api/cities/getAll", async (req, res) => {
   }
 
   const filteredCities = cachedCities.filter((city) =>
-    city.label.toLowerCase().includes(searchTerm),
+    city.label.toLowerCase().startsWith(searchTerm),
+  );
+  const sortedCities = filteredCities.sort((a, b) =>
+    a.label.localeCompare(b.label),
   );
 
   // Calculate start and end indices for pagination
@@ -54,7 +56,7 @@ dev.get("/api/cities/getAll", async (req, res) => {
   const end = page * pageSize;
 
   logger.log("Successful cached cities", currentTime);
-  res.status(200).json(filteredCities.slice(start, end));
+  res.status(200).json(sortedCities.slice(start, end));
 });
 
 module.exports = { dev };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import debounce from "lodash.debounce";
 import AsyncSelect from "react-select/async";
-import { getCities } from "../../utilities/api";
+import { getCities, addCity } from "../../utilities/api";
 import { Button, Grid } from "@mui/material";
 
 const CitySearchBox = ({selectedCity, setSelectedCity}) => {
@@ -38,15 +38,19 @@ const CitySearchBox = ({selectedCity, setSelectedCity}) => {
   }, 500);
 
   const handleChange = (selectedOption) => {
-    console.log("Selected City:", selectedOption.label);
     setSelectedCity(selectedOption);
   };
 
   const handleBottomScroll = () => {
-    console.log("Scrolled to bottom");
     setPage(page + 1);
     setTrigger(!trigger);
   };
+
+  const handleSubmit = () => {
+    addCity(selectedCity.label);
+  };
+
+
 
   return (
     <Grid container spacing={1} direction="row" alignItems="center" justifyContent="center">
@@ -60,7 +64,7 @@ const CitySearchBox = ({selectedCity, setSelectedCity}) => {
         /> 
       </Grid>
       <Grid item xs={2}>
-        <Button fullWidth variant="contained" color="primary" onClick={() => (console.log(selectedCity))}>Submit</Button>
+        <Button fullWidth variant="contained" color="primary" onClick={handleSubmit}>Submit</Button>
       </Grid>
     </Grid>
   );

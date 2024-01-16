@@ -34,3 +34,18 @@ export const getCities = async (searchTerm = '', page = 1) => {
   const res = await response.json();
   return res;
 };
+
+export const addCity = async (city) => {
+  const response = await fetch(`${apiBaseUrl}/api/cities/add/${city}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error: ${response.status}`);
+  }
+  const res = await response.json();
+  return res;
+};

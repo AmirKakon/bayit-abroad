@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from "react";
+import { Button, Grid, Snackbar, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import debounce from "lodash.debounce";
 import AsyncSelect from "react-select/async";
 import { getCities, addCity } from "../../utilities/api";
-import { Button, Grid } from "@mui/material";
 
-const CitySearchBox = ({selectedCity, setSelectedCity}) => {
+const CitySearchBox = ({ selectedCity, setSelectedCity }) => {
   const [cities, setCities] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const [trigger, setTrigger] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   useEffect(() => {
     const fetchCities = async () => {
       try {
         const newCities = await getCities(searchTerm, page);
-        setCities([...cities, ...newCities]);
+        setCities(prevCities => [...prevCities, ...newCities]);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -26,7 +29,6 @@ const CitySearchBox = ({selectedCity, setSelectedCity}) => {
 
   const debouncedLoadOptions = debounce(async (inputValue, callback) => {
     try {
-      
       const newCities = await getCities(inputValue, 1);
       setPage(1);
       setSearchTerm(inputValue);
@@ -46,27 +48,73 @@ const CitySearchBox = ({selectedCity, setSelectedCity}) => {
     setTrigger(!trigger);
   };
 
-  const handleSubmit = () => {
-    addCity(selectedCity.label);
+  const handleSubmit = async () => {
+    try {
+      const res = await addCity(selectedCity.label);
+      setSnackbarMessage(res.msg);
+      setOpenSnackbar(true);
+    } catch (error) {
+      setSnackbarMessage(error);
+      console.error("Error adding city:", error);
+    }
   };
 
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
 
+    setOpenSnackbar(false);
+  };
+
+  const action = (
+    <IconButton
+      size="small"
+      aria-label="close"
+      color="inherit"
+      onClick={handleCloseSnackbar}
+    >
+      <CloseIcon fontSize="small" />
+    </IconButton>
+  );
 
   return (
-    <Grid container spacing={1} direction="row" alignItems="center" justifyContent="center">
-      <Grid item xs={10}>
-        <AsyncSelect
-          loadOptions={debouncedLoadOptions}
-          defaultOptions={cities}
-          value={selectedCity}
-          onChange={handleChange}
-          onMenuScrollToBottom={handleBottomScroll}
-        /> 
+    <>
+      <Grid
+        container
+        spacing={1}
+        direction="row"
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Grid item xs={9} md={10}>
+          <AsyncSelect
+            loadOptions={debouncedLoadOptions}
+            defaultOptions={cities}
+            value={selectedCity}
+            onChange={handleChange}
+            onMenuScrollToBottom={handleBottomScroll}
+          />
+        </Grid>
+        <Grid item xs={3} md={2}>
+          <Button
+            fullWidth
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit}
+          >
+            Submit
+          </Button>
+        </Grid>
       </Grid>
-      <Grid item xs={2}>
-        <Button fullWidth variant="contained" color="primary" onClick={handleSubmit}>Submit</Button>
-      </Grid>
-    </Grid>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+        action={action}
+      />
+    </>
   );
 };
 

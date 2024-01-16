@@ -31,6 +31,10 @@ const HomePage = ({isSmallScreen}) => {
           variant="middle"
           sx={{ marginBottom: 1, width: "100%", border: "0px solid #000" }}
         />
+        <Divider
+          variant="middle"
+          sx={{ marginTop: 3, marginBottom: 3, width: "90%" }}
+        />
         <HowItWorksSection />
         <Divider
           variant="middle"

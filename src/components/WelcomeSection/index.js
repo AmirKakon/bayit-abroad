@@ -1,13 +1,16 @@
 import React from "react";
 import RegistrationLink from "../RegistrationLink";
 import FindOrderLink from "../FindOrderLink";
+import CitySearchBox from "../CitySearchBox";
 import CircleIcon from "../../media/CircleIcon";
 import { backgroundImageUrl } from "../../utilities/config";
 import { Grid, Typography } from "@mui/material";
+import { margin } from "@mui/system";
 
 const circleSize = "170";
 
 const WelcomeSection = ({ isSmallScreen }) => {
+  
   const circles = [
     { title: "Travel Lightly" },
     { title: "Travel Flexibly" },
@@ -89,6 +92,13 @@ const WelcomeSection = ({ isSmallScreen }) => {
 
       <Grid container item justifyContent="center">
         {circles}
+      </Grid>
+
+      <Grid container item sx={{paddingX: 2}} justifyContent="center">
+        <Typography variant="h5" color="primary" textAlign="center">Want to see us in another city?
+        <br />
+        let us know!</Typography>
+        <CitySearchBox />
       </Grid>
     </>
   );

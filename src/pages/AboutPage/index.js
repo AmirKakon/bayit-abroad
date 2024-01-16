@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Box} from "@mui/material";
-import CitySearchBox from "../../components/CitySearchBox";
 
 const AboutPage = ({ isSmallScreen }) => {
-  const [selectedCity, setSelectedCity] = useState(null);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -19,7 +17,7 @@ const AboutPage = ({ isSmallScreen }) => {
       }}
       flex={1}
     >
-      <CitySearchBox selectedCity={selectedCity} setSelectedCity={setSelectedCity} />
+      {/* <CitySearchBox /> */}
     </Box>
   );
 };

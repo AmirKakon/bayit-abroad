@@ -5,8 +5,9 @@ import debounce from "lodash.debounce";
 import AsyncSelect from "react-select/async";
 import { getCities, addCity } from "../../utilities/api";
 
-const CitySearchBox = ({ selectedCity, setSelectedCity }) => {
+const CitySearchBox = () => {
   const [cities, setCities] = useState([]);
+  const [selectedCity, setSelectedCity] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const [trigger, setTrigger] = useState(false);
@@ -17,7 +18,7 @@ const CitySearchBox = ({ selectedCity, setSelectedCity }) => {
     const fetchCities = async () => {
       try {
         const newCities = await getCities(searchTerm, page);
-        setCities(prevCities => [...prevCities, ...newCities]);
+        setCities((prevCities) => [...prevCities, ...newCities]);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -78,6 +79,30 @@ const CitySearchBox = ({ selectedCity, setSelectedCity }) => {
     </IconButton>
   );
 
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      color: state.isSelected ? "white" : "black",
+      backgroundColor: state.isSelected ? "#2c3c30" : "white",
+      "&:hover": {
+        backgroundColor: state.isSelected ? "#2c3c30" : "#e6deca",
+        color: state.isSelected ? "white" : "black",
+      },
+    }),
+    singleValue: (provided) => ({
+      ...provided,
+      color: "black",
+    }),
+    control: (provided) => ({
+      ...provided,
+      borderColor: "grey",
+      "&:hover": {
+        borderColor: "#2c3c30",
+      },
+      boxShadow: "none",
+    }),
+  };
+
   return (
     <>
       <Grid
@@ -89,6 +114,8 @@ const CitySearchBox = ({ selectedCity, setSelectedCity }) => {
       >
         <Grid item xs={9} md={10}>
           <AsyncSelect
+            styles={customStyles}
+            placeholder="Search for a city..."
             loadOptions={debouncedLoadOptions}
             defaultOptions={cities}
             value={selectedCity}

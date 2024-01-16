@@ -5,10 +5,12 @@ const cacheDurationHours = 24 * 60;
 let lastFetchTime = 0;
 let cachedCities = null;
 
-// const filterByCountry = ["USA", "GBR", "ESP", "FRA"];
+const pageSize = 100; // Number of cities to send at a time
 
 dev.get("/api/cities/getAll", async (req, res) => {
   const currentTime = Date.now();
+  const searchTerm = req.query.search ? req.query.search.toLowerCase() : "";
+  const page = req.query.page ? parseInt(req.query.page) : 1;
 
   if (
     !cachedCities ||
@@ -22,7 +24,6 @@ dev.get("/api/cities/getAll", async (req, res) => {
 
       // Flatten the nested array structure
       cachedCities = data.data
-        .filter((location) => filterByCountry.includes(location.iso3))
         .flatMap((location) =>
           location.cities.map((city) => ({
             value: `${city} (${location.country})`,
@@ -44,8 +45,16 @@ dev.get("/api/cities/getAll", async (req, res) => {
     }
   }
 
+  const filteredCities = cachedCities.filter((city) =>
+    city.label.toLowerCase().includes(searchTerm),
+  );
+
+  // Calculate start and end indices for pagination
+  const start = (page - 1) * pageSize;
+  const end = page * pageSize;
+
   logger.log("Successful cached cities", currentTime);
-  res.status(200).json(cachedCities);
+  res.status(200).json(filteredCities.slice(start, end));
 });
 
 module.exports = { dev };

@@ -1,28 +1,43 @@
-import React, { useState } from "react";
-import AsyncSelect from "react-select/async";
+import React, { useEffect, useState } from "react";
 import debounce from "lodash.debounce";
+import AsyncSelect from "react-select/async";
+import { getCities } from "../../utilities/api";
 
-const CitySearchBox = ({cities, onSelectCity}) => {
-  const [selectedCity, setSelectedCity] = useState(null);
+const CitySearchBox = ({selectedCity, setSelectedCity}) => {
+  const [cities, setCities] = useState([]);
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const cities = await getCities('', 1);
+        setCities(cities);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchCities();
+  }, []);
 
   const debouncedLoadOptions = debounce(async (inputValue, callback) => {
     try {
-      const filteredCities = cities.filter((city) =>
-        city.label.toLowerCase().includes(inputValue.toLowerCase())
-      );
-      callback(cities);
+      const newCities = await getCities(inputValue, 1);
+      setCities(newCities);
+      callback(newCities);
     } catch (error) {
-      console.error("Error fetching cities:", error);
+      console.error("Error fetching data:", error);
     }
-  }, 700);
+  }, 500);
 
   return (
     <AsyncSelect
-      cacheOptions
-      defaultOptions
       loadOptions={debouncedLoadOptions}
+      defaultOptions={cities}
       value={selectedCity}
-      onChange={(selectedOption) => setSelectedCity(selectedOption)}
+      onChange={(selectedOption) => {
+        console.log("Selected City:", selectedOption.label);
+        setSelectedCity(selectedOption);
+      }}
     />
   );
 };

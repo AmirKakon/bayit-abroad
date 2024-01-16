@@ -3,6 +3,16 @@ const { getExchangeRate } = require("../../ExchangeRates");
 
 const baseDB = "form-items_dev";
 
+const convertPrice = (price, exchangeRate) => {
+  if (price !== null && price !== undefined) {
+    return {
+      usd: price,
+      nis: Math.ceil(price * exchangeRate),
+    };
+  }
+  return price;
+};
+
 // create a form item
 dev.post("/api/form/form-items/create", (req, res) => {
   // async waits for a response
@@ -41,13 +51,7 @@ dev.get("/api/form/form-items/get/:id", (req, res) => {
         });
       }
 
-      // update price
-      if (item.price !== null && item.price !== undefined) {
-        item.price = {
-          usd: item.price,
-          nis: Math.ceil(item.price * exchangeRate),
-        };
-      }
+      item.price = convertPrice(item.price, exchangeRate);
 
       return res.status(200).send({ status: "Success", data: item });
     } catch (error) {
@@ -77,12 +81,7 @@ dev.get("/api/form/form-items/getAll", async (req, res) => {
 
     // Iterate through items and modify the price property
     items.forEach((item) => {
-      if (item.price !== null && item.price !== undefined) {
-        item.price = {
-          usd: item.price,
-          nis: Math.ceil(item.price * exchangeRate),
-        };
-      }
+      item.price = convertPrice(item.price, exchangeRate);
     });
 
     // Group items by category
@@ -144,4 +143,4 @@ dev.delete("/api/form/form-items/delete/:id", (req, res) => {
   })();
 });
 
-module.exports = dev;
+module.exports = { dev };

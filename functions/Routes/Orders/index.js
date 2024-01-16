@@ -110,8 +110,10 @@ app.post("/api/orders/create", async (req, res) => {
     };
 
     try {
-      await transporter.sendMail(internalMailOptions);
-      await transporter.sendMail(externalMailOptions);
+      await Promise.all([
+        transporter.sendMail(internalMailOptions),
+        transporter.sendMail(externalMailOptions),
+      ]);
       logger.log("Email notification sent successfully.");
     } catch (error) {
       logger.error("Error sending email:", error);
@@ -228,4 +230,4 @@ app.delete("/api/orders/delete/:id", (req, res) => {
   })();
 });
 
-module.exports = app;
+module.exports = { app };

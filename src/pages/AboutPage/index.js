@@ -20,7 +20,6 @@ const AboutPage = ({ isSmallScreen }) => {
       flex={1}
     >
       <CitySearchBox selectedCity={selectedCity} setSelectedCity={setSelectedCity} />
-      <button onClick={() => (console.log(selectedCity.label))}>Submit</button>
     </Box>
   );
 };

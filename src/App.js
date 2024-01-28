@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import ReactGA from "react-ga";
+import ReactGA from "react-ga4";
 import {
   BrowserRouter as Router,
   Route,
@@ -30,7 +30,7 @@ const App = () => {
   useEffect(() => {
     const trackingId = process.env.REACT_APP_GA_TRACKING_ID;
     ReactGA.initialize(`${trackingId}`);
-    ReactGA.pageview(window.location.pathname + window.location.search);
+    // ReactGA.send({ hitType: "pageview", page: window.location.pathname });
   }, []);
 
   return (

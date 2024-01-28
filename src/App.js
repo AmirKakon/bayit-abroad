@@ -19,6 +19,7 @@ const App = () => {
   useEffect(() => {
     ReactGA.initialize('G-70SKMMYSNZ');
     ReactGA.pageview(window.location.pathname + window.location.search);
+    console.log(window.location.pathname + window.location.search);
   }, []);
 
   return (

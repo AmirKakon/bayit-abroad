@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import ReactGA from 'react-ga';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -14,6 +15,11 @@ const theme = createTheme(lightThemeOptions);
 
 const App = () => {
   const isSmallScreen = useMediaQuery('(max-width:600px)');
+
+  useEffect(() => {
+    ReactGA.initialize('G-70SKMMYSNZ');
+    ReactGA.pageview(window.location.pathname + window.location.search);
+  }, []);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

@@ -129,6 +129,7 @@ const CitySearchBox = () => {
             variant="contained"
             color="primary"
             onClick={handleSubmit}
+            disabled={!selectedCity}
           >
             Submit
           </Button>

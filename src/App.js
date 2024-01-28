@@ -31,7 +31,6 @@ const App = () => {
     const trackingId = process.env.REACT_APP_GA_TRACKING_ID;
     ReactGA.initialize(`${trackingId}`);
     ReactGA.pageview(window.location.pathname + window.location.search);
-    console.log(window.location.pathname + window.location.search);
   }, []);
 
   return (

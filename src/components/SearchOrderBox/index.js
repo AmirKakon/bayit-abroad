@@ -1,14 +1,13 @@
-import React from "react";
+import React, {useState} from "react";
 import { Button, TextField, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 
 const SearchOrderBox = ({ isSmallScreen }) => {
+  const [trackingNumber, setTrackingNumber] = useState("");
   const navigate = useNavigate();
 
   const handleSearchOrder = () => {
-    // Get the input value from the TextField
-    const trackingNumber = document.getElementById("tracking-number").value;
     const url = `/orders/${trackingNumber}/thankyou?first=false`;
     navigate(url);
   };
@@ -29,6 +28,8 @@ const SearchOrderBox = ({ isSmallScreen }) => {
           id="tracking-number"
           label="Tracking Number"
           variant="outlined"
+          value={trackingNumber}
+          onChange={(e) => setTrackingNumber(e.target.value)}
           fullWidth
         />
       </Grid>
@@ -39,6 +40,7 @@ const SearchOrderBox = ({ isSmallScreen }) => {
           startIcon={<SearchIcon />}
           sx={{ px: 3, py: 1 }}
           onClick={handleSearchOrder}
+          disabled={trackingNumber === ""}
           fullWidth
         >
           Search

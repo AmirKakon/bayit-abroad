@@ -22,7 +22,7 @@ const SignUpContainer = ({ isSmallScreen }) => {
       alignItems="center"
       justifyContent="center"
       width="300px"
-      padding={2}
+      padding={3}
       sx={{ backgroundColor: "white" }}
     >
       <Grid item >

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
 import SignUpContainer from "../../components/SignUpContainer";
 import Loading from "../../components/Loading";
+import { backgroundImageUrl } from "../../utilities/config";
 import { auth } from "../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
@@ -35,6 +36,13 @@ const LoginPage = ({ isSmallScreen }) => {
         backgroundColor: "#e2e2e2",
         minHeight: "50vh",
         padding: 2,
+      }}
+      style={{
+        backgroundImage: `url(${backgroundImageUrl})`,
+        backgroundSize: "cover",
+        backgroundAttachment: "fixed",
+        minHeight: "100vh",
+        position: "relative",
       }}
     >
       <SignUpContainer isSmallScreen={isSmallScreen} />

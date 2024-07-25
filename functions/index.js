@@ -12,6 +12,7 @@ require("./DevRoutes/Form/FormItems");
 require("./DevRoutes/Orders");
 require("./DevRoutes/ExchangeRates");
 require("./DevRoutes/Cities");
+require("./DevRoutes/User");
 
 require("./DevRoutes/Tutorial");
 

@@ -49,3 +49,19 @@ export const addCity = async (city) => {
   const res = await response.json();
   return res;
 };
+
+export const signupViaEmail = async (user) => {
+  const response = await fetch(`${apiBaseUrl}/api/user/signupViaEmail`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(user),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error: ${response.status}`);
+  }
+
+  return await response.json();
+};

@@ -1,16 +1,59 @@
 import React, { useState } from "react";
-import { Button, TextField, Grid, Typography } from "@mui/material";
+import {
+  Button,
+  TextField,
+  Grid,
+  Typography,
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
+import { signupViaEmail } from "../../utilities/api";
+import { useNavigate } from "react-router-dom";
 
 const SignUpContainer = ({ isSmallScreen }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
+  const [errors, setErrors] = useState({ email: false, password: false });
+  const [popup, setPopup] = useState(false);
+  const [status, setStatus] = useState("");
 
-  const handleSignUp = () => {
-    if(!email.includes("@")) {
-        setError(true);
+  const navigate = useNavigate();
+
+  const handleSignUp = async () => {
+    const newErrors = { email: false, password: false };
+
+    if (!email.includes("@")) {
+      newErrors.email = true;
     }
-    console.log(email, password);
+
+    if (password.length < 6) {
+      newErrors.password = true;
+    }
+
+    setErrors(newErrors);
+
+    if (!(newErrors.email && newErrors.password)) {
+      console.log(email, password);
+      setPopup(true);
+      try {
+        const response = await signupViaEmail({
+          email: email,
+          password: password,
+        });
+
+        setStatus(response.status);
+      } catch (e) {
+        console.log(e);
+        setStatus("Failed");
+      }
+    }
+  };
+
+  const handleOkButtonClick = () => {
+    setPopup(false);
+    navigate("/home");
   };
 
   return (
@@ -25,13 +68,18 @@ const SignUpContainer = ({ isSmallScreen }) => {
       padding={3}
       sx={{ backgroundColor: "white" }}
     >
-      <Grid item >
-        <Typography variant="h6" fontWeight="bold" >Sign Up</Typography>
+      <Grid item>
+        <Typography variant="h6" fontWeight="bold">
+          Sign Up
+        </Typography>
       </Grid>
-      {error ?
-      <Grid item xs={isSmallScreen ? 12 : "auto"}>
-         <Typography variant="caption" color="red">* Not a valid email</Typography> 
-      </Grid> : null}
+      {errors.email ? (
+        <Grid item xs={isSmallScreen ? 12 : "auto"}>
+          <Typography variant="caption" color="red">
+            * Not a valid email
+          </Typography>
+        </Grid>
+      ) : null}
       <Grid item xs={isSmallScreen ? 12 : "auto"}>
         <TextField
           id="email"
@@ -42,6 +90,13 @@ const SignUpContainer = ({ isSmallScreen }) => {
           fullWidth
         />
       </Grid>
+      {errors.password ? (
+        <Grid item xs={isSmallScreen ? 12 : "auto"}>
+          <Typography variant="caption" color="red">
+            * Password length &lt; 6
+          </Typography>
+        </Grid>
+      ) : null}
       <Grid item xs={isSmallScreen ? 12 : "auto"}>
         <TextField
           id="password"
@@ -64,6 +119,47 @@ const SignUpContainer = ({ isSmallScreen }) => {
           SignUp
         </Button>
       </Grid>
+      <Dialog
+        open={popup}
+        color="primary"
+        sx={{ alignItems: "center", justifyContent: "center" }}
+      >
+        <DialogTitle sx={{ backgroundColor: "primary.main", color: "white" }}>
+          {status === "" ? "Signing Up..." : status}
+        </DialogTitle>
+        {status === "" ? (
+          <DialogContent
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: 2,
+            }}
+          >
+            <CircularProgress sx={{ padding: 2 }} />
+          </DialogContent>
+        ) : (
+          <DialogContent sx={{ padding: 2 }}>
+            {status === "Success" ? (
+              <p>Signed Up successfully!</p>
+            ) : (
+              <p>
+                Failed to sign up. Please try again at a later time.
+                <br />
+                If the issue persists, please contact us!
+              </p>
+            )}
+            <Button
+              onClick={handleOkButtonClick}
+              fullWidth
+              variant="contained"
+              color="primary"
+            >
+              OK
+            </Button>
+          </DialogContent>
+        )}
+      </Dialog>
     </Grid>
   );
 };

@@ -4,7 +4,7 @@ const { dev, logger } = require("../../setup");
 // const baseDB = "users_dev";
 
 // sign up a user
-dev.post("/api/user/signup", async (req, res) => {
+dev.post("/api/user/signupViaEmail", async (req, res) => {
   try {
     const user = await getAuth().createUser({
       email: req.body.email,

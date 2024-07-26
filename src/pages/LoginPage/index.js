@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import SignUpContainer from "../../components/SignUpContainer";
+import LoginContainer from "../../components/LoginContainer";
 import Loading from "../../components/Loading";
 import { backgroundImageUrl } from "../../utilities/config";
 import { auth } from "../../firebase";
@@ -45,7 +46,22 @@ const LoginPage = ({ isSmallScreen }) => {
         position: "relative",
       }}
     >
-      <SignUpContainer isSmallScreen={isSmallScreen} />
+      <Grid
+        container
+        spacing={2}
+        direction="row"
+        alignItems="center"
+        justifyContent="center"
+        padding={3}
+      >
+        <Grid item>
+          {" "}
+          <SignUpContainer isSmallScreen={isSmallScreen} />
+        </Grid>
+        <Grid item>
+          <LoginContainer isSmallScreen={isSmallScreen} />
+        </Grid>
+      </Grid>
     </Box>
   );
 };

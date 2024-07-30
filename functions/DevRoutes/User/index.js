@@ -7,6 +7,7 @@ const { dev, logger } = require("../../setup");
 dev.post("/api/user/signupViaEmail", async (req, res) => {
   try {
     const user = await getAuth().createUser({
+      displayName: req.body.name,
       email: req.body.email,
       emailVerified: false,
       password: req.body.password,
@@ -45,6 +46,7 @@ dev.get("/api/user/get/:id", async (req, res) => {
 dev.put("/api/user/update/:id", async (req, res) => {
   try {
     await getAuth().updateUser(req.params.id, {
+      displayName: req.body.name,
       email: req.body.email,
       password: req.body.password,
     });

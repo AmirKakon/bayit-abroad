@@ -15,45 +15,30 @@ import { useNavigate } from "react-router-dom";
 const LoginContainer = ({ isSmallScreen }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({ email: false, password: false });
   const [popup, setPopup] = useState(false);
   const [status, setStatus] = useState("");
 
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    const newErrors = { email: false, password: false };
-
-    if (!email.includes("@")) {
-      newErrors.email = true;
-    }
-
-    if (password.length < 6) {
-      newErrors.password = true;
-    }
-
-    setErrors(newErrors);
-
-    if (!(newErrors.email && newErrors.password)) {
-      console.log(email, password);
-      setPopup(true);
-      try {
-        const response = await loginViaEmail({
-          email: email,
-          password: password,
-        });
-
-        setStatus(response.status);
-      } catch (e) {
-        console.log(e);
-        setStatus("Failed");
+    setPopup(true);
+    var tempStatus = null;
+    try {
+      const response = await loginViaEmail({
+        email: email,
+        password: password,
+      });
+      tempStatus = response.status
+      setStatus(tempStatus);
+    } catch (e) {
+      console.log(e);
+      setStatus("Failed");
+    } finally {
+      setPopup(false);
+      if (tempStatus === "Success") {
+        navigate("/home");
       }
     }
-  };
-
-  const handleOkButtonClick = () => {
-    setPopup(false);
-    navigate("/home");
   };
 
   return (
@@ -73,13 +58,13 @@ const LoginContainer = ({ isSmallScreen }) => {
           Login
         </Typography>
       </Grid>
-      {errors.email ? (
+      {status === "Failed" && (
         <Grid item xs={isSmallScreen ? 12 : "auto"}>
           <Typography variant="caption" color="red">
-            * Not a valid email
+            * Email/password is incorrect
           </Typography>
         </Grid>
-      ) : null}
+      )}
       <Grid item xs={isSmallScreen ? 12 : "auto"}>
         <TextField
           id="email"
@@ -89,30 +74,23 @@ const LoginContainer = ({ isSmallScreen }) => {
           onChange={(e) => setEmail(e.target.value)}
           fullWidth
           sx={{
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: '#e6deca', // Default border color
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#e6deca", // Default border color
               },
             },
-            '& .MuiInputLabel-root': {
-              color: '#e6deca', // Label color
+            "& .MuiInputLabel-root": {
+              color: "#e6deca", // Label color
             },
-            '& .MuiInputLabel-root.Mui-focused': {
-              color: '#e6deca', // Label color when focused
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "#e6deca", // Label color when focused
             },
-            '& .MuiInputBase-input': {
-              color: '#e6deca', // Text color
+            "& .MuiInputBase-input": {
+              color: "#e6deca", // Text color
             },
           }}
         />
       </Grid>
-      {errors.password ? (
-        <Grid item xs={isSmallScreen ? 12 : "auto"}>
-          <Typography variant="caption" color="red">
-            * Password length &lt; 6
-          </Typography>
-        </Grid>
-      ) : null}
       <Grid item xs={isSmallScreen ? 12 : "auto"}>
         <TextField
           id="password"
@@ -122,19 +100,19 @@ const LoginContainer = ({ isSmallScreen }) => {
           onChange={(e) => setPassword(e.target.value)}
           fullWidth
           sx={{
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: '#e6deca', // Default border color
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "#e6deca", // Default border color
               },
             },
-            '& .MuiInputLabel-root': {
-              color: '#e6deca', // Label color
+            "& .MuiInputLabel-root": {
+              color: "#e6deca", // Label color
             },
-            '& .MuiInputLabel-root.Mui-focused': {
-              color: '#e6deca', // Label color when focused
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "#e6deca", // Label color when focused
             },
-            '& .MuiInputBase-input': {
-              color: '#e6deca', // Text color
+            "& .MuiInputBase-input": {
+              color: "#e6deca", // Text color
             },
           }}
         />
@@ -143,7 +121,14 @@ const LoginContainer = ({ isSmallScreen }) => {
         <Button
           variant="contained"
           color="secondary"
-          sx={{ px: 11, py: 1 }}
+          sx={{
+            px: 11,
+            py: 1,
+            "&:disabled": {
+              backgroundColor: "#b4b4b4",
+              color: "grey",
+            },
+          }}
           onClick={handleLogin}
           disabled={email === "" || password === ""}
           fullWidth
@@ -157,40 +142,18 @@ const LoginContainer = ({ isSmallScreen }) => {
         sx={{ alignItems: "center", justifyContent: "center" }}
       >
         <DialogTitle sx={{ backgroundColor: "primary.main", color: "white" }}>
-          {status === "" ? "Logging in..." : status}
+          Logging in...
         </DialogTitle>
-        {status === "" ? (
-          <DialogContent
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 2,
-            }}
-          >
-            <CircularProgress sx={{ padding: 2 }} />
-          </DialogContent>
-        ) : (
-          <DialogContent sx={{ padding: 2 }}>
-            {status === "Success" ? (
-              <p>Logged in successfully!</p>
-            ) : (
-              <p>
-                Failed to log in. Please try again at a later time.
-                <br />
-                If the issue persists, please contact us!
-              </p>
-            )}
-            <Button
-              onClick={handleOkButtonClick}
-              fullWidth
-              variant="contained"
-              color="primary"
-            >
-              OK
-            </Button>
-          </DialogContent>
-        )}
+        <DialogContent
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 2,
+          }}
+        >
+          <CircularProgress sx={{ padding: 2 }} />
+        </DialogContent>
       </Dialog>
     </Grid>
   );

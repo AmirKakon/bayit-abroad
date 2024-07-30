@@ -13,16 +13,21 @@ import { signupViaEmail } from "../../utilities/api";
 import { useNavigate } from "react-router-dom";
 
 const SignUpContainer = ({ isSmallScreen }) => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({ email: false, password: false });
+  const [errors, setErrors] = useState({ name: false, email: false, password: false });
   const [popup, setPopup] = useState(false);
   const [status, setStatus] = useState("");
 
   const navigate = useNavigate();
 
   const handleSignUp = async () => {
-    const newErrors = { email: false, password: false };
+    const newErrors = { name: false, email: false, password: false };
+
+    if(!name ||  name === "") {
+      newErrors.name = true;
+    }
 
     if (!email.includes("@")) {
       newErrors.email = true;
@@ -34,11 +39,12 @@ const SignUpContainer = ({ isSmallScreen }) => {
 
     setErrors(newErrors);
 
-    if (!(newErrors.email && newErrors.password)) {
-      console.log(email, password);
+    if (!(newErrors.name && newErrors.email && newErrors.password)) {
+      console.log(name, email, password);
       setPopup(true);
       try {
         const response = await signupViaEmail({
+          name: name,
           email: email,
           password: password,
         });
@@ -72,6 +78,15 @@ const SignUpContainer = ({ isSmallScreen }) => {
         <Typography variant="h6" fontWeight="bold">
           Sign Up
         </Typography>
+      </Grid>
+      <Grid item xs={isSmallScreen ? 12 : "auto"}>
+        <TextField
+          id="name"
+          label="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          fullWidth
+        />
       </Grid>
       {errors.email ? (
         <Grid item xs={isSmallScreen ? 12 : "auto"}>
@@ -113,7 +128,7 @@ const SignUpContainer = ({ isSmallScreen }) => {
           color="primary"
           sx={{ px: 11, py: 1 }}
           onClick={handleSignUp}
-          disabled={email === "" || password === ""}
+          disabled={name === "" || email === "" || password === ""}
           fullWidth
         >
           SignUp

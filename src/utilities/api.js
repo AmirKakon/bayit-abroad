@@ -1,6 +1,7 @@
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+const auth = getAuth();
 
 export const fetchFormItems = async () => {
   const response = await fetch(`${apiBaseUrl}/api/form/form-items/getAll`);
@@ -72,7 +73,6 @@ export const signupViaEmail = async (user) => {
 
 export const loginViaEmail = async ({ email, password }) => {
   try {
-    const auth = getAuth();
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
     const user = userCredential.user;
     console.log(`Successfully logged in user ${user.uid}`);

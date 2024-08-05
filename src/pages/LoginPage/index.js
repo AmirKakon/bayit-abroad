@@ -48,12 +48,6 @@ const LoginPage = ({ isSmallScreen }) => {
         <Grid item>
           <SignUpContainer isSmallScreen={isSmallScreen} />
         </Grid>
-        <Grid item>
-          <Button onClick={logout}>LOGOUT</Button>
-        </Grid>
-        <Grid item>
-          <Button onClick={getLoggedInUser}>Check</Button>
-        </Grid>
       </Grid>
     </Box>
   );

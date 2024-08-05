@@ -1,11 +1,14 @@
 const { getAuth } = require("firebase-admin/auth");
 const { dev, logger } = require("../../setup");
+const { checkRequiredParams } = require("../Utilities");
 
 // const baseDB = "users_dev";
 
 // sign up a user
 dev.post("/api/user/signupViaEmail", async (req, res) => {
   try {
+    checkRequiredParams(["name", "email", "password"], req.body);
+
     const user = await getAuth().createUser({
       displayName: req.body.name,
       email: req.body.email,
@@ -25,6 +28,8 @@ dev.post("/api/user/signupViaEmail", async (req, res) => {
 // get a user by id
 dev.get("/api/user/get/:id", async (req, res) => {
   try {
+    checkRequiredParams(["id"], req.params);
+
     const user = await getAuth().getUser(req.params.id);
 
     if (!user) {
@@ -45,6 +50,9 @@ dev.get("/api/user/get/:id", async (req, res) => {
 // update user
 dev.put("/api/user/update/:id", async (req, res) => {
   try {
+    checkRequiredParams(["id"], req.params);
+    checkRequiredParams(["name", "email", "password"], req.body);
+
     await getAuth().updateUser(req.params.id, {
       displayName: req.body.name,
       email: req.body.email,
@@ -61,6 +69,8 @@ dev.put("/api/user/update/:id", async (req, res) => {
 // delete user
 dev.delete("/api/user/delete/:id", async (req, res) => {
   try {
+    checkRequiredParams(["id"], req.params);
+
     await getAuth().deleteUser(req.params.id);
 
     return res.status(200).send({ status: "Success", msg: "User Deleted" });

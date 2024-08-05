@@ -67,7 +67,7 @@ const LoginContainer = ({ isSmallScreen }) => {
       )}
       <Grid item xs={isSmallScreen ? 12 : "auto"}>
         <TextField
-          id="email"
+          id="login_email"
           label="Email"
           type="email"
           value={email}
@@ -93,7 +93,7 @@ const LoginContainer = ({ isSmallScreen }) => {
       </Grid>
       <Grid item xs={isSmallScreen ? 12 : "auto"}>
         <TextField
-          id="password"
+          id="login_password"
           label="Password"
           type="password"
           value={password}

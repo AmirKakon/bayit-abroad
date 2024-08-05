@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -10,13 +10,17 @@ import {
   List,
   ListItem,
   ListItemText,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
+import AccountIcon from "@mui/icons-material/AccountCircle";
 import logo from "../../media/bayit-abroad-logo.png";
+import { updateUser, logout } from "../../utilities/api";
 
 const HeaderLogo = () => {
   return (
@@ -66,7 +70,17 @@ const SmallScreenIcon = ({ index, title, link, icon, handleDrawerClose }) => {
 };
 
 const Header = ({ isSmallScreen }) => {
+  const [user, setUser] = useState(null);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [isAccountMenuOpen, setAccountMenuOpen] = useState(null);
+
+  useEffect(() => {
+    const updatedUser = updateUser((loggedInUser) => {
+      setUser(loggedInUser);
+    });
+
+    console.log(updatedUser);
+  }, []);
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -75,6 +89,19 @@ const Header = ({ isSmallScreen }) => {
   const handleDrawerClose = () => {
     setDrawerOpen(false);
   };
+
+  const handleAccountMenuOpen = (event) => {
+    setAccountMenuOpen(event.currentTarget);
+  };
+
+  const handleAccountMenuClose = () => {
+    setAccountMenuOpen(null);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    handleAccountMenuClose();
+  }
 
   const headerIcons = [
     { title: "Home", link: "/home", icon: <HomeIcon /> },
@@ -97,7 +124,6 @@ const Header = ({ isSmallScreen }) => {
           {isSmallScreen && (
             <IconButton
               size="small"
-              // edge="start"
               color="inherit"
               aria-label="menu"
               onClick={handleDrawerOpen}
@@ -118,6 +144,51 @@ const Header = ({ isSmallScreen }) => {
                   icon={item.icon}
                 />
               ))}
+              {user ? (
+                <div>
+                  <IconButton
+                    size="large"
+                    aria-label="account of current user"
+                    aria-controls="menu-appbar"
+                    aria-haspopup="true"
+                    onClick={handleAccountMenuOpen}
+                    color="inherit"
+                  >
+                    <AccountIcon />
+                  </IconButton>
+                  <Menu
+                    id="menu-appbar"
+                    anchorEl={isAccountMenuOpen}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "right",
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "right",
+                    }}
+                    open={Boolean(isAccountMenuOpen)}
+                    onClose={handleAccountMenuClose}
+                  >
+                    <MenuItem>
+                      {user.displayName}
+                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>
+                      Logout
+                    </MenuItem>
+                  </Menu>
+                </div>
+              ) : (
+                <Link
+                  to={"/login"}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <IconButton color="inherit">
+                    <Typography>Login</Typography>
+                  </IconButton>
+                </Link>
+              )}
             </>
           )}
         </Toolbar>

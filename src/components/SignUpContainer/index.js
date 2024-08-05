@@ -97,7 +97,7 @@ const SignUpContainer = ({ isSmallScreen }) => {
       ) : null}
       <Grid item xs={isSmallScreen ? 12 : "auto"}>
         <TextField
-          id="email"
+          id="signup_email"
           label="Email"
           type="email"
           value={email}
@@ -114,7 +114,7 @@ const SignUpContainer = ({ isSmallScreen }) => {
       ) : null}
       <Grid item xs={isSmallScreen ? 12 : "auto"}>
         <TextField
-          id="password"
+          id="signup_password"
           label="Password"
           type="password"
           value={password}

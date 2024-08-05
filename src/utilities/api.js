@@ -1,7 +1,11 @@
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { auth } from "../firebase";
 
 const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
-const auth = getAuth();
 
 export const fetchFormItems = async () => {
   const response = await fetch(`${apiBaseUrl}/api/form/form-items/getAll`);
@@ -68,12 +72,18 @@ export const signupViaEmail = async (user) => {
     throw new Error(`Error: ${response.status}`);
   }
 
+  await loginViaEmail(user);
+
   return await response.json();
 };
 
 export const loginViaEmail = async ({ email, password }) => {
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
     const user = userCredential.user;
     console.log(`Successfully logged in user ${user.uid}`);
     const response = { status: "Success", user: user };
@@ -81,5 +91,32 @@ export const loginViaEmail = async ({ email, password }) => {
   } catch (error) {
     console.log(`Failed to log in user ${email}`, error);
     return { status: "Failed", error: error };
+  }
+};
+
+export const getLoggedInUser = () => {
+  const user = auth.currentUser;
+
+  if (user) {
+    console.log(user);
+  } else {
+    console.log("No user logged in");
+  }
+  return user;
+};
+
+export const updateUser = (callback) => {
+  onAuthStateChanged(auth, (user) => {
+    callback(user);
+  });
+};
+
+export const logout = async () => {
+  try {
+    await signOut(auth);
+
+    console.log("Logged out successfully");
+  } catch (error) {
+    console.log("Error logging out - possibly no user logged in.", error);
   }
 };

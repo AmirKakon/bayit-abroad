@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Box, Grid } from "@mui/material";
+import { Box, Button, Grid } from "@mui/material";
 import SignUpContainer from "../../components/SignUpContainer";
 import LoginContainer from "../../components/LoginContainer";
 import Loading from "../../components/Loading";
 import { backgroundImageUrl } from "../../utilities/config";
-import { auth } from "../../firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { logout, getLoggedInUser } from "../../utilities/api";
 
 const LoginPage = ({ isSmallScreen }) => {
   const [loading, setLoading] = useState(true);
@@ -13,17 +12,6 @@ const LoginPage = ({ isSmallScreen }) => {
     window.scrollTo({ top: 0, behavior: "auto" });
     setLoading(false);
   }, []);
-
-  const handleSignUp = () => {
-    createUserWithEmailAndPassword(auth, "test@gmail.com", "123456")
-      .then((userCredential) => {
-        const user = userCredential.user;
-        console.log("signed up!", user);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
 
   return loading ? (
     <Loading />
@@ -55,11 +43,16 @@ const LoginPage = ({ isSmallScreen }) => {
         padding={3}
       >
         <Grid item>
-          {" "}
+          <LoginContainer isSmallScreen={isSmallScreen} />
+        </Grid>
+        <Grid item>
           <SignUpContainer isSmallScreen={isSmallScreen} />
         </Grid>
         <Grid item>
-          <LoginContainer isSmallScreen={isSmallScreen} />
+          <Button onClick={logout}>LOGOUT</Button>
+        </Grid>
+        <Grid item>
+          <Button onClick={getLoggedInUser}>Check</Button>
         </Grid>
       </Grid>
     </Box>

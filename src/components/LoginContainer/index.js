@@ -9,7 +9,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@mui/material";
-import { loginViaEmail } from "../../utilities/api";
+import { loginViaEmail } from "../../utilities/auth";
 import { useNavigate } from "react-router-dom";
 
 const LoginContainer = ({ isSmallScreen }) => {

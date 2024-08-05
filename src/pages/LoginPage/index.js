@@ -4,7 +4,7 @@ import SignUpContainer from "../../components/SignUpContainer";
 import LoginContainer from "../../components/LoginContainer";
 import Loading from "../../components/Loading";
 import { backgroundImageUrl } from "../../utilities/config";
-import { logout, getLoggedInUser } from "../../utilities/api";
+import { logout, getLoggedInUser } from "../../utilities/auth";
 
 const LoginPage = ({ isSmallScreen }) => {
   const [loading, setLoading] = useState(true);

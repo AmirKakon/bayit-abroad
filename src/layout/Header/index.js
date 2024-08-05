@@ -20,7 +20,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountIcon from "@mui/icons-material/AccountCircle";
 import logo from "../../media/bayit-abroad-logo.png";
-import { updateUser, logout } from "../../utilities/api";
+import { updateUser, logout } from "../../utilities/auth";
 
 const HeaderLogo = () => {
   return (

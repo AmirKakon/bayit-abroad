@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import SignUpContainer from "../../components/SignUpContainer";
 import LoginContainer from "../../components/LoginContainer";
 import Loading from "../../components/Loading";
 import { backgroundImageUrl } from "../../utilities/config";
-import { logout, getLoggedInUser } from "../../utilities/auth";
 
 const LoginPage = ({ isSmallScreen }) => {
   const [loading, setLoading] = useState(true);

@@ -19,9 +19,10 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountIcon from "@mui/icons-material/AccountCircle";
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from "@mui/icons-material/Logout";
 import logo from "../../media/bayit-abroad-logo.png";
 import { updateUser, logout } from "../../utilities/auth";
+import { useNavigate } from "react-router-dom";
 
 const HeaderLogo = () => {
   return (
@@ -75,6 +76,8 @@ const Header = ({ isSmallScreen }) => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isAccountMenuOpen, setAccountMenuOpen] = useState(null);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const updatedUser = updateUser((loggedInUser) => {
       setUser(loggedInUser);
@@ -102,7 +105,8 @@ const Header = ({ isSmallScreen }) => {
   const handleLogout = async () => {
     await logout();
     isSmallScreen ? handleDrawerClose() : handleAccountMenuClose();
-  }
+    navigate("/home");
+  };
 
   const headerIcons = [
     { title: "Home", link: "/home", icon: <HomeIcon /> },
@@ -172,12 +176,16 @@ const Header = ({ isSmallScreen }) => {
                     open={Boolean(isAccountMenuOpen)}
                     onClose={handleAccountMenuClose}
                   >
-                    <MenuItem>
-                      {user.displayName}
+                    <MenuItem onClick={handleAccountMenuClose}>
+                      <Link
+                        to={"/account"}
+                        key={"profile"}
+                        style={{ textDecoration: "none", color: "inherit" }}
+                      >
+                        {user.displayName}
+                      </Link>
                     </MenuItem>
-                    <MenuItem onClick={handleLogout}>
-                      Logout
-                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>Logout</MenuItem>
                   </Menu>
                 </div>
               ) : (
@@ -209,28 +217,30 @@ const Header = ({ isSmallScreen }) => {
             ))}
             {user ? (
               <>
-              <SmallScreenIcon
-                index={4}
-                title={user.displayName}
-                link={"/account"}
-                icon={<AccountIcon />}
-                handleDrawerClose={handleDrawerClose}
-              />
-              <SmallScreenIcon
-                index={5}
-                title={"Logout"}
-                link={"/home"}
-                icon={<LogoutIcon />}
-                handleDrawerClose={handleLogout}
-              />
+                <SmallScreenIcon
+                  index={4}
+                  title={user.displayName}
+                  link={"/account"}
+                  icon={<AccountIcon />}
+                  handleDrawerClose={handleDrawerClose}
+                />
+                <SmallScreenIcon
+                  index={5}
+                  title={"Logout"}
+                  link={"/home"}
+                  icon={<LogoutIcon />}
+                  handleDrawerClose={handleLogout}
+                />
               </>
-            ) : (<SmallScreenIcon
+            ) : (
+              <SmallScreenIcon
                 index={4}
                 title={"Login"}
                 link={"/login"}
                 icon={<AccountIcon />}
                 handleDrawerClose={handleDrawerClose}
-              />)}
+              />
+            )}
           </List>
         </Drawer>
       )}

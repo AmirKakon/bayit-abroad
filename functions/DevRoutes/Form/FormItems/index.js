@@ -1,5 +1,6 @@
 const { dev, logger, db } = require("../../../setup");
 const { getExchangeRate } = require("../../ExchangeRates");
+const { checkRequiredParams } = require("../../Utilities");
 
 const baseDB = "form-items_dev";
 
@@ -14,51 +15,50 @@ const convertPrice = (price, exchangeRate) => {
 };
 
 // create a form item
-dev.post("/api/form/form-items/create", (req, res) => {
-  // async waits for a response
-  (async () => {
-    try {
-      await db.collection(baseDB).doc().create({
-        name: req.body.name,
-        price: req.body.price,
-        category: req.body.category,
-      });
+dev.post("/api/form/form-items/create", async (req, res) => {
+  try {
+    checkRequiredParams(["name", "price", "category"], req.body);
 
-      return res.status(200).send({ status: "Success", msg: "Item Saved" });
-    } catch (error) {
-      logger.error(error);
-      return res.status(500).send({ status: "Failed", msg: error });
-    }
-  })();
+    await db.collection(baseDB).doc().create({
+      name: req.body.name,
+      price: req.body.price,
+      category: req.body.category,
+    });
+
+    return res.status(200).send({ status: "Success", msg: "Item Saved" });
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({ status: "Failed", msg: error });
+  }
 });
 
 // get a single item using specific id
-dev.get("/api/form/form-items/get/:id", (req, res) => {
-  (async () => {
-    try {
-      // Fetch the exchange rate
-      const exchangeRate = await getExchangeRate();
+dev.get("/api/form/form-items/get/:id", async (req, res) => {
+  try {
+    checkRequiredParams(["id"], req.params);
 
-      const itemRef = db.collection(baseDB).doc(req.params.id);
-      const doc = await itemRef.get(); // gets doc
-      const item = doc.data(); // the actual data of the item
+    // Fetch the exchange rate
+    const exchangeRate = await getExchangeRate();
 
-      if (!item) {
-        logger.error(`Error - No item found with id: ${req.params.id}`);
-        return res.status(404).send({
-          status: "Failed",
-          msg: `No item found with id: ${req.params.id}`,
-        });
-      }
+    const itemRef = db.collection(baseDB).doc(req.params.id);
+    const doc = await itemRef.get(); // gets doc
+    const item = doc.data(); // the actual data of the item
 
-      item.price = convertPrice(item.price, exchangeRate);
-
-      return res.status(200).send({ status: "Success", data: item });
-    } catch (error) {
-      logger.error(error);
-      return res.status(500).send({ status: "Failed", msg: error });
+    if (!item) {
+      logger.error(`Error - No item found with id: ${req.params.id}`);
+      return res.status(404).send({
+        status: "Failed",
+        msg: `No item found with id: ${req.params.id}`,
+      });
     }
-  })();
+
+    item.price = convertPrice(item.price, exchangeRate);
+
+    return res.status(200).send({ status: "Success", data: item });
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({ status: "Failed", msg: error });
+  }
 });
 
 dev.get("/api/form/form-items/getAll", async (req, res) => {
@@ -108,39 +108,38 @@ dev.get("/api/form/form-items/getAll", async (req, res) => {
 });
 
 // update item
-dev.put("/api/form/form-items/update/:id", (req, res) => {
-  // async waits for a response
-  (async () => {
-    try {
-      const reqDoc = db.collection(baseDB).doc(req.params.id);
-      await reqDoc.update({
-        name: req.body.name,
-        price: req.body.price,
-        category: req.body.category,
-      });
+dev.put("/api/form/form-items/update/:id", async (req, res) => {
+  try {
+    checkRequiredParams(["id"], req.params);
+    checkRequiredParams(["name", "price", "category"], req.body);
 
-      return res.status(200).send({ status: "Success", msg: "Item Updated" });
-    } catch (error) {
-      logger.error(error);
-      return res.status(500).send({ status: "Failed", msg: error });
-    }
-  })();
+    const reqDoc = db.collection(baseDB).doc(req.params.id);
+    await reqDoc.update({
+      name: req.body.name,
+      price: req.body.price,
+      category: req.body.category,
+    });
+
+    return res.status(200).send({ status: "Success", msg: "Item Updated" });
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({ status: "Failed", msg: error });
+  }
 });
 
 // delete item
-dev.delete("/api/form/form-items/delete/:id", (req, res) => {
-  // async waits for a response
-  (async () => {
-    try {
-      const reqDoc = db.collection(baseDB).doc(req.params.id);
-      await reqDoc.delete();
+dev.delete("/api/form/form-items/delete/:id", async (req, res) => {
+  try {
+    checkRequiredParams(["id"], req.params);
 
-      return res.status(200).send({ status: "Success", msg: "Item Deleted" });
-    } catch (error) {
-      logger.error(error);
-      return res.status(500).send({ status: "Failed", msg: error });
-    }
-  })();
+    const reqDoc = db.collection(baseDB).doc(req.params.id);
+    await reqDoc.delete();
+
+    return res.status(200).send({ status: "Success", msg: "Item Deleted" });
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({ status: "Failed", msg: error });
+  }
 });
 
 module.exports = { dev };

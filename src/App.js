@@ -15,6 +15,7 @@ import {
   ThankYouPage,
   SearchOrderPage,
   AboutPage,
+  LoginPage,
 } from "./pages";
 import Footer from "./layout/Footer";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -40,6 +41,10 @@ const App = () => {
           <Header isSmallScreen={isSmallScreen} />
           <Box display="flex" flexDirection="column" minHeight="100vh">
             <Routes>
+            <Route
+                path="/login"
+                element={<LoginPage isSmallScreen={isSmallScreen} />}
+              />
               <Route
                 path="/home"
                 element={<HomePage isSmallScreen={isSmallScreen} />}

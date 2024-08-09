@@ -25,8 +25,10 @@ export const createOrder = async (submissionData) => {
   return await response.json();
 };
 
-export const getCities = async (searchTerm = '', page = 1) => {
-  const response = await fetch(`${apiBaseUrl}/api/cities/getAll?search=${searchTerm}&page=${page}`);
+export const getCities = async (searchTerm = "", page = 1) => {
+  const response = await fetch(
+    `${apiBaseUrl}/api/cities/getAll?search=${searchTerm}&page=${page}`
+  );
 
   if (!response.ok) {
     throw new Error(`Error: ${response.status}`);

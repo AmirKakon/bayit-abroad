@@ -19,6 +19,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountIcon from "@mui/icons-material/AccountCircle";
+import LogoutIcon from '@mui/icons-material/Logout';
 import logo from "../../media/bayit-abroad-logo.png";
 import { updateUser, logout } from "../../utilities/auth";
 
@@ -100,7 +101,7 @@ const Header = ({ isSmallScreen }) => {
 
   const handleLogout = async () => {
     await logout();
-    handleAccountMenuClose();
+    isSmallScreen ? handleDrawerClose() : handleAccountMenuClose();
   }
 
   const headerIcons = [
@@ -206,6 +207,30 @@ const Header = ({ isSmallScreen }) => {
                 handleDrawerClose={handleDrawerClose}
               />
             ))}
+            {user ? (
+              <>
+              <SmallScreenIcon
+                index={4}
+                title={user.displayName}
+                link={"/account"}
+                icon={<AccountIcon />}
+                handleDrawerClose={handleDrawerClose}
+              />
+              <SmallScreenIcon
+                index={5}
+                title={"Logout"}
+                link={"/home"}
+                icon={<LogoutIcon />}
+                handleDrawerClose={handleLogout}
+              />
+              </>
+            ) : (<SmallScreenIcon
+                index={4}
+                title={"Login"}
+                link={"/login"}
+                icon={<AccountIcon />}
+                handleDrawerClose={handleDrawerClose}
+              />)}
           </List>
         </Drawer>
       )}

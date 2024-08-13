@@ -25,6 +25,16 @@ export const createOrder = async (submissionData) => {
   return await response.json();
 };
 
+export const getUserOrders = async (userId) => {
+  const response = await fetch(`${apiBaseUrl}/api/orders/getAll?uid=${userId}`);
+
+  if (!response.ok) {
+    return [];
+  }
+  const res = await response.json();
+  return res.data;
+};
+
 export const getCities = async (searchTerm = "", page = 1) => {
   const response = await fetch(
     `${apiBaseUrl}/api/cities/getAll?search=${searchTerm}&page=${page}`

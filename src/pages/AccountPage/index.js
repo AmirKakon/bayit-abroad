@@ -8,11 +8,13 @@ import {
   Collapse,
 } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import Profile from "../../components/Account/Profile";
+import { Profile, OrdersList } from "../../components/Account";
 import { getLoggedInUser } from "../../utilities/auth";
+import { getUserOrders } from "../../utilities/api";
 
 const AccountPage = ({ isSmallScreen }) => {
   const [user, setUser] = useState({});
+  const [orders, setOrders] = useState([]);
   const [triggerRefresh, setTriggerRefresh] = useState(false);
   const [value, setValue] = useState(0);
   const [openCategories, setOpenCategories] = useState({});
@@ -25,6 +27,12 @@ const AccountPage = ({ isSmallScreen }) => {
       name: currentUser.displayName,
       email: currentUser.email,
     });
+    async function getOrders(userId) {
+      const orderResponse = await getUserOrders(userId);
+      setOrders(orderResponse);
+      console.log(orderResponse);
+    }
+    getOrders(currentUser.uid);
   }, [triggerRefresh]);
 
   const handleChange = (event, newValue) => {
@@ -39,8 +47,7 @@ const AccountPage = ({ isSmallScreen }) => {
   };
 
   const tabs = [
-    
-    { title: "Orders", component: null },
+    { title: "Orders", component: (<OrdersList orders={orders}/>) },
     {
       title: "Profile",
       component: (

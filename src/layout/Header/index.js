@@ -12,6 +12,9 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
@@ -20,6 +23,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
 import AccountIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
+import CircularProgress from "@mui/material/CircularProgress";
 import logo from "../../media/bayit-abroad-logo.png";
 import { updateUser, logout } from "../../utilities/auth";
 import { useNavigate } from "react-router-dom";
@@ -75,6 +79,7 @@ const Header = ({ isSmallScreen }) => {
   const [user, setUser] = useState(null);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isAccountMenuOpen, setAccountMenuOpen] = useState(null);
+  const [popup, setPopup] = useState(false);
 
   const navigate = useNavigate();
 
@@ -103,9 +108,16 @@ const Header = ({ isSmallScreen }) => {
   };
 
   const handleLogout = async () => {
-    await logout();
-    isSmallScreen ? handleDrawerClose() : handleAccountMenuClose();
-    navigate("/home");
+    setPopup(true);
+    try {
+      await logout();
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setPopup(false);
+      isSmallScreen ? handleDrawerClose() : handleAccountMenuClose();
+      navigate("/home");
+    }
   };
 
   const headerIcons = [
@@ -244,6 +256,25 @@ const Header = ({ isSmallScreen }) => {
           </List>
         </Drawer>
       )}
+      <Dialog
+        open={popup}
+        color="primary"
+        sx={{ alignItems: "center", justifyContent: "center" }}
+      >
+        <DialogTitle sx={{ backgroundColor: "primary.main", color: "white" }}>
+          Logging out...
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 2,
+          }}
+        >
+          <CircularProgress sx={{ padding: 2 }} />
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };

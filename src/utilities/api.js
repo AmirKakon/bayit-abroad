@@ -51,3 +51,19 @@ export const addCity = async (city) => {
   const res = await response.json();
   return res;
 };
+
+export const updateUserProfile = async (user) => {
+  const response = await fetch(`${apiBaseUrl}/api/user/update/${user.id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(user),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error: ${response.status}`);
+  }
+  const res = await response.json();
+  return res;
+};

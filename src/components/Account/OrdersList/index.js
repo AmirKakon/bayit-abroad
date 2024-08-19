@@ -75,20 +75,22 @@ const OrdersList = ({ orders }) => {
               Total Price: ${order.totalPrice.usd} / ₪{order.totalPrice.nis}
             </Typography>
             <ListItemButton
-                onClick={() => handleClickOrder(order.id)}
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                  backgroundColor: "#2c3c30",
-                  "&:hover": {
-                    backgroundColor: "#64886d",
-                  },
-                }}
-              ><Typography variant="subtitle" color="white">
-              View Order
-            </Typography></ListItemButton>
+              onClick={() => handleClickOrder(order.id)}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+                backgroundColor: "#2c3c30",
+                "&:hover": {
+                  backgroundColor: "#64886d",
+                },
+              }}
+            >
+              <Typography variant="subtitle" color="white">
+                View Order
+              </Typography>
+            </ListItemButton>
           </Paper>
         ))}
       </List>

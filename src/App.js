@@ -16,6 +16,7 @@ import {
   SearchOrderPage,
   AboutPage,
   LoginPage,
+  AccountPage,
 } from "./pages";
 import Footer from "./layout/Footer";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -64,6 +65,10 @@ const App = () => {
               <Route
                 path="/about"
                 element={<AboutPage isSmallScreen={isSmallScreen} />}
+              />
+              <Route
+                path="/account"
+                element={<AccountPage isSmallScreen={isSmallScreen} />}
               />
               <Route path="*" element={<Navigate to="/home" replace />} />
             </Routes>

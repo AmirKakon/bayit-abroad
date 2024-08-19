@@ -90,6 +90,7 @@ dev.post("/api/orders/create", async (req, res) => {
       created: timestamps.updated,
       weeks: req.body.weeks,
       status: req.body.status,
+      uid: req.body.uid ?? null,
     };
 
     // Get a reference to a new document with an auto-generated ID
@@ -150,7 +151,7 @@ dev.post("/api/orders/create", async (req, res) => {
 // get a single order using specific id
 dev.get("/api/orders/get/:id", async (req, res) => {
   try {
-    checkRequiredParams(["id", req.params]);
+    checkRequiredParams(["id"], req.params);
 
     const orderRef = db.collection(baseDB).doc(req.params.id);
     const doc = await orderRef.get();
@@ -175,8 +176,18 @@ dev.get("/api/orders/get/:id", async (req, res) => {
 // get all orders
 dev.get("/api/orders/getAll", async (req, res) => {
   try {
+    const { uid } = req.query;
     const ordersRef = db.collection(baseDB);
-    const snapshot = await ordersRef.get();
+
+    let snapshot;
+
+    if (uid) {
+      // If uid is provided, filter the orders by uid
+      snapshot = await ordersRef.where("uid", "==", uid).get();
+    } else {
+      // If uid is not provided, get all orders
+      snapshot = await ordersRef.get();
+    }
 
     if (snapshot.empty) {
       logger.error("No orders found");
@@ -239,6 +250,7 @@ dev.put("/api/orders/update/:id", async (req, res) => {
       lastUpdated: timestamps.updated,
       weeks: req.body.weeks,
       status: req.body.status,
+      uid: req.body.uid ?? null,
     });
 
     return res.status(200).send({ status: "Success", msg: "Order Updated" });

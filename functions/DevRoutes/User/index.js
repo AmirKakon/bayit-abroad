@@ -51,12 +51,11 @@ dev.get("/api/user/get/:id", async (req, res) => {
 dev.put("/api/user/update/:id", async (req, res) => {
   try {
     checkRequiredParams(["id"], req.params);
-    checkRequiredParams(["name", "email", "password"], req.body);
+    checkRequiredParams(["name", "email"], req.body);
 
     await getAuth().updateUser(req.params.id, {
       displayName: req.body.name,
       email: req.body.email,
-      password: req.body.password,
     });
 
     return res.status(200).send({ status: "Success", msg: "User Updated" });

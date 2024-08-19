@@ -151,14 +151,7 @@ export const loginViaEmail = async ({ email, password }) => {
 };
 
 export const getLoggedInUser = () => {
-  const user = auth.currentUser;
-
-  if (user) {
-    console.log(user);
-  } else {
-    console.log("No user logged in");
-  }
-  return user;
+  return auth.currentUser;
 };
 
 export const updateUser = (callback) => {

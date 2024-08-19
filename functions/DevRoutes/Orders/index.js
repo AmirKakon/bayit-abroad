@@ -151,7 +151,7 @@ dev.post("/api/orders/create", async (req, res) => {
 // get a single order using specific id
 dev.get("/api/orders/get/:id", async (req, res) => {
   try {
-    checkRequiredParams(["id", req.params]);
+    checkRequiredParams(["id"], req.params);
 
     const orderRef = db.collection(baseDB).doc(req.params.id);
     const doc = await orderRef.get();

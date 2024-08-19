@@ -24,12 +24,7 @@ const ThankYouPage = ({ isSmallScreen }) => {
         const response = await fetch(`${apiBaseUrl}/api/orders/get/${id}`);
 
         if (!response.ok) {
-          if (response.status === 404) {
-            // Order not found
             setNotFound(true);
-          } else {
-            throw new Error(`Error: ${response.status}`);
-          }
         }
 
         const res = await response.json();

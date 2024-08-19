@@ -1,19 +1,42 @@
-import React from 'react';
-import { Paper, Typography, Box, List, ListItem, ListItemText, Divider } from '@mui/material';
+import React from "react";
+import {
+  Paper,
+  Typography,
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  ListItemButton,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const OrdersList = ({ orders }) => {
+  const navigate = useNavigate();
+
+  const handleClickOrder = (id) => {
+    navigate(`/orders/${id}/thankyou?first=false`);
+  };
+
   return (
     <Paper sx={{ padding: 2 }}>
-      <List>
+      <List sx={{ maxHeight: 400, overflowY: "auto" }}>
         {orders.map((order) => (
-          <Paper key={order.id} elevation={2} sx={{ marginBottom: 2, padding: 2, backgroundColor: "#e6deca" }}>
+          <Paper
+            key={order.id}
+            elevation={2}
+            sx={{ marginBottom: 2, padding: 2, backgroundColor: "#e6deca" }}
+          >
             <ListItem>
               <ListItemText
                 primary={`Order ID: ${order.id}`}
-                secondary={`Full Name: ${order.fullName}`}
+                secondary={`Status: ${order.status}`}
               />
             </ListItem>
 
+            <Typography variant="body2" color="textSecondary">
+              Full Name: {order.fullName}
+            </Typography>
             <Typography variant="body2" color="textSecondary">
               Delivery Address: {order.deliveryAddress}
             </Typography>
@@ -22,9 +45,6 @@ const OrdersList = ({ orders }) => {
             </Typography>
             <Typography variant="body2" color="textSecondary">
               Email: {order.email}
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Status: {order.status}
             </Typography>
             <Typography variant="body2" color="textSecondary">
               Date Range: {order.dateRange.delivery} - {order.dateRange.return}
@@ -46,9 +66,6 @@ const OrdersList = ({ orders }) => {
                 <Typography variant="body2" color="textSecondary">
                   Price: ${item.price.usd} / ₪{item.price.nis}
                 </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  Category: {item.category}
-                </Typography>
               </Box>
             ))}
 
@@ -57,6 +74,21 @@ const OrdersList = ({ orders }) => {
             <Typography variant="h6" component="h3">
               Total Price: ${order.totalPrice.usd} / ₪{order.totalPrice.nis}
             </Typography>
+            <ListItemButton
+                onClick={() => handleClickOrder(order.id)}
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  backgroundColor: "#2c3c30",
+                  "&:hover": {
+                    backgroundColor: "#64886d",
+                  },
+                }}
+              ><Typography variant="subtitle" color="white">
+              View Order
+            </Typography></ListItemButton>
           </Paper>
         ))}
       </List>

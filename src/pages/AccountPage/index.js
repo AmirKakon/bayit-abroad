@@ -16,7 +16,6 @@ const AccountPage = ({ isSmallScreen }) => {
   const [user, setUser] = useState({});
   const [orders, setOrders] = useState([]);
   const [triggerRefresh, setTriggerRefresh] = useState(false);
-  const [value, setValue] = useState(0);
   const [openCategories, setOpenCategories] = useState({});
 
   useEffect(() => {
@@ -34,10 +33,6 @@ const AccountPage = ({ isSmallScreen }) => {
     }
     getOrders(currentUser.uid);
   }, [triggerRefresh]);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
 
   const handleOpenCategory = (category) => {
     setOpenCategories((prevOpenCategories) => ({

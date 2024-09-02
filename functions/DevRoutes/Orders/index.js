@@ -2,6 +2,7 @@ const dayjs = require("dayjs");
 const { dev, logger, db, admin, functions } = require("../../setup");
 const nodemailer = require("nodemailer");
 const getOrderEmailTemplate = require("./orderEmailTemplate");
+const { checkRequiredParams } = require("../Utilities");
 
 const baseDB = "orders_dev";
 
@@ -55,6 +56,23 @@ const setOrder = (doc) => {
 // create an order
 dev.post("/api/orders/create", async (req, res) => {
   try {
+    checkRequiredParams(
+      [
+        "dateRange",
+        "fullName",
+        "additionalNotes",
+        "deliveryAddress",
+        "email",
+        "phone",
+        "selectedItems",
+        "totalPrice",
+        "weeks",
+        "status",
+        "baseUrl",
+      ],
+      req.body,
+    );
+
     let url = "";
     const timestamps = getTimestamps(req.body.dateRange);
 
@@ -72,6 +90,7 @@ dev.post("/api/orders/create", async (req, res) => {
       created: timestamps.updated,
       weeks: req.body.weeks,
       status: req.body.status,
+      uid: req.body.uid ?? null,
     };
 
     // Get a reference to a new document with an auto-generated ID
@@ -132,6 +151,8 @@ dev.post("/api/orders/create", async (req, res) => {
 // get a single order using specific id
 dev.get("/api/orders/get/:id", async (req, res) => {
   try {
+    checkRequiredParams(["id"], req.params);
+
     const orderRef = db.collection(baseDB).doc(req.params.id);
     const doc = await orderRef.get();
 
@@ -155,8 +176,18 @@ dev.get("/api/orders/get/:id", async (req, res) => {
 // get all orders
 dev.get("/api/orders/getAll", async (req, res) => {
   try {
+    const { uid } = req.query;
     const ordersRef = db.collection(baseDB);
-    const snapshot = await ordersRef.get();
+
+    let snapshot;
+
+    if (uid) {
+      // If uid is provided, filter the orders by uid
+      snapshot = await ordersRef.where("uid", "==", uid).get();
+    } else {
+      // If uid is not provided, get all orders
+      snapshot = await ordersRef.get();
+    }
 
     if (snapshot.empty) {
       logger.error("No orders found");
@@ -176,58 +207,72 @@ dev.get("/api/orders/getAll", async (req, res) => {
 });
 
 // update order
-dev.put("/api/orders/update/:id", (req, res) => {
-  // async waits for a response
-  (async () => {
-    try {
-      const timestamps = getTimestamps(req.body.dateRange);
+dev.put("/api/orders/update/:id", async (req, res) => {
+  try {
+    checkRequiredParams(["id"], req.params);
+    checkRequiredParams(
+      [
+        "dateRange",
+        "fullName",
+        "additionalNotes",
+        "deliveryAddress",
+        "email",
+        "phone",
+        "selectedItems",
+        "totalPrice",
+        "weeks",
+        "status",
+      ],
+      req.body,
+    );
 
-      const reqDoc = db.collection(baseDB).doc(req.params.id);
+    const timestamps = getTimestamps(req.body.dateRange);
 
-      if (!reqDoc) {
-        logger.error(`Error - No order found with id: ${req.params.id}`);
-        return res.status(404).send({
-          status: "Failed",
-          msg: `No order found with id: ${req.params.id}`,
-        });
-      }
+    const reqDoc = db.collection(baseDB).doc(req.params.id);
 
-      await reqDoc.update({
-        fullName: req.body.fullName,
-        additionalNotes: req.body.additionalNotes,
-        deliveryDate: timestamps.delivery,
-        returnDate: timestamps.return,
-        deliveryAddress: req.body.deliveryAddress,
-        email: req.body.email,
-        phone: req.body.phone,
-        selectedItems: req.body.selectedItems,
-        lastUpdated: timestamps.updated,
-        weeks: req.body.weeks,
-        status: req.body.status,
+    if (!reqDoc) {
+      logger.error(`Error - No order found with id: ${req.params.id}`);
+      return res.status(404).send({
+        status: "Failed",
+        msg: `No order found with id: ${req.params.id}`,
       });
-
-      return res.status(200).send({ status: "Success", msg: "Order Updated" });
-    } catch (error) {
-      logger.error(error);
-      return res.status(500).send({ status: "Failed", msg: error });
     }
-  })();
+
+    await reqDoc.update({
+      fullName: req.body.fullName,
+      additionalNotes: req.body.additionalNotes,
+      deliveryDate: timestamps.delivery,
+      returnDate: timestamps.return,
+      deliveryAddress: req.body.deliveryAddress,
+      email: req.body.email,
+      phone: req.body.phone,
+      selectedItems: req.body.selectedItems,
+      lastUpdated: timestamps.updated,
+      weeks: req.body.weeks,
+      status: req.body.status,
+      uid: req.body.uid ?? null,
+    });
+
+    return res.status(200).send({ status: "Success", msg: "Order Updated" });
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({ status: "Failed", msg: error });
+  }
 });
 
 // delete order
-dev.delete("/api/orders/delete/:id", (req, res) => {
-  // async waits for a response
-  (async () => {
-    try {
-      const reqDoc = db.collection(baseDB).doc(req.params.id);
-      await reqDoc.delete();
+dev.delete("/api/orders/delete/:id", async (req, res) => {
+  try {
+    checkRequiredParams(["id"], req.params);
 
-      return res.status(200).send({ status: "Success", msg: "Order Deleted" });
-    } catch (error) {
-      logger.error(error);
-      return res.status(500).send({ status: "Failed", msg: error });
-    }
-  })();
+    const reqDoc = db.collection(baseDB).doc(req.params.id);
+    await reqDoc.delete();
+
+    return res.status(200).send({ status: "Success", msg: "Order Deleted" });
+  } catch (error) {
+    logger.error(error);
+    return res.status(500).send({ status: "Failed", msg: error });
+  }
 });
 
 module.exports = { dev };

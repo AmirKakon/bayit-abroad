@@ -1,6 +1,7 @@
 const { dev, logger, db, admin } = require("../../setup");
 const fetch = require("node-fetch");
 const { FieldValue } = admin.firestore;
+const { checkRequiredParams } = require("../Utilities");
 
 const baseDB = "cities_dev";
 
@@ -63,10 +64,12 @@ dev.get("/api/cities/getAll", async (req, res) => {
 
 // add city to db or update count of city
 dev.post("/api/cities/add/:city", async (req, res) => {
-  const { city: cityName } = req.params;
-  const cityRef = db.collection(baseDB).doc(cityName);
-
   try {
+    checkRequiredParams(["city"], req.params);
+
+    const { city: cityName } = req.params;
+    const cityRef = db.collection(baseDB).doc(cityName);
+
     await db.runTransaction(async (t) => {
       const doc = await t.get(cityRef);
 

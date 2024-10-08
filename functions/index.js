@@ -6,6 +6,8 @@ require("./Routes/Form/FormItems");
 require("./Routes/Orders");
 require("./Routes/ExchangeRates");
 require("./Routes/Cities");
+require("./Routes/User");
+require("./Routes/Auth");
 
 // // dev routes
 require("./DevRoutes/Form/FormItems");
